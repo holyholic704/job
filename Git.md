@@ -141,17 +141,11 @@ $ git reset --hard HEAD^
 
 
 
-#### revert
-
-用法同reset
-
-
-
 #### reset 与 revert 的区别
 
-* reset 是回到某次提交，提交及之前的commit都会被保留，但是此次之后的修改都会被退回到暂存区
+* reset 是回到某次提交，提交及之前的 commit 都会被保留，但是此次之后的修改都会被退回到暂存区
 
-* revert 是生成一个新的提交来撤销某次提交，此次提交之前的commit都会被保留
+* revert 用法与 reset 类似，是生成一个新的提交来撤销某次提交，此次提交之前的 commit 都会被保留
 
 
 
@@ -241,7 +235,27 @@ $ git checkout -- <file>
 
 
 
+### 忽略文件
+
+在Git工作区的根目录下创建一个特殊的**`.gitignore`**文件，然后把要忽略的文件名填进去，Git就会自动忽略这些文件，也可自己定义需要忽略的文件
+
+忽略文件的原则是
+
+* 忽略操作系统自动生成的文件，如缩略图等
+* 忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的 .class 文件
+* 忽略带有敏感信息的配置文件，如存放口令的配置文件
+
+如果某个文件被**`.gitignore`**忽略了，可以使用**`git add -f <file>`**强制添加到 Git
+
+可以使用**`git check-ignore`**检查**`.gitignore`**的忽略规则
+
+**`.gitignore`**文件本身要放到版本库里，并且可以对其做版本管理
+
+
+
 ## 远程仓库
+
+### SSH Key
 
 由于本地Git仓库和GitHub仓库之间的传输是通过 SSH 加密的，所以需要进行设置
 
@@ -267,19 +281,272 @@ $ ssh-keygen -t rsa -C "email@example.com"
 
 
 
+### 添加远程仓库
+
+在本地仓库下运行命令。添加后，远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库
+
+```
+$ git remote add origin <adress>
+```
+
+Git 支持多种协议，默认的 git@ 使用 ssh，但也可以使用 https 等其他协议。使用https除了速度慢以外，还有个最大的麻烦是每次推送都必须输入口令，但是在某些只开放 http 端口的公司内部就无法使用 ssh 协议而只能用 https
 
 
 
+### 将本地仓库的所有内容推送到远程仓库
+
+由于远程库是空的，我们第一次推送master分支时，加上了**`-u`**参数，Git 不但会把本地的 master 分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令，直接使用**`git push origin master`**
+
+```
+$ git push -u origin master
+```
 
 
 
+### 从远程仓库克隆
+
+假设从零开发，那么最好的方式是先创建远程库，然后，从远程库用命令 git clone 克隆一个本地库
+
+```
+$ git clone <address>
+```
 
 
 
+## 分支管理
+
+### 创建分支
+
+因为创建、合并和删除分支非常快，所以 Git 鼓励使用分支完成某个任务，合并后再删掉分支，这和直接在 master 分支上工作效果是一样的，但过程更安全
+
+**创建并切换到分支**
+
+```
+$ git checkout -b <branch>
+---相当于
+$ git branch <branch>		---创建分支
+$ git checkout <branch>		---切换分支
+```
 
 
 
+### 查看分支
 
+使用以下命令查看当前分支，命令会列出所有分支，**当前分支前面会标一个 * 号**
+
+```
+$ git branch
+```
+
+
+
+### 删除分支
+
+使用以下命令删除分支
+
+```
+$ git branch -d <branch>
+```
+
+
+
+### 合并分支
+
+#### merge
+
+把分支的工作成果合并到master分支上，**`git merge `**命令用于**合并指定分支到当前分支**。注意到下面的 **Fast-forward** 信息，Git 告诉我们，这次合并是“快进模式”，也就是直接把 master 指向 dev 的当前提交，所以合并速度非常快
+
+```
+$ git merge dev
+Updating d46f35e..b17d20e
+Fast-forward 
+ readme.txt | 1 +
+ 1 file changed, 1 insertion(+)
+```
+
+
+
+```
+$ git merge bugFix
+```
+
+![QQ浏览器截图20190415123250](Git.assets/20190415123250.png)
+
+
+
+#### rebase
+
+rebase 实际上就是取出一系列的提交记录，“复制”它们，然后在另外一个地方逐个的放下去。**绝不要在公共的分支上使用 rebase** 。如果想要一个干净的、线性的提交历史，没有不必要的合并提交，可以使用 **`git rebase`**
+
+```
+$ git rebase <branch>
+```
+
+
+
+```
+$ git rebase master
+```
+
+![QQ浏览器截图20190415123516](Git.assets/20190415123516.png)
+
+
+
+### 整理提交记录
+
+**`git cherry-pick`**可以理解为”挑拣”提交，它会获取某一个分支的单笔提交，并作为一个新的提交引入到你当前分支上。当我们需要在本地合入其他分支的提交时，如果不想对整个分支进行合并，而是只想将某一次提交合入到本地当前分支上，那么就要使用**`git cherry-pick`**了
+
+```
+$ git cherry-pick c2 c4
+```
+
+![1555305917762](Git.assets/1555305917762.png)
+
+
+
+如果知道你所需要的提交记录，并且还知道这些提交记录的哈希值时, 用**`git cherry-pick`**再好不过了。但是如果不清楚想要的提交记录的哈希值呢就可以利用交互式的 rebase 
+
+```
+$ git rebase -i HEAD~4
+```
+
+![1555306138697](Git.assets/1555306138697.png)
+
+
+
+### 解决冲突
+
+当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。解决冲突就是**把 Git 合并失败的文件手动编辑为我们希望的内容**，再提交
+
+
+
+### 分支管理策略
+
+通常合并分支时，Git会用 Fast forward 模式，但这种模式下，删除分支后，会丢掉分支信息。如果要强制禁用 Fast forward 模式，Git 就会在 merge 时生成一个新的 commit，这样，从分支历史上就可以看出分支信息。**在`git merge`中可以使用`--no-ff`参数，表示禁用 Fast forward **
+
+在实际开发中，我们应该按照几个基本原则进行分支管理：
+
+* 首先，**master 分支应该是非常稳定**的，也就是仅用来发布新版本，平时不能在上面干活
+
+* 干活都在dev分支上，也就是说，dev 分支是不稳定的，到某个时候，比如1.0版本发布时，再把 dev 分支合并到 master 上，在 master 分支发布1.0版本
+
+* 所有人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了
+
+所以，团队合作的分支看起来就像这样
+
+
+
+![dev](Git.assets/dev.png)
+
+
+
+### Bug 分支
+
+当需要修复 bug 或其他操作时，当前分支工作未完成无法提交，可以使用 **stash** 功能，把当前工作现场储存起来，等以后恢复现场后继续工作
+
+```
+$ git stash
+```
+
+修复完成后，切换到当前分支，使用以下命令查看保存的工作
+
+```
+$ git stash list
+stash@{0}: WIP on dev: f52c633 add merge
+```
+
+恢复的办法有两种
+
+* **`git stash apply <stash>`**：恢复后，stash 内容并不删除，可以使用**`git stash drop`**来删除
+* **`git stash pop`**：恢复的同时把 stash 内容一并删除
+
+
+
+### Feature 分支
+
+软件开发中，总有新的功能要不断添加进来。添加一个新功能时，肯定不希望因为一些实验性质的代码，把主分支搞乱了，所以，每添加一个新功能，最好新建一个 feature 分支，在上面开发，完成后，合并，最后，删除该 feature 分支
+
+如果要丢弃一个没有被合并过的分支，可以通过以下命令强行删除
+
+```
+$ git branch -D <branch>
+```
+
+
+
+### 多人协作
+
+* 首先，可以试图用**`git push origin <branch>`**推送自己的修改
+* 如果推送失败，则因为远程分支比你的本地更新，需要先用**`git pull`**试图合并
+* 如果合并有冲突，则解决冲突，并在本地提交
+* 没有冲突或者解决掉冲突后，再用**`git push origin <branch>`**推送就能成功
+* 如果**`git pull`**提示 **no tracking information**，则说明本地分支和远程分支的链接关系没有创建，用命令**`git branch --set-upstream-to <branch> origin/<branch>`**
+* 要查看远程库的信息，用**`git remote`**，或者用**`git remote -v`**显示更详细的信息
+* 本地新建的分支如果不推送到远程，对其他人就是不可见的
+* 在本地创建和远程分支对应的分支，使用**`git checkout -b <branch> origin/<branch>`**，本地和远程分支的名称最好一致
+
+
+
+## 标签管理
+
+发布一个版本时，我们通常先在版本库中打一个标签（tag），这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来。所以，**标签也是版本库的一个快照**。 Git 的标签虽然是版本库的快照，但其实它就是指向某个 commit 的指针，类似分支，但是分支可以移动，标签不能移动，所以，创建和删除标签都是瞬间完成的。**标签总是和某个 commit 挂钩**。如果这个 commit 既出现在 master 分支，又出现在 dev 分支，那么在这两个分支上都可以看到这个标签
+
+
+
+### 创建标签
+
+切换到需要打标签的分支上，然后，使用以下命令就可以创建新标签
+
+```	
+$ git tag <tag-name>
+$ git tag -a <tag-name> -m "message"	---创建带有说明的标签
+```
+
+可以使用**`git tag`**查看所有标签
+
+标签不是按时间顺序列出，而是**按字母排**序的。可以使用一下命令查看标签信息
+
+``` $ git show <tag-name>
+$ git show <tag-name>
+```
+
+标签**默认是打在最新提交的 commit **上的。如果需要给历史版本打标签，方法是找到历史提交的 commit id，然后打上就可以了
+
+
+
+### 操作标签
+
+如果标签打错了，也可以删除，因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除
+
+```
+$ git tag -d <tag-name>
+```
+
+如果要推送标签到远程，可以使用以下命令
+
+```
+$ git push origin <tag-name>
+$ git push origin --tags		---一次性推送全部尚未推送到远程的本地标签
+```
+
+如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除，然后，从远程删除
+
+```
+$ git tag -d <tag-name>
+$ git push origin <origin-tag-name>
+```
+
+
+
+## 参考
+
+* [廖雪峰的Git教程](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
+
+* [官方文档](https://git-scm.com/docs)
+* [CS-Notes/Git.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Git.md#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99)
+* [JavaGuide/Git,md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/tools/Git.md#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB)
+* [git-recipes](https://github.com/geeeeeeeeek/git-recipes)
+* [git-flight-rules](https://github.com/k88hudson/git-flight-rules)
 
 
 
