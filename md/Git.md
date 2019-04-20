@@ -33,10 +33,6 @@ Git 是目前世界上最先进的分布式版本控制系统
 
 
 
-* **来源：[详细透彻解读Git与SVN的区别](https://blog.csdn.net/hellow__world/article/details/72529022)**
-
-
-
 ## Git的优点和缺点
 
 ### 优点
@@ -175,10 +171,6 @@ $ git reset --hard HEAD^
 | git checkout | 文件层面 | 舍弃工作目录中的更改               |
 | git revert   | 提交层面 | 在公共分支上回滚更改               |
 | git revert   | 文件层面 | （然而并没有）                     |
-
-
-
-* **来源：[代码回滚：Reset、Checkout、Revert 的选择](https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-代码回滚：Reset、Checkout、Revert-的选择)**
 
 
 
@@ -601,23 +593,3 @@ $ git push origin --tags		---一次性推送全部尚未推送到远程的本地
 $ git tag -d <tag-name>
 $ git push origin <origin-tag-name>
 ```
-
-
-
-## 参考
-
-* [廖雪峰的Git教程](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
-* [官方文档](https://git-scm.com/docs)
-* [CS-Notes/Git.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Git.md#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99)
-* [JavaGuide/Git,md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/tools/Git.md#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB)
-* [git-recipes](https://github.com/geeeeeeeeek/git-recipes)
-* [git-flight-rules](https://github.com/k88hudson/git-flight-rules)
-* [猴子都能懂的Git教程](https://backlog.com/git-tutorial/cn/)
-* [LearnGitBranching](https://learngitbranching.js.org/)
-
-
-
-
-
-
-
