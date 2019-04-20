@@ -1,10 +1,10 @@
 
 
-## 拜师爷
+## GOD
 
 
 
-![linus](Git.assets/linus.jpg)
+![linus](../md.assets/linus.jpg)
 
 
 
@@ -201,11 +201,11 @@ $ git reset --hard <commit id>
 
 
 
-![pc1yn2oxey](Git.assets/pc1yn2oxey.png)
+![pc1yn2oxey](../md.assets/pc1yn2oxey.png)
 
 
 
-![0](Git.assets/0.jpg)
+![0](../md.assets/0.jpg)
 
 
 
@@ -223,7 +223,7 @@ $ git reset --hard <commit id>
 
 
 
-![git-four-areas-five-states](Git.assets/git-four-areas-five-states.png)
+![git-four-areas-five-states](../md.assets/git-four-areas-five-states.png)
 
 
 
@@ -436,7 +436,7 @@ Fast-forward
 $ git merge bugFix
 ```
 
-![QQ浏览器截图20190415123250](Git.assets/20190415123250.png)
+![20190415123250](../md.assets/20190415123250.png)
 
 
 
@@ -454,7 +454,7 @@ $ git rebase <branch>
 $ git rebase master
 ```
 
-![QQ浏览器截图20190415123516](Git.assets/20190415123516.png)
+![20190415123516](../md.assets/20190415123516.png)
 
 
 
@@ -466,7 +466,7 @@ $ git rebase master
 $ git cherry-pick c2 c4
 ```
 
-![1555305917762](Git.assets/1555305917762.png)
+![1555305917762](../md.assets/1555305917762.png)
 
 
 
@@ -476,7 +476,7 @@ $ git cherry-pick c2 c4
 $ git rebase -i HEAD~4
 ```
 
-![1555306138697](Git.assets/1555306138697.png)
+![1555306138697](../md.assets/1555306138697.png)
 
 
 
@@ -502,7 +502,7 @@ $ git rebase -i HEAD~4
 
 
 
-![dev](Git.assets/dev.png)
+![dev](../md.assets/dev.png)
 
 
 
