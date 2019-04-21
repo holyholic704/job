@@ -1,14 +1,12 @@
-# Java
-
 ## Linux
 
-###  [linux基础](https://github.com/holyholic704/oh_java/blob/master/linux.md)
+###  [linux基础](https://github.com/holyholic704/oh_java/blob/master/md/linux.md)
 
 
 
 ## Git
 
-### [Git基础](https://github.com/holyholic704/oh_java/blob/master/Git.md)
+### [Git基础](https://github.com/holyholic704/oh_java/blob/master/md/Git.md)
 
 
 
@@ -20,7 +18,7 @@
 - [官方文档](https://git-scm.com/docs)
 - [Pro Git](https://git-scm.com/book/zh/v2)
 - [CS-Notes/Git.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Git.md#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99)
-- [JavaGuide/Git,md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/tools/Git.md#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB)
+- [JavaGuide/Git.md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/tools/Git.md#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB)
 - [git-recipes](https://github.com/geeeeeeeeek/git-recipes)
 - [git-flight-rules](https://github.com/k88hudson/git-flight-rules)
 - [猴子都能懂的Git教程](https://backlog.com/git-tutorial/cn/)
@@ -33,11 +31,29 @@
 
 ## JVM
 
-### [Java内存区域与内存溢出异常](https://github.com/holyholic704/oh_java/blob/master/Java内存区域与内存溢出异常.md)
+### [Java内存区域与内存溢出异常](https://github.com/holyholic704/oh_java/blob/master/md/Java内存区域与内存溢出异常.md)
 
 
 
 ## Redis
 
-### Redis基础
+### [Redis概述](https://github.com/holyholic704/oh_java/blob/master/md/Redis概述.md)
 
+### [Redis数据结构](https://github.com/holyholic704/oh_java/blob/master/md/Redis数据结构.md)
+
+
+
+### 参考
+
+* [Redis命令参考及中文文档](http://doc.redisfans.com/index.html)
+* [Redis命令参考](http://redisdoc.com/)
+* [官方文档](https://redis.io/documentation)
+* [Redis和MongoDB的区别](https://www.cnblogs.com/java-spring/p/9488227.html)
+* [JavaGuide/Redis.md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/database/Redis/Redis.md#redis-%E7%AE%80%E4%BB%8B)
+* [Interview-Notebook/Redis.md](https://github.com/jianghui-galaxy/Interview-Notebook/blob/master/notes/Redis.md#%E4%B8%80redis-%E6%98%AF%E4%BB%80%E4%B9%88)
+* [CS-Notes/Redis.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Redis.md#%E5%9B%9B%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF)
+* [3y/Redis.md](https://github.com/ZhongFuCheng3y/3y/blob/master/src/redis.md)
+
+
+
+## OTHER
