@@ -1,6 +1,6 @@
 ## 内部编码
 
-type 命令实际返回的就是当前键的数据结构类型，但这些只是 Redis 对外的数据结构。实际上每种数据结构都有自己底层的内部编码实现，**每种数据结构都有两种以上的内部编码实现**，这样 Redis 会根据当前值的类型和长度决定使用内部编码实现，**有些内部编码可以作为多种外部数据结构的内部实现**。可以使用**`object encoding <key>`**命令查询内部编码
+**`type <key>`**命令实际返回的就是当前键的数据结构类型，但这些只是 Redis 对外的数据结构。实际上每种数据结构都有自己底层的内部编码实现，**每种数据结构都有两种以上的内部编码实现**，这样 Redis 会根据当前值的类型和长度决定使用内部编码实现，**有些内部编码可以作为多种外部数据结构的内部实现**。可以使用**`object encoding <key>`**命令查询内部编码
 
 
 
@@ -17,38 +17,9 @@ type 命令实际返回的就是当前键的数据结构类型，但这些只是
 
 ### 五种数据结构的内部编码方式
 
-* 字符串的编码
-  * **int**：**8 个字节的长整型**
-    * 如 `123456789`
-  * **embstr**：**小于等于 39 个字节的字符串**
-    * 如 `hello world`
-  * **raw**：**大于 39 个字节的字符串**
-    * 如`The only time you should ever look back is to see how far you've come`
-* 哈希的内部编码
-  * **ziplist**：**压缩列表**，当哈希类型**元素个数小于 hash-max-ziplist-entries 配置（默认512个），同时所有值都小于 hash-max-ziplist-value 配置（默认64个字节）时**，Redis 会使用ziplist作为哈希的内部实现
-    * 如`name kobe age 38`
-  * **hashtable**：**哈希表**，当哈希类型无法满足 ziplist 的条件时，Redis 会使用 hashtable 作为哈希的内部实现，因为此时 ziplist 的读写效率会下降，而 hashtable 的读写时间复杂度为 O(1)
-    * 如`info abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcba`
-  * ziplist 使用更加紧凑的结构实现多个元素的连续存储，在节省内存方面比 hashtable 更加优秀。当一个哈希的编码由 ziplist 变为 hashtable 的时候，即使在替换掉所有值，它一直都会是 hashtable 类型
-* 列表的内部编码
-  * **ziplist**：同上
-    * 如`a b c`
-  * **linkedlist**：链表，当列表类型无法满足 ziplist 的条件时，Redis 会使用 linkedlist 作为列表的内部实现
-    * 如`abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcbabcdefghijklmnopqrstuvwxyz`
-* 集合的内部编码
-  * **intset**：**整数集合**，当集合中的元素**都是整数且元素个数小于 set-max-intset-entries 配置（默认512个）时**，Redis 会选用 intset 来作为集合内部实现，从而减少内存的使用
-    * 如`1 2 3 4 5 6`
-  * **hashtable**：同上
-    * 如`1 2 3 4 .5`
-* 有序集合的内部编码
-  * **ziplist**：当有序集合的**元素个数小于 zset-max-ziplist-entries 配置（默认128个）同时每个元素的值小于 zset-max-ziplist-value 配置（默认64个字节）时**，Redis 会用 ziplist 来作为有序集合的内部实现，ziplist 可以有效减少内存使用
-    * 如`10 a 20 b 30 c`
-  * **skiplist**：**跳跃表**，当 ziplist 条件不满足时，有序集合会使用 skiplist 作为内部实现，因为此时 ziplist 的读写效率会下降
-    * 如`10 abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcbabcdefghijklmnopqrstuvwxyz`
 
 
-
-![1868251457-5ac3a4d996c3e](assets/1868251457-5ac3a4d996c3e.png)
+![](../md.assets/Redis-BIANMA.png)
 
 
 
@@ -242,11 +213,23 @@ lpush + brpop = Message Queue（消息队列）
 
 ### 集合
 
+集合提供的功能与列表类似，特殊之处在于集合是可以自动排重的并且是无序的，不能通过索引下标获取元素，Redis 除了支持集合内的增删改查，同时还支持多个集合取交集、并集、差集
 
 
 
+#### 使用场景
+
+比较典型的使用场景就是标签，如一个用户对娱乐、体育比较感兴趣，另一个可能对新闻感兴趣，这些兴趣就是标签，有了这些数据就可以得到同一标签的人，以及用户的共同爱好的标签，这些数据对于用户体验以及曾强用户粘度比较重要。用户和标签的关系维护应该放在一个事物内执行，防止部分命令失败造成数据不一致。
+
+在微博应用中，可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如共同关注、共同粉丝、共同喜好等功能
+
+sadd = tagging（标签）
+spop / srandmember = random item（生成随机数，比如抽奖）
+sadd + sinter = social Graph(社交需求)
 
 
+
+#### 常用命令
 
 
 
