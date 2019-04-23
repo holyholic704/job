@@ -134,11 +134,45 @@ auto-aof-rewrite-min-size 64mb
 
 
 
+因为 AOF 的运作方式是不断地将命令追加到文件的末尾， 所以随着写入命令的不断增加， AOF 文件的体积也会变得越来越大。
+
+举个例子， 如果你对一个计数器调用了 100 次 [*INCR*](http://doc.redisfans.com/string/incr.html#incr) ， 那么仅仅是为了保存这个计数器的当前值， AOF 文件就需要使用 100 条记录（entry）。
+
+然而在实际上， 只使用一条 [*SET*](http://doc.redisfans.com/string/set.html#set) 命令已经足以保存计数器的当前值了， 其余 99 条记录实际上都是多余的。
+
+为了处理这种情况， Redis 支持一种有趣的特性： 可以在不打断服务客户端的情况下， 对 AOF 文件进行重建（rebuild）。
+
+执行 [*BGREWRITEAOF*](http://doc.redisfans.com/server/bgrewriteaof.html#bgrewriteaof) 命令， Redis 将生成一个新的 AOF 文件， 这个文件包含重建当前数据集所需的最少命令。
+
+Redis 2.2 需要自己手动执行 [*BGREWRITEAOF*](http://doc.redisfans.com/server/bgrewriteaof.html#bgrewriteaof) 命令； Redis 2.4 则可以自动触发 AOF 重写， 具体信息请查看 2.4 的示例配置文件。
+
+
+
+
+
+
+
+## 如果 AOF 文件出错了，怎么办？
+
+服务器可能在程序正在对 AOF 文件进行写入时停机， 如果停机造成了 AOF 文件出错（corrupt）， 那么 Redis 在重启时会拒绝载入这个 AOF 文件， 从而确保数据的一致性不会被破坏。
+
+当发生这种情况时， 可以用以下方法来修复出错的 AOF 文件：
+
+1. 为现有的 AOF 文件创建一个备份。
+2. 使用 Redis 附带的 `redis-check-aof` 程序，对原来的 AOF 文件进行修复。
+
+> ```
+> $ redis-check-aof --fix
+> ```
+
+1. （可选）使用 `diff -u` 对比修复后的 AOF 文件和原始 AOF 文件的备份，查看两个文件之间的不同之处。
+2. 重启 Redis 服务器，等待服务器载入修复后的 AOF 文件，并进行数据恢复。
+
+
+
+
+
 对硬盘的文件进行写入时，写入的内容首先会被存储到缓冲区，然后由操作系统决定什么时候将该内容同步到硬盘，用户可以调用 file.flush() 方法请求操作系统尽快将缓冲区存储的数据同步到硬盘。
-
-
-
-
 
 
 
@@ -185,3 +219,20 @@ AOF 重写和 RDB 创建快照一样，都巧妙地利用了写时复制机制
 
 * AOF 会因为个别命令的原因，出现 bug，导致 AOF 文件在重新载入时，无法将数据集恢复成保存时的原样
   * 如 brpoplpush 就曾经引起过这样的 bug，虽然这种 bug 在 AOF 文件中并不常见，但是 RDB 几乎是不可能出现这种 bug 的
+
+
+
+
+
+## RDB 和 AOF ，我应该用哪一个？
+
+一般来说， 如果想达到足以媲美 PostgreSQL 的数据安全性， 你应该同时使用两种持久化功能。
+
+如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。
+
+有很多用户都只使用 AOF 持久化， 但我们并不推荐这种方式： 因为定时生成 RDB 快照（snapshot）非常便于进行数据库备份， 并且 RDB 恢复数据集的速度也要比 AOF 恢复的速度要快， 除此之外， 使用 RDB 还可以避免之前提到的 AOF 程序的 bug 。
+
+因为以上提到的种种原因， 未来我们可能会将 AOF 和 RDB 整合成单个持久化模型。 （这是一个长期计划。）
+
+接下来的几个小节将介绍 RDB 和 AOF 的更多细节。
+
