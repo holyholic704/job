@@ -96,7 +96,7 @@ $ git commit <file> -m "message"	---提交暂存区的指定文件到仓库
 
 **`-m`** 后面输入的是本次提交的说明，可以输入任意内容，最好是有意义的，这样就能从历史记录里方便地找到改动记录
 
-**`--amend`**参数用法
+**`--amend`** 参数用法
 
 * 如果已经 push 到远端服务器，想修改已经提交过的 commit 信息
 * 如果已经 push 到远端服务器，有漏掉的文件想提交到上一次的 commit 信息
@@ -110,7 +110,7 @@ $ git commit <file> -m "message"	---提交暂存区的指定文件到仓库
 * **`git status`**： 查看版本库当前状态
 * **`git diff <file>`**： 查看文件修改的内容
 * **`git log`**： 显示从最近到最远的提交日志
-  * 可以加上**`--pretty=oneline`**参数，简洁显示
+  * 可以加上 **`--pretty=oneline`** 参数，简洁显示
 * **`git show <commit id>`**：显示某次提交的元数据和内容变化
 
 
@@ -274,7 +274,7 @@ $ git checkout -- <file>
 
 ### 忽略文件
 
-在 Git 工作区的根目录下创建一个特殊的**`.gitignore`**文件，然后把要忽略的文件名填进去，Git 就会自动忽略这些文件，也可自己定义需要忽略的文件
+在 Git 工作区的根目录下创建一个特殊的 **`.gitignore`** 文件，然后把要忽略的文件名填进去，Git 就会自动忽略这些文件，也可自己定义需要忽略的文件
 
 忽略文件的原则是
 
@@ -282,11 +282,11 @@ $ git checkout -- <file>
 * 忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的 .class 文件
 * 忽略带有敏感信息的配置文件，如存放口令的配置文件
 
-如果某个文件被**`.gitignore`**忽略了，可以使用**`git add -f <file>`**强制添加到 Git
+如果某个文件被 **`.gitignore`** 忽略了，可以使用 **`git add -f <file>`** 强制添加到 Git
 
-可以使用**`git check-ignore`**检查**`.gitignore`**的忽略规则
+可以使用 **`git check-ignore`** 检查 **`.gitignore`** 的忽略规则
 
-**`.gitignore`**文件本身要放到版本库里，并且可以对其做版本管理
+**`.gitignore`** 文件本身要放到版本库里，并且可以对其做版本管理
 
 
 
@@ -332,7 +332,7 @@ Git 支持多种协议，默认的 git@ 使用 ssh，但也可以使用 https �
 
 ### 将本地仓库的所有内容推送到远程仓库
 
-由于远程库是空的，我们第一次推送 master 分支时，加上了**`-u`**参数，Git 不但会把本地的 master 分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令，直接使用**`git push origin master`**
+由于远程库是空的，我们第一次推送 master 分支时，加上了 **`-u`** 参数，Git 不但会把本地的 master 分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令，直接使用 **`git push origin master`**
 
 ```
 $ git push -u origin master
@@ -452,7 +452,7 @@ $ git rebase master
 
 ### 整理提交记录
 
-**`git cherry-pick`**可以理解为”挑拣”提交，它会获取某一个分支的单笔提交，并作为一个新的提交引入到你当前分支上。当我们需要在本地合入其他分支的提交时，如果不想对整个分支进行合并，而是只想将某一次提交合入到本地当前分支上，那么就要使用**`git cherry-pick`**了
+**`git cherry-pick`** 可以理解为”挑拣”提交，它会获取某一个分支的单笔提交，并作为一个新的提交引入到你当前分支上。当我们需要在本地合入其他分支的提交时，如果不想对整个分支进行合并，而是只想将某一次提交合入到本地当前分支上，那么就要使用 **`git cherry-pick`** 了
 
 ```
 $ git cherry-pick c2 c4
@@ -462,7 +462,7 @@ $ git cherry-pick c2 c4
 
 
 
-如果知道你所需要的提交记录，并且还知道这些提交记录的哈希值时, 用**`git cherry-pick`**再好不过了。但是如果不清楚想要的提交记录的哈希值呢就可以利用交互式的 rebase 
+如果知道你所需要的提交记录，并且还知道这些提交记录的哈希值时, 用 **`git cherry-pick`** 再好不过了。但是如果不清楚想要的提交记录的哈希值呢就可以利用交互式的 rebase 
 
 ```
 $ git rebase -i HEAD~4
@@ -480,7 +480,7 @@ $ git rebase -i HEAD~4
 
 ### 分支管理策略
 
-通常合并分支时，Git会用 Fast forward 模式，但这种模式下，删除分支后，会丢掉分支信息。如果要强制禁用 Fast forward 模式，Git 就会在 merge 时生成一个新的 commit，这样，从分支历史上就可以看出分支信息。**在`git merge`中可以使用`--no-ff`参数，表示禁用 Fast forward **
+通常合并分支时，Git会用 Fast forward 模式，但这种模式下，删除分支后，会丢掉分支信息。如果要强制禁用 Fast forward 模式，Git 就会在 merge 时生成一个新的 commit，这样，从分支历史上就可以看出分支信息。**在`git merge`中可以使用`--no-ff`参数，表示禁用 Fast forward**
 
 在实际开发中，我们应该按照几个基本原则进行分支管理：
 
@@ -515,7 +515,7 @@ stash@{0}: WIP on dev: f52c633 add merge
 
 恢复的办法有两种
 
-* **`git stash apply <stash>`**：恢复后，stash 内容并不删除，可以使用**`git stash drop`**来删除
+* **`git stash apply <stash>`**：恢复后，stash 内容并不删除，可以使用 **`git stash drop`** 来删除
 * **`git stash pop`**：恢复的同时把 stash 内容一并删除
 
 
@@ -534,14 +534,14 @@ $ git branch -D <branch>
 
 ### 多人协作
 
-* 首先，可以试图用**`git push origin <branch>`**推送自己的修改
-* 如果推送失败，则因为远程分支比你的本地更新，需要先用**`git pull`**试图合并
+* 首先，可以试图用 **`git push origin <branch>`** 推送自己的修改
+* 如果推送失败，则因为远程分支比你的本地更新，需要先用 **`git pull`** 试图合并
 * 如果合并有冲突，则解决冲突，并在本地提交
-* 没有冲突或者解决掉冲突后，再用**`git push origin <branch>`**推送就能成功
-* 如果**`git pull`**提示 **no tracking information**，则说明本地分支和远程分支的链接关系没有创建，用命令**`git branch --set-upstream-to <branch> origin/<branch>`**
-* 要查看远程库的信息，用**`git remote`**，或者用**`git remote -v`**显示更详细的信息
+* 没有冲突或者解决掉冲突后，再用 **`git push origin <branch>`** 推送就能成功
+* 如果 **`git pull`** 提示 **no tracking information**，则说明本地分支和远程分支的链接关系没有创建，用命令 **`git branch --set-upstream-to <branch> origin/<branch>`**
+* 要查看远程库的信息，用 **`git remote`**，或者用 **`git remote -v`** 显示更详细的信息
 * 本地新建的分支如果不推送到远程，对其他人就是不可见的
-* 在本地创建和远程分支对应的分支，使用**`git checkout -b <branch> origin/<branch>`**，本地和远程分支的名称最好一致
+* 在本地创建和远程分支对应的分支，使用 **`git checkout -b <branch> origin/<branch>`**，本地和远程分支的名称最好一致
 
 
 
@@ -560,7 +560,7 @@ $ git tag <tag-name>
 $ git tag -a <tag-name> -m "message"	---创建带有说明的标签
 ```
 
-可以使用**`git tag`**查看所有标签
+可以使用 **`git tag`** 查看所有标签
 
 标签不是按时间顺序列出，而是**按字母排**序的。可以使用一下命令查看标签信息
 
@@ -568,7 +568,7 @@ $ git tag -a <tag-name> -m "message"	---创建带有说明的标签
 $ git show <tag-name>
 ```
 
-标签**默认是打在最新提交的 commit **上的。如果需要给历史版本打标签，方法是找到历史提交的 commit id，然后打上就可以了
+标签 **默认是打在最新提交的 commit** 上的。如果需要给历史版本打标签，方法是找到历史提交的 commit id，然后打上就可以了
 
 
 

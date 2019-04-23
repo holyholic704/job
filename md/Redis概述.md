@@ -87,6 +87,7 @@ redis-server							---启动Redis
 redis-server --port 6380				---使用端口号启动Redis
 ----------------------------------------
 redis-cli -h <address> -p <port>		---建立连接
+redis-cli -a <password>					---使用密码登录
 redis-cli								---使用默认方式建立连接
 ---相当于
 redis-cli -h 127.0.0.1 -p 6379

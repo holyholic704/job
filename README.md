@@ -53,6 +53,8 @@
 * [Interview-Notebook/Redis.md](https://github.com/jianghui-galaxy/Interview-Notebook/blob/master/notes/Redis.md#%E4%B8%80redis-%E6%98%AF%E4%BB%80%E4%B9%88)
 * [CS-Notes/Redis.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Redis.md#%E5%9B%9B%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF)
 * [3y/Redis.md](https://github.com/ZhongFuCheng3y/3y/blob/master/src/redis.md)
+* [一起看懂Redis两种持久化方式的原理](https://segmentfault.com/a/1190000015983518)
+* [Redis的五种数据结构的内部编码](https://www.cnblogs.com/yangmingxianshen/p/8054094.html)
 
 
 
