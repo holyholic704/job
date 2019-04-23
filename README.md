@@ -1,6 +1,12 @@
 ## Linux
 
-###  [linux基础](https://github.com/holyholic704/oh_java/blob/master/md/linux.md)
+###  [Linux基础](https://github.com/holyholic704/oh_java/blob/master/md/linux.md)
+
+
+
+### 以上内容出自
+
+* 鸟哥的 Linux 私房菜
 
 
 
@@ -10,7 +16,7 @@
 
 
 
-### 参考
+### 以上内容出自
 
 * [详细透彻解读Git与SVN的区别](https://blog.csdn.net/hellow__world/article/details/72529022)
 
@@ -35,23 +41,31 @@
 
 
 
+### 以上内容出自
+
+* 深入理解 Java 虚拟机
+
+
+
 ## Redis
 
 ### [Redis概述](https://github.com/holyholic704/oh_java/blob/master/md/Redis概述.md)
 
 ### [Redis数据结构](https://github.com/holyholic704/oh_java/blob/master/md/Redis数据结构.md)
 
+### [Redis持久化](https://github.com/holyholic704/oh_java/blob/master/md/Redis持久化.md)
 
 
-### 参考
+
+### 以上内容出自
 
 * [Redis命令参考及中文文档](http://doc.redisfans.com/index.html)
 * [Redis命令参考](http://redisdoc.com/)
 * [官方文档](https://redis.io/documentation)
 * [Redis和MongoDB的区别](https://www.cnblogs.com/java-spring/p/9488227.html)
-* [JavaGuide/Redis.md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/database/Redis/Redis.md#redis-%E7%AE%80%E4%BB%8B)
-* [Interview-Notebook/Redis.md](https://github.com/jianghui-galaxy/Interview-Notebook/blob/master/notes/Redis.md#%E4%B8%80redis-%E6%98%AF%E4%BB%80%E4%B9%88)
-* [CS-Notes/Redis.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Redis.md#%E5%9B%9B%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF)
+* [JavaGuide/Redis.md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/database/Redis/Redis.md)
+* [Interview-Notebook/Redis.md](https://github.com/jianghui-galaxy/Interview-Notebook/blob/master/notes/Redis.md)
+* [CS-Notes/Redis.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Redis.md)
 * [3y/Redis.md](https://github.com/ZhongFuCheng3y/3y/blob/master/src/redis.md)
 * [一起看懂Redis两种持久化方式的原理](https://segmentfault.com/a/1190000015983518)
 * [Redis的五种数据结构的内部编码](https://www.cnblogs.com/yangmingxianshen/p/8054094.html)
