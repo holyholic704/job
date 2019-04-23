@@ -72,11 +72,11 @@ Redis的的是完全开源免费的，遵守 BSD 协议，是一个高性能的�
 ### Redis 启动方式
 
 * 最简启动，默认
-  * 直接运行**`redis-server`**
+  * 直接运行 **`redis-server`**
 * 动态参数启动
-  * 如**`redis-server -port 6380`**
+  * 如 **`redis-server -port 6380`**
 * 配置文件启动，生产环境推荐
-  * 如**`redis-server config/redis-6379.conf`**
+  * 如 **`redis-server config/redis-6379.conf`**
 
 
 
@@ -165,7 +165,7 @@ Redis 采用的是**惰性删除 + 定期删除**策略，也就是说，在 Red
 
 如果定期删除漏掉了很多过期 key，然后也没有及时去查（惰性删除），大量的过期 key 堆积在内存里，会导致 Redis 内存块耗尽
 
-可以设置内存最大使用量（在 redis.conf 中设置**`maxmemory <bytes>`**），当内存使用量超出时，会施行数据淘汰策略。作为内存数据库，出于对性能和内存消耗的考虑，Redis 的淘汰算法实际实现上并非针对所有 key，而是抽样一小部分并且从中选出被淘汰的 key，抽样数量可通过**`maxmemory-samples`**配置。
+可以设置内存最大使用量（在 redis.conf 中设置 **`maxmemory <bytes>`**），当内存使用量超出时，会施行数据淘汰策略。作为内存数据库，出于对性能和内存消耗的考虑，Redis 的淘汰算法实际实现上并非针对所有 key，而是抽样一小部分并且从中选出被淘汰的 key，抽样数量可通过 **`maxmemory-samples`** 配置。
 
 使用 Redis 缓存数据时，为了提高缓存命中率，需要保证缓存数据都是热点数据。可以将内存最大使用量设置为热点数据占用的内存量，然后启用 allkeys-lru 淘汰策略，将最近最少使用的数据淘汰。更改淘汰策略可修改配置文件 maxmemory-policy 
 
