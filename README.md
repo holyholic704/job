@@ -47,6 +47,19 @@
 
 
 
+## MySQL
+
+[]()
+
+
+
+
+
+* [数据库原理—超键、候选键、主键、外键](https://blog.csdn.net/fjxcsdn/article/details/76549751)
+* 
+
+
+
 ## Redis
 
 ### [Redis概述](https://github.com/holyholic704/oh_java/blob/master/md/Redis概述.md)
