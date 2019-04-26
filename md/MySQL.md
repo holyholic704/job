@@ -2,17 +2,17 @@
 
 ### 启动、重启和关闭
 
-```
+```bash
 service mysql start		---启动mysql
 service mysql stop		---关闭mysql
-service mysql restart	---重启mysql
+service mysql restart		---重启mysql
 ```
 
 
 
 ### 连接 MySQL
 
-```
+```bash
 mysql -h <主机地址> -u <用户名> -p <密码>
 mysql -h<主机地址> -u<用户名> -p<密码>			---可以省略空格
 ```
@@ -21,7 +21,7 @@ mysql -h<主机地址> -u<用户名> -p<密码>			---可以省略空格
 
 ### 修改密码
 
-```
+```bash
 # 未登录mysql
 mysqladmin -u<用户名> -p password <新密码>
 # 之后输入原来的密码就更改好了
@@ -36,7 +36,7 @@ flush privileges;
 
 ### 对数据库进行操作
 
-```
+```mysql
 # 创建数据库
 create database <数据库名>;
 
@@ -66,7 +66,7 @@ use <数据库名>;
 
 ### 对表进行操作
 
-```
+```mysql
 # 创建表
 CREATE TABLE `user` (
 	`id` INT (11) NOT NULL AUTO_INCREMENT,
@@ -87,7 +87,7 @@ CREATE TABLE <表名> (
 
 
 
-```
+```mysql
 # 查看数据库中所有的表
 show tables;
 
@@ -163,7 +163,7 @@ truncate table <表名>;
 
 #### 增删改
 
-```
+```mysql
 # 插入数据
 # 可以使用null插入空值，日期和字符要使用单引号
 insert into <表名> (字段名,...) values (值,...);
@@ -182,7 +182,7 @@ update <表名> set <字段名> = <值>,... where <字段名> = <值>;
 
 #### 查
 
-```
+```mysql
 # 查询数据
 # 没有where条件会查找所有的数据
 # 不建议使用*，因为会先将其编译成字段，然后再去查询，会影响一些性能，而且也不明确
@@ -234,7 +234,7 @@ select <字段名> from <表名> where id = 1 order by <字段名> desc;
 
 #### 处理函数
 
-```
+```mysql
 # 转换为大写
 select lower(字段名) from <表名>;
 
@@ -300,7 +300,7 @@ select str_to_date(日期字符串,日期格式);
 
 聚合函数在计算时会 **自动忽略空值，不能直接写在where语句的后面。聚合函数可以一起使用**
 
-```
+```mysql
 # 求和
 select sum(字段名) from <表名>;
 
@@ -321,7 +321,7 @@ select count(字段名) from <表名>;
 
 #### 去重
 
-```
+```mysql
 # 去除重复记录，将查询结果中某一字段的重复记录去除掉
 # 只能出现在所有字段最前面，后面如果有多个字段即为多字段联合去重
 select destinct 字段名 from <表名>;
@@ -331,7 +331,7 @@ select destinct 字段名 from <表名>;
 
 #### 分组
 
-```
+```mysql
 # 在有group by的语句中，select语句后面只能跟聚合函数和参与分组的字段
 # order by语句只能放在group by语句后面
 # 如果想对分组的数据进行过滤，需要使用having子句。
@@ -350,7 +350,7 @@ select <字段名> from <表名> group by id having id != 1;
 
 #### 返回的记录的数目
 
-```
+```mysql
 # limit子句可以获取前几条或中间某几行数据，下标从0开始
 # 主要用来分页处理，limit关键字只在MySQL中起作用
 select <字段名> from <表名> limit <起始下标>,<截取长度>;
@@ -376,7 +376,7 @@ select <字段名> from <表名> limit <截取长度>;
 
 在实际开发中，数据通常是存储在多张表中，这些表与表之间存在着关系，在检索数据的时候需要多张表联合起来检索，这种多表联合检索被称为连接查询。如果多表进行连接查询时没有任何条件，最终的结果会是多表结果数量的乘积
 
-```
+```mysql
 # 内连接，inner可省略
 select a.name,b.name from atable a inner join btable b on a.id = b.id
 
@@ -403,7 +403,7 @@ select a.name,b.name from atable a,btable b where a.id = b.id
 
 select 语句嵌套 select 语句被称为子查询，select 子句可出现在 select（使用较少）、from、where 关键字后面
 
-```
+```mysql
 # 以下命令只做参考，没有实际用途
 # select后
 select
@@ -435,7 +435,7 @@ where
 
 ### 合并结果集
 
-```
+```mysql
 # UNION 操作符用于连接两个以上的 SELECT 语句的结果组合到一个结果集合中。多个 SELECT 语句会删除重复的数据。
 
 # union，将查询的结果集合并
@@ -451,7 +451,7 @@ select name from test
 
 #### while...do...end while循环
 
-```
+```mysql
 create procedure ww()
 begin
 declare i int;
@@ -469,7 +469,7 @@ call ww();
 
 #### repeat...until...end repeat
 
-```
+```mysql
 create procedure pp()
 begin
 declare i int;
@@ -488,7 +488,7 @@ call pp();
 
 #### loop...end loop
 
-```
+```mysql
 create procedure ll()
 begin
 declare i int;
