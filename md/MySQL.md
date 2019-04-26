@@ -25,7 +25,8 @@ mysql -h<主机地址> -u<用户名> -p<密码>			---可以省略空格
 # 未登录mysql
 mysqladmin -u<用户名> -p password <新密码>
 # 之后输入原来的密码就更改好了
-
+```
+```mysql
 # 登录mysql
 use mysql；
 update user set password = password("新密码") where user = 'root';
