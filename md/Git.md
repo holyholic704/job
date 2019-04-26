@@ -53,7 +53,7 @@ Git 是目前世界上最先进的分布式版本控制系统
 
 步骤很简单，不赘述了，安装完成后还需要最后一步设置，在 Git Bash 中输入
 
-```
+```bash
 $ git config --global user.name "Your Name"
 $ git config --global user.email "email@example.com"
 ```
@@ -72,7 +72,7 @@ $ git config --global user.email "email@example.com"
 
 ### 初始化版本库
 
-```
+```bash
 $ git init
 ```
 
@@ -82,14 +82,14 @@ $ git init
 
 **1. 用命令把文件添加到暂存区**
 
-```
+```bash
 $ git add <file>
 $ git add .			---添加当前目录的所有文件到暂存区
 ```
 
 **2. 用命令把文件提交到仓库**
 
-```
+```bash
 $ git commit -m "message"
 $ git commit <file> -m "message"	---提交暂存区的指定文件到仓库
 ```
@@ -119,7 +119,7 @@ $ git commit <file> -m "message"	---提交暂存区的指定文件到仓库
 
 下面一大串类似乱码的就是**版本号（commit id）**，和 SVN 不一样，Git 的 commit id 不是 1、2、3递增的数字，而是**一个 SHA-1 计算出来的一个非常大的数字，用十六进制表示。**因为 Git 是分布式的版本控制系统，多人在同一个版本库里工作，如果大家都用1、2、3作为版本号，那肯定就冲突了
 
-```
+```bash
 $ git log --pretty=oneline
 1094adb7b9b3807259d8cb349e7df1d4d6477073 (HEAD -> master) append GPL
 e475afc93c209a690c39c13a46716e8fa000c366 add distributed
@@ -134,7 +134,7 @@ eaadf4e385e865d25c48e7ca9c8395c3f7dfaef0 wrote a readme file
 
 把当前版本回退到上一个版本，可以使用 **`git reset`** 命令。首先，Git 必须知道当前版本是哪个版本，在 Git 中，**用HEAD表示当前版本**，上一个版本就是**HEAD^**，上上一个版本就是**HEAD^^**，往上100个版本可以写成**HEAD~100**
 
-```
+```bash
 $ git reset --hard HEAD^
 ```
 
@@ -178,7 +178,7 @@ $ git reset --hard HEAD^
 
 Git 提供了 **`git reflog`** 用来记录每一次命令。**版本号没必要写全，前几位就可以了，Git 会自动去找**
 
-```
+```bash
 $ git reflog
 $ git reset --hard <commit id>
 ```
@@ -229,7 +229,7 @@ $ git reset --hard <commit id>
 
 当用 git add 命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit 只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用以下命令可以查看工作区和版本库里面最新版本的区别
 
-```
+```bash
 $ git diff HEAD -- <file>
 ```
 
@@ -243,13 +243,13 @@ $ git diff HEAD -- <file>
 
 总之，就是让这个文件回到最近一次 git commit 或 git add 时的状态
 
-```
+```bash
 $ git checkout -- <file>
 ```
 
 * 如果修改后已经使用 git add 到暂存区，用以下命令可以把暂存区的修改撤销掉，重新放回工作区，之后再用上面的命令撤销修改
 
-```
+```bash
 $ git reset HEAD <file>
 ```
 
@@ -259,14 +259,14 @@ $ git reset HEAD <file>
 
 * 确定要从版本库中删除该文件，用以下命令删掉，之后 commit
 
-```
+```bash
 $ git rm <file>
 $ git commit -m "message"
 ```
 
 * 如果删错了，因为版本库里还保存着，所以可以很轻松地把误删的文件恢复到最新版本。git checkout 其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以还原
 
-```
+```bash
 $ git checkout -- <file>
 ```
 
@@ -300,7 +300,7 @@ $ git checkout -- <file>
 
 在用户主目录下，看看有没有 .ssh 目录，如果有，再看看这个目录下有没有 id_rsa 和 id_rsa.pub 这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开 Shell 或 Git Bash，创建 SSH Key
 
-```
+```bash
 $ ssh-keygen -t rsa -C "email@example.com"
 ```
 
@@ -322,7 +322,7 @@ $ ssh-keygen -t rsa -C "email@example.com"
 
 在本地仓库下运行命令。添加后，远程库的名字就是 origin，这是 Git 默认的叫法，也可以改成别的，但是 origin 这个名字一看就知道是远程库
 
-```
+```bash
 $ git remote add origin <adress>
 ```
 
@@ -334,7 +334,7 @@ Git 支持多种协议，默认的 git@ 使用 ssh，但也可以使用 https �
 
 由于远程库是空的，我们第一次推送 master 分支时，加上了 **`-u`** 参数，Git 不但会把本地的 master 分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令，直接使用 **`git push origin master`**
 
-```
+```bash
 $ git push -u origin master
 ```
 
@@ -344,7 +344,7 @@ $ git push -u origin master
 
 假设从零开发，那么最好的方式是先创建远程库，然后，从远程库用命令 git clone 克隆一个本地库
 
-```
+```bash
 $ git clone <address>
 ```
 
@@ -357,7 +357,7 @@ $ git clone <address>
 * 从远程仓库下载本地仓库中缺失的提交记录
 * 更新远程分支指针（如  origin/master ）
 
-```
+```bash
 $ git fetch
 $ git pull		---常用的更新命令
 ---相当于
@@ -377,7 +377,7 @@ $ git pull --rebase		---使用 rebase 合并
 
 **创建并切换到分支**
 
-```
+```bash
 $ git checkout -b <branch>
 ---相当于
 $ git branch <branch>		---创建分支
@@ -390,7 +390,7 @@ $ git checkout <branch>		---切换分支
 
 使用以下命令查看分支，**当前分支前面会标一个 * 号**
 
-```
+```bash
 $ git branch		---列出所有本地分支
 $ git branch -r		---列出所有远程分支
 $ git branch -a		---列出所有分支
@@ -402,7 +402,7 @@ $ git branch -a		---列出所有分支
 
 使用以下命令删除分支
 
-```
+```bash
 $ git branch -d <branch>
 ```
 
@@ -414,7 +414,7 @@ $ git branch -d <branch>
 
 把分支的工作成果合并到 master 分支上，**`git merge `**命令用于**合并指定分支到当前分支**。注意到下面的 **Fast-forward** 信息，Git 告诉我们，这次合并是“快进模式”，也就是直接把 master 指向 dev 的当前提交，所以合并速度非常快
 
-```
+```bash
 $ git merge dev
 Updating d46f35e..b17d20e
 Fast-forward 
@@ -424,7 +424,7 @@ Fast-forward
 
 
 
-```
+```bash
 $ git merge master
 ```
 
@@ -436,13 +436,13 @@ $ git merge master
 
 rebase 实际上就是取出一系列的提交记录，“复制”它们，然后在另外一个地方逐个的放下去。**绝不要在公共的分支上使用 rebase** 。如果想要一个干净的、线性的提交历史，没有不必要的合并提交，可以使用 **`git rebase`**
 
-```
+```bash
 $ git rebase <branch>
 ```
 
 
 
-```
+```bash
 $ git rebase master
 ```
 
@@ -454,7 +454,7 @@ $ git rebase master
 
 **`git cherry-pick`** 可以理解为”挑拣”提交，它会获取某一个分支的单笔提交，并作为一个新的提交引入到你当前分支上。当我们需要在本地合入其他分支的提交时，如果不想对整个分支进行合并，而是只想将某一次提交合入到本地当前分支上，那么就要使用 **`git cherry-pick`** 了
 
-```
+```bash
 $ git cherry-pick c2 c4
 ```
 
@@ -464,7 +464,7 @@ $ git cherry-pick c2 c4
 
 如果知道你所需要的提交记录，并且还知道这些提交记录的哈希值时, 用 **`git cherry-pick`** 再好不过了。但是如果不清楚想要的提交记录的哈希值呢就可以利用交互式的 rebase 
 
-```
+```bash
 $ git rebase -i HEAD~4
 ```
 
@@ -502,13 +502,13 @@ $ git rebase -i HEAD~4
 
 当需要修复 bug 或其他操作时，当前分支工作未完成无法提交，可以使用 **stash** 功能，把当前工作现场储存起来，等以后恢复现场后继续工作
 
-```
+```bash
 $ git stash
 ```
 
 修复完成后，切换到当前分支，使用以下命令查看保存的工作
 
-```
+```bash
 $ git stash list
 stash@{0}: WIP on dev: f52c633 add merge
 ```
@@ -526,7 +526,7 @@ stash@{0}: WIP on dev: f52c633 add merge
 
 如果要丢弃一个没有被合并过的分支，可以通过以下命令强行删除
 
-```
+```bash
 $ git branch -D <branch>
 ```
 
@@ -555,7 +555,7 @@ $ git branch -D <branch>
 
 切换到需要打标签的分支上，然后，使用以下命令就可以创建新标签
 
-```	
+```	bash
 $ git tag <tag-name>
 $ git tag -a <tag-name> -m "message"	---创建带有说明的标签
 ```
@@ -564,7 +564,7 @@ $ git tag -a <tag-name> -m "message"	---创建带有说明的标签
 
 标签不是按时间顺序列出，而是**按字母排**序的。可以使用一下命令查看标签信息
 
-``` $ git show <tag-name>
+``` bash
 $ git show <tag-name>
 ```
 
@@ -576,20 +576,20 @@ $ git show <tag-name>
 
 如果标签打错了，也可以删除，因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除
 
-```
+```bash
 $ git tag -d <tag-name>
 ```
 
 如果要推送标签到远程，可以使用以下命令
 
-```
+```bash
 $ git push origin <tag-name>
 $ git push origin --tags		---一次性推送全部尚未推送到远程的本地标签
 ```
 
 如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除，然后，从远程删除
 
-```
+```bash
 $ git tag -d <tag-name>
 $ git push origin <origin-tag-name>
 ```

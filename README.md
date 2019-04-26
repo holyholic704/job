@@ -49,14 +49,15 @@
 
 ## MySQL
 
-[]()
+### [数据库基础]()
 
 
 
 
 
 * [数据库原理—超键、候选键、主键、外键](https://blog.csdn.net/fjxcsdn/article/details/76549751)
-* 
+* [对于脏读，不可重复读，幻读的一点理解](https://blog.csdn.net/yuxin6866/article/details/52649048)
+* [数据库并发事务存在的问题](https://blog.csdn.net/starlh35/article/details/76445267)
 
 
 
