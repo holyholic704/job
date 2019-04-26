@@ -13,21 +13,23 @@ service mysql restart		---重启mysql
 ### 连接 MySQL
 
 ```bash
-mysql -h <主机地址> -u <用户名> -p <密码>
-mysql -h<主机地址> -u<用户名> -p<密码>			---可以省略空格
+mysql -h 主机地址 -u 用户名 -p 密码
+mysql -h主机地址 -u用户名 -p密码			---可以省略空格
 ```
 
 
 
 ### 修改密码
 
+**未登录 mysql**
+
 ```bash
-# 未登录mysql
-mysqladmin -u<用户名> -p password <新密码>
-# 之后输入原来的密码就更改好了
+mysqladmin -u用户名 -p password 新密码
+--- 回车后输入原来的密码
 ```
+**登录 mysql**
+
 ```mysql
-# 登录mysql
 use mysql；
 update user set password = password("新密码") where user = 'root';
 flush privileges;
@@ -135,24 +137,31 @@ truncate table <表名>;
 
 * int：整型
 * double：浮点型
+
   * 如 double（5，2）表示最多有 5 位，其中必须有 2 位小数
 
 * char：**固定长度字符串类型**
+
   * 如 char（10）如果不足 10 位则会自动补足 10 位
 
 * varchar：**可变长度字符串类型**
+
   * 如 varchar（10）如果不足10位不会补足，**性能不如 char 高**
 
 * text：字符串类型
+
   * 适用于大文本内容
 
 * date：日期类型
+
   * 格式为 `yyyy-MM-dd`
 
 * time：时间类型
+
   * 格式为 `hh:mm:ss`
 
 * timestamp：时间戳类型
+
   * 格式为 `yyyy-MM-dd hh:mm:ss`，**会自动赋值**
 
 * datetime：日期时间类型
