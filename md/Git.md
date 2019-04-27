@@ -1,7 +1,3 @@
-## 目录
-
-[TOC]
-
 ## Linus Torvalds
 
 
