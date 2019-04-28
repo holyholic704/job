@@ -191,3 +191,16 @@ Redis 4.0 引入了 volatile-lfu 和 allkeys-lfu 淘汰策略，LFU 策略通过
 | **allkeys-lru** | **当内存不足以容纳新写入数据时，在键空间中，移除最近最少使用的 key，常用** |
 | allkeys-random  |                  从数据集中任意选择数据淘汰                  |
 |   no-eviction   | 禁止驱逐数据，当内存不足以容纳新写入数据时，新写入操作会报错 |
+
+
+
+## 更多
+
+- [Redis命令参考及中文文档](http://doc.redisfans.com/index.html)
+- [Redis命令参考](http://redisdoc.com/)
+- [官方文档](https://redis.io/documentation)
+- [Redis和MongoDB的区别](https://www.cnblogs.com/java-spring/p/9488227.html)
+- [JavaGuide/Redis.md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/database/Redis/Redis.md)
+- [Interview-Notebook/Redis.md](https://github.com/jianghui-galaxy/Interview-Notebook/blob/master/notes/Redis.md)
+- [CS-Notes/Redis.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Redis.md)
+- [3y/Redis.md](https://github.com/ZhongFuCheng3y/3y/blob/master/src/redis.md)

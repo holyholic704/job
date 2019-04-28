@@ -211,6 +211,10 @@ drop view if exists [视图名称]；
 
  
 
+* *更多：[对于脏读，不可重复读，幻读的一点理解](https://blog.csdn.net/yuxin6866/article/details/52649048)、[数据库并发事务存在的问题](https://blog.csdn.net/starlh35/article/details/76445267)*
+
+
+
 ### 事务控制语句
 
 ```mysql
@@ -255,10 +259,3 @@ set [global | session] transaction isolation level [read uncommitted | read comm
 
 ## OTHER
 
-MyIASM 和 Innodb 两种引擎所使用的索引的数据结构是什么？
-
-答案:都是B+树
-
-MyIASM引擎，B+树的数据结构中存储的内容实际上是实际数据的地址值。也就是说它的索引和实际数据是分开的，**只不过使用索引指向了实际数据。这种索引的模式被称为非聚集索引。**
-
-Innodb引擎的索引的数据结构也是B+树，**只不过数据结构中存储的都是实际的数据，这种索引有被称为聚集索引**

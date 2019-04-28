@@ -27,6 +27,10 @@ Git 是目前世界上最先进的分布式版本控制系统
 
 
 
+* *更多：[详细透彻解读Git与SVN的区别](https://blog.csdn.net/hellow__world/article/details/72529022)*
+
+
+
 ## Git的优点和缺点
 
 ### 优点
@@ -185,6 +189,10 @@ $ git reflog
 # 版本号写前几位就可以了，Git会自动去找
 $ git reset --hard <commit id>
 ```
+
+
+
+* *更多：[Git恢复之前版本的两种方法reset、revert](https://blog.csdn.net/yxlshk/article/details/79944535)*
 
 
 
@@ -433,6 +441,10 @@ $ git rebase master
 
 
 
+* *更多：[merge和rebase的区别](https://www.cnblogs.com/xueweihan/p/5743327.html)*
+
+
+
 ### 整理提交记录
 
 **`git cherry-pick`** 可以理解为”挑拣”提交，它会获取某一个分支的单笔提交，并作为一个新的提交引入到你当前分支上。当我们需要在本地合入其他分支的提交时，如果不想对整个分支进行合并，而是只想将某一次提交合入到本地当前分支上，那么就要使用 **`git cherry-pick`** 了
@@ -530,6 +542,10 @@ $ git branch -D <branch>
 
 
 
+* *更多：[Git分支的基本使用](https://www.cnblogs.com/TonyYPZhang/p/6219265.html)*
+
+
+
 ## 标签管理
 
 发布一个版本时，通常会先在版本库中打一个标签（tag），这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来
@@ -567,3 +583,17 @@ $ git push origin --tags
 $ git tag -d <tag-name>
 $ git push origin <origin-tag-name>
 ```
+
+
+
+## 更多
+
+- [廖雪峰的Git教程](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
+- [官方文档](https://git-scm.com/docs)
+- [Pro Git](https://git-scm.com/book/zh/v2)
+- [CS-Notes/Git.md](https://github.com/CyC2018/CS-Notes/blob/master/docs/notes/Git.md#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99)
+- [JavaGuide/Git.md](https://github.com/Snailclimb/JavaGuide/blob/master/docs/tools/Git.md#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB)
+- [git-recipes](https://github.com/geeeeeeeeek/git-recipes)
+- [git-flight-rules](https://github.com/k88hudson/git-flight-rules)
+- [猴子都能懂的Git教程](https://backlog.com/git-tutorial/cn/)
+- [LearnGitBranching](https://learngitbranching.js.org/)

@@ -263,3 +263,8 @@ aof-load-truncated yes
 aof-rewrite-incremental-fsync yes
 ```
 
+
+
+## 更多
+
+* [一起看懂Redis两种持久化方式的原理](https://segmentfault.com/a/1190000015983518)
