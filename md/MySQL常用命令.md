@@ -1,4 +1,4 @@
-## MySQL 常用命令
+## 开始使用
 
 ### 启动、重启和关闭
 
@@ -43,7 +43,7 @@ flush privileges;
 
 
 
-### 对数据库进行操作
+## 对数据库进行操作
 
 ```mysql
 # 创建数据库
@@ -73,7 +73,7 @@ use [数据库名];
 
 
 
-### 对表进行操作
+## 对表进行操作
 
 ```mysql
 # 创建表
@@ -140,9 +140,9 @@ truncate table [表名];
 
 
 
-### 对字段进行操作
+## 对字段进行操作
 
-#### 增删改
+### 增删改
 
 ```mysql
 # 插入数据
@@ -161,7 +161,7 @@ update [表名] set [字段名] = [值] where [字段名] = [值];
 
 
 
-#### 查
+### 查
 
 ```mysql
 # 查询数据
@@ -188,16 +188,10 @@ select [字段名] from [表名] where (name = 'user' and id = 1) or id = 2;
 # 正确写法为
 select [字段名] from [表名] where name = 'user' and (id = 1 or id = 2);
 
-
 # in，表示只要满足其中一项条件即可，也可以采用or来表示，采用in会更简洁一些
 select [字段名] from [表名] where id in (1,2);
 # not in，则表示不满足其中任何一项，并且结果集不能有null，否则没有返回结果
 select [字段名] from [表名] where id not in (1,2);
-
-# like，模糊查询
-# _表示匹配一个任意字符，%匹配任意个任意字符
-select [字段名] from [表名] where name like '_end';
-select [字段名] from [表名] where name like '%end';
 
 # is null，查询为空的数据
 select [字段名] from [表名] where name is null;
@@ -213,7 +207,25 @@ select [字段名] from [表名] where id = 1 order by [字段名] desc;
 
 
 
-#### 处理函数
+### 模糊查询
+
+```mysql
+# like
+# _表示匹配一个任意字符，%匹配任意个任意字符
+select [字段名] from [表名] where name like '_end';
+
+# 更高效的模糊查询，可以使用索引
+# locate，>0可以省略，=0表示不包括该条件的所有数据，<0结果为null
+select [字段名] from [表名] where locate('end',字段名) > 0;
+# position
+select [字段名] from [表名] where position('end' in 字段名);
+# instr，同locate
+select [字段名] from [表名] where instr(字段名,'end') > 0;
+```
+
+
+
+### 处理函数
 
 ```mysql
 # 转换为大写
@@ -277,7 +289,7 @@ select str_to_date(日期字符串,日期格式);
 
 
 
-#### 聚合函数
+### 聚合函数
 
 聚合函数在计算时会 **自动忽略空值，不能直接写在where语句的后面。聚合函数可以一起使用**
 
@@ -300,7 +312,7 @@ select count(字段名) from [表名];
 
 
 
-#### 去重
+### 去重
 
 ```mysql
 # 去除重复记录，将查询结果中某一字段的重复记录去除掉
@@ -310,7 +322,7 @@ select destinct 字段名 from [表名];
 
 
 
-#### 分组
+### 分组
 
 ```mysql
 # 在有group by的语句中，select语句后面只能跟聚合函数和参与分组的字段
@@ -329,7 +341,7 @@ select [字段名] from [表名] group by id having id != 1;
 
 
 
-#### 返回的记录的数目
+### 返回的记录的数目
 
 ```mysql
 # limit子句可以获取前几条或中间某几行数据，下标从0开始
@@ -341,7 +353,21 @@ select [字段名] from [表名] limit [截取长度];
 
 
 
-#### select 语句执行顺序
+### 合并结果集
+
+```mysql
+# UNION 操作符用于连接两个以上的 SELECT 语句的结果组合到一个结果集合中。多个 SELECT 语句会删除重复的数据。
+
+# union，将查询的结果集合并
+# 合并结果集时查询字段的个数必须一致，多个select语句会删除重复的数据
+select id from test
+union
+select name from test
+```
+
+
+
+## select 语句执行顺序
 
 1. from：将硬盘上的表文件加载到内存
 2. where：将符合条件的数据筛选出来，生成一张新的临时表
@@ -353,7 +379,64 @@ select [字段名] from [表名] limit [截取长度];
 
 
 
-### 连接查询
+## explain 命令
+
+用来分析 SQL 语句执行时是否高效，MySQL 5.6 之前只允许解释 select 语句，之后非 select 语句也可以被解释了
+
+```mysql
+explain [SQL语句];
+```
+
+
+
+### 输出结果
+
+输出的结果有 10 列：`id、select_type、table、type、possible_keys、key、key_len、ref、rows、Extra`
+
+* id：包含一组数字，表示查询中执行 select 子句或操作表的顺序
+  * 如果 id 相同执行顺序由上至下
+  * 如果 id 不相同，id 的序号会递增，**id 值越大优先级越高**，越先被执行。一般有子查询的 SQL 语句 id 就会不同
+
+* select_type：表示 select 查询的类型
+  - SIMPLLE：简单查询，该查询不包含 union 或子查询
+  - PRIMARY：如果查询包含 union 或子查询，**最外层的查询将被标识为 PRIMARY**
+  - SUBQUERY：子查询中的第一个 select 语句，该子查询不在 from 子句中
+  - DERIVED：包含在 from 子句中子查询
+  - UNION：表示此查询是 union 中的第二个或者随后的查询
+  - UNION RESULT：union 的结果
+  - DEPENDENT：union 满足 union 中的第二个或者随后的查询，其次取决于外面的查询
+  - DEPENDENT SUBQUERY：子查询中的 第一个 select，同时取决于外面的查询
+  - UNCACHEABLE SUBQUERY：满足是子查询中的第一个 select 语句，同时意味着 select 中的某些特性阻止结果被缓存于一个 Item_cache 中
+  - UNCACHEABLE UNION：满足此查询是 union 中的第二个或者随后的查询，同时意味着 select 中的某些特性阻止结果被缓存于一个 Item_cache 中
+
+* table：显示了对应行正在访问哪个表，有别名时显示别名
+* type：关联类型或者访问类型，指明了 MySQL 决定如何查找表中符合条件的行，同时是 **判断查询是否高效的重要依据**
+  - ALL：**全表扫描**，性能最差的查询之一。我们的查询不应该出现 ALL 类型，当数据量特别大的情况下，非常影响数据库的性能
+  - index：**全索引扫描**，和 ALL 类型类似，主要优点是避免了排序，但是开销仍然非常大。当在 Extra 列看到 Using index，说明正在使用覆盖索引，只扫描索引的数据，比按索引次序全表扫描的开销要少很多
+  - range：**范围扫描**，一个有限制的索引扫描，它开始于索引里的某一点，返回匹配这个值域的行。这个类型通常出现在 `=、<>、>、>=、<、<=、is null、<=>、between、in` 的操作中，key 列显示使用了哪个索引。当 type 为该值时，ref 列输出为 NULL，且 key_len 列是此次查询中使用到的索引最长的那个
+  - ref：一种索引访问，也称索引查找，返回所有匹配某个单个值的行。此类型通常出现在多表的 join 查询，针对于非唯一或非主键索引，或者是使用了最左前缀规则索引的查询
+  - eq_ref：使用这种索引查找，最多只返回一条符合条件的记录。在使用唯一性索引或主键查找时会出现该值，非常高效
+  - const、system：该表至多有一个匹配行，在查询开始时读取，或者该表是系统表，只有一行匹配。其中 const 用于在和 primary key 或 unique 索引中有固定值比较的情形
+  - NULL：在执行阶段不需要访问表
+* possible_keys：显示查询 **可能** 使用哪些索引来查找
+* key：显示 MySQL **实际** 决定使用的索引。如果没有选择索引，键是 NULL
+
+* key_len：显示在索引里使用的字节数，当key列的值为 NULL 时，则该列也是 NULL
+* ref：显示哪些字段或者常量被用来和key配合从表中查询记录出来
+* rows：显示 **估计** 要找到所需的行而要读取的行数，这个值是个估计值，原则上值越小越好
+* extra：其他的信息
+  - Using index：使用覆盖索引，表示查询索引就可查到所需数据，不用扫描表数据文件，说明性能不错
+  - Using Where：在存储引擎检索行后再进行过滤，使用了 where 从句来限制哪些行将与下一张表匹配或者是返回给用户
+  - Using temporary：在查询结果排序时会使用一个临时表，一般出现于排序、分组和多表 join 的情况，查询效率不高，建议优化
+  - Using filesort：对结果使用一个外部索引排序，而不是按索引次序从表里读取行，一般有出现该值，都建议优化去掉，因为这样的查询 CPU 资源消耗大
+
+
+
+* *[面试前必须知道的MySQL命令【explain】](https://segmentfault.com/a/1190000017278335)*
+
+
+
+## 连接查询
 
 在实际开发中，数据通常是存储在多张表中，这些表与表之间存在着关系，在检索数据的时候需要多张表联合起来检索，这种多表联合检索被称为连接查询。如果多表进行连接查询时没有任何条件，最终的结果会是多表结果数量的乘积
 
@@ -380,7 +463,7 @@ select a.name,b.name from atable a,btable b where a.id = b.id
 
 
 
-### 子查询
+## 子查询
 
 select 语句嵌套 select 语句被称为子查询，select 子句可出现在 select（使用较少）、from、where 关键字后面
 
@@ -391,7 +474,7 @@ select
   id,
   (
 	select name
- 	from test
+ 	from other
  	where id = 1
   ) name
 from test
@@ -401,7 +484,7 @@ select
   a.name,b.name
 from
   test a,
-  (select name from test) b
+  (select name from other) b
 
 # where后
 select
@@ -409,28 +492,47 @@ select
 from
   test
 where
-  id in (select id from bank)
+  id in (select id from other)
 ```
 
 
 
-### 合并结果集
+### in 与 exists
+
+exists 表示存在，常与子查询配合使用，会检查子查询是否至少会返回一行数据，子查询不返回任何数据，只返回 true 或 false 
+
+* 当子查询返回为真时，外层查询语句将进行查询
+* 当子查询返回为假时，外层查询语句将不进行查询或者查询不出任何记录
+
+**外层查询表小于子查询表，则用 exists，外层查询表大于子查询表，则用 in**
 
 ```mysql
-# UNION 操作符用于连接两个以上的 SELECT 语句的结果组合到一个结果集合中。多个 SELECT 语句会删除重复的数据。
+# in语句只会执行一次，会查出子句中的所有id字段并且缓存起来，之后，检查test表的id是否和子句中的id相当，如果相等则加入结果期，直到遍历完test的所有记录
+select
+  id,name
+from
+  test
+where
+  id in (select id from other)
 
-# union，将查询的结果集合并
-# 合并结果集时查询字段的个数必须一致，多个select语句会删除重复的数据
-select id from test
-union
-select name from test
+# exists语句会执行test.length次，它不会去缓存exists的结果集
+select
+  id,name
+from
+  test
+where
+  exists (select id from other)
 ```
 
 
 
-### 循环
+* *更多：[在MySQL里，有个和in一样的东东叫做exists，但是它比in更牛叉，你会么](https://segmentfault.com/a/1190000008709410)*
 
-#### while...do...end while循环
+
+
+## 循环
+
+### while...do...end while循环
 
 ```mysql
 create procedure ww()
@@ -448,7 +550,7 @@ call ww();
 
 
 
-#### repeat...until...end repeat
+### repeat...until...end repeat
 
 ```mysql
 create procedure pp()
@@ -467,7 +569,7 @@ call pp();
 
 
 
-#### loop...end loop
+### loop...end loop
 
 ```mysql
 create procedure ll()

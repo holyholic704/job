@@ -146,6 +146,79 @@ drop view if exists [视图名称]；
 
 
 
+## 字符集与字符序
+
+* 字符集（character set）：定义了字符以及字符的编码。在数据的存储上，MySQL 提供了不同的字符集支持，默认的字符集为 latin1
+
+* 字符序（collation）：定义了字符的比较规则。每种字符集都可能有多种校对规则，并且都有一个默认的校对规则，并且每个校对规则只是针对某个字符集，和其他的字符集么有关系
+
+
+
+字符集合校对规则有4个级别的默认设置：
+
+1）服务器级别；
+
+2）数据库级别；
+
+3）表级别、列级别；
+
+4）连接级别。
+
+MySQL 提供了不同级别的设置，包括server级、database级、table级、column级
+
+
+
+MySQL支持多种字符集 与 字符序。
+
+1. 一个字符集对应至少一种字符序（一般是1对多）。
+2. 两个不同的字符集不能有相同的字符序。
+3. 每个字符集都有默认的字符序。
+
+
+
+    character_set_client：客户端请求数据的字符集
+    character_set_connection：客户机/服务器连接的字符集
+    character_set_database：默认数据库的字符集，无论默认数据库如何改变，都是这个字符集；如果没有默认数据库，那就使用 character_set_server指定的字符集，这个变量建议由系统自己管理，不要人为定义。
+    character_set_filesystem：把os上文件名转化成此字符集，即把 character_set_client转换character_set_filesystem， 默认binary是不做任何转换的
+
+    character_set_results：结果集，返回给客户端的字符集
+    character_set_server：数据库服务器的默认字符集
+    character_set_system：系统字符集，这个值总是utf8，不需要设置。这个字符集用于数据库对象（如表和列）的名字，也用于存储在目录表中的函数的名字。
+
+
+
+collation_connection 当前连接的字符集。
+collation_database    当前日期的默认校对。每次用USE语句来“跳转”到另一个数据库的时候，这个变量的值就会改变。如果没有当前数据库，这个变量的值就是collation_server变量的值。
+collation_server 服务器的默认校对。
+
+
+
+排序方式的命名规则为：字符集名字_语言_后缀，其中各个典型后缀的含义如下：
+1）_ci：不区分大小写的排序方式
+2）_cs：区分大小写的排序方式
+3）_bin：二进制排序方式，大小比较将根据字符编码，不涉及人类语言，因此_bin的排序方式不包含人类语言
+
+
+
+```mysql
+# 查看所有字符集
+show character set;
+
+# 查看指定字符集
+show character set where charset = 'utf8';
+
+# 查看当前使用的字符集
+show variables like 'character%';
+
+# 查看所有字符序
+show collation;
+
+# 查看当前使用的字符序
+show variables like 'collation%';
+```
+
+
+
 ## 事务
 
 ### 什么是事务（Transaction）
@@ -254,6 +327,64 @@ set autocommit = 0|1
 # global全局，session本次会话
 set [global | session] transaction isolation level [read uncommitted | read committed | repeatable read | serializable];
 ```
+
+
+
+## 触发器（trigger）
+
+监视某种情况，并触发某种操作，它是一种保证数据完整性的方法，它是与表事件相关的特殊的存储过程，它的执行而是由事件来触发，当对一个表进行增删改操作时就会激活执行
+
+
+
+### 不建议使用
+
+非常消耗资源，如果使用的话，确定它是非常高效的，增删改非常频繁的表上不要使用触发器，不需要的触发器应及时删除。触发器的功能基本都可以用存储过程来实现
+
+
+
+### 创建触发器
+
+```mysql
+# trigger_time，指定了触发执行的时间，在事件之前或是之后，参数：before、after
+# 触发事件，满足相应条件时触发，参数：insert、update、delete
+# for each row，所有记录的操作满足条件都会触发该触发器，即触发器的触发频率是针对每一行数据触发一次
+# 触发顺序（MySQL5.7+），定义多个触发器时，选择触发器执行的先后顺序，参数：follows、precedes
+create trigger [触发器名]
+[触发时间] [触发事件]
+on [表名] for each row [触发顺序]
+[执行语句];
+
+# 多个执行语句的触发器
+create trigger [触发器名]
+[触发时间] [触发事件]
+on [表名] for each row [触发顺序]
+begin
+	[执行语句]
+end;
+
+# 查看触发器
+show triggers;
+
+# 
+drop trigger;
+```
+
+
+
+### new 与 old
+
+对同一个表相同触发时间的相同触发事件，只能定义一个触发器，可以使用 new 和 old 来引用触发器中发生变化的记录内容
+
+* insert 型触发器
+  * new 用来表示将要或已经插入的新数据
+* update 型触发器
+  * new 用来表示将要或已经被修改的新数据，old 用来表示将要或已经被修改的原数据
+* delete 型触发器
+  * old 用来表示将要或已经被删除的原数据
+
+
+
+* *更多：[MySQL触发器trigger的使用](https://www.cnblogs.com/geaozhang/p/6819648.html)*
 
 
 
