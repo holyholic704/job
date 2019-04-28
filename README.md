@@ -2,7 +2,10 @@
 
 ### Linux
 
-* [Linux基础](https://github.com/holyholic704/oh_java/blob/master/md/linux.md)
+* [Linux基础](https://github.com/holyholic704/oh_java/blob/master/md/Linux.md)
+* [文件与目录](https://github.com/holyholic704/oh_java/blob/master/md/文件与目录.md)
+* [压缩、打包、备份](https://github.com/holyholic704/oh_java/blob/master/md/压缩、打包、备份.md)
+* [vim](https://github.com/holyholic704/oh_java/blob/master/md/vim.md)
 
 
 
@@ -20,7 +23,7 @@
 
 ### MySQL
 
-* [数据库基础]()
+回炉重造
 
 
 
