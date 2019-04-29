@@ -148,55 +148,15 @@ drop view if exists [视图名称]；
 
 ## 字符集与字符序
 
-* 字符集（character set）：定义了字符以及字符的编码。在数据的存储上，MySQL 提供了不同的字符集支持，默认的字符集为 latin1
+### 字符集（character set）
 
-* 字符序（collation）：定义了字符的比较规则。每种字符集都可能有多种校对规则，并且都有一个默认的校对规则，并且每个校对规则只是针对某个字符集，和其他的字符集么有关系
-
-
-
-字符集合校对规则有4个级别的默认设置：
-
-1）服务器级别；
-
-2）数据库级别；
-
-3）表级别、列级别；
-
-4）连接级别。
-
-MySQL 提供了不同级别的设置，包括server级、database级、table级、column级
+定义了字符以及字符的编码。在数据的存储上，MySQL 提供了不同的字符集支持，默认的字符集为 latin1
 
 
 
-MySQL支持多种字符集 与 字符序。
+### 字符序（collation）
 
-1. 一个字符集对应至少一种字符序（一般是1对多）。
-2. 两个不同的字符集不能有相同的字符序。
-3. 每个字符集都有默认的字符序。
-
-
-
-    character_set_client：客户端请求数据的字符集
-    character_set_connection：客户机/服务器连接的字符集
-    character_set_database：默认数据库的字符集，无论默认数据库如何改变，都是这个字符集；如果没有默认数据库，那就使用 character_set_server指定的字符集，这个变量建议由系统自己管理，不要人为定义。
-    character_set_filesystem：把os上文件名转化成此字符集，即把 character_set_client转换character_set_filesystem， 默认binary是不做任何转换的
-
-    character_set_results：结果集，返回给客户端的字符集
-    character_set_server：数据库服务器的默认字符集
-    character_set_system：系统字符集，这个值总是utf8，不需要设置。这个字符集用于数据库对象（如表和列）的名字，也用于存储在目录表中的函数的名字。
-
-
-
-collation_connection 当前连接的字符集。
-collation_database    当前日期的默认校对。每次用USE语句来“跳转”到另一个数据库的时候，这个变量的值就会改变。如果没有当前数据库，这个变量的值就是collation_server变量的值。
-collation_server 服务器的默认校对。
-
-
-
-排序方式的命名规则为：字符集名字_语言_后缀，其中各个典型后缀的含义如下：
-1）_ci：不区分大小写的排序方式
-2）_cs：区分大小写的排序方式
-3）_bin：二进制排序方式，大小比较将根据字符编码，不涉及人类语言，因此_bin的排序方式不包含人类语言
+定义了字符的比较规则。每种字符集都可能有多种校对规则，并且都有一个默认的校对规则，并且每个校对规则只是针对某个字符集，和其他的字符集么有关系。每个字符集都有默认的字符序，一个字符集对应至少一种字符序，两个不同的字符集不能有相同的字符序
 
 
 
@@ -210,11 +170,23 @@ show character set where charset = 'utf8';
 # 查看当前使用的字符集
 show variables like 'character%';
 
+# character_set_client：客户端请求数据的字符集
+# character_set_connection：客户机/服务器连接的字符集
+# character_set_database：默认数据库的字符集，无论默认数据库如何改变，都是这个字符集；如果没有默认数   据库，那就使用 character_set_server指定的字符集，这个变量建议由系统自己管理，不要人为定义
+# character_set_filesystem：把os上文件名转化成此字符集，即把character_set_client转换           character_set_filesystem， 默认binary是不做任何转换的
+# character_set_results：结果集，返回给客户端的字符集
+# character_set_server：数据库服务器的默认字符集
+# character_set_system：系统字符集，这个值总是utf8，不需要设置
+
 # 查看所有字符序
 show collation;
 
 # 查看当前使用的字符序
 show variables like 'collation%';
+
+# collation_connection：当前连接的字符集
+# collation_database：当前日期的默认校对。每次用USE语句来“跳转”到另一个数据库的时候，这个变量的值就   会改变。如果没有当前数据库，这个变量的值就是collation_server变量的值
+# collation_server：服务器的默认校对
 ```
 
 
@@ -385,6 +357,74 @@ drop trigger;
 
 
 * *更多：[MySQL触发器trigger的使用](https://www.cnblogs.com/geaozhang/p/6819648.html)*
+
+
+
+## 权限管理
+
+### MySQL 的权限是如何实现的
+
+服务器首先会检查你是否允许连接，因为创建用户的时候会加上主机限制，可以限制成本地、某个IP、某个IP段、以及任何地方等，只允许你从配置的指定地方登陆。然后，如果你能连接，MySQL 会检查你发出的每个请求，看你是否有足够的权限实施它
+
+
+
+### MySQL 的权限
+
+
+
+![20190429144530](../md.assets/20190429144530.png)
+
+
+
+### 如何使用
+
+* 只授予能满足需要的最小权限，防止用户干坏事
+* 创建用户的时候限制用户的登录主机，一般是限制成指定 IP 或者内网 IP 段
+
+* 初始化数据库的时候删除没有密码的用户。安装完数据库的时候会自动创建一些用户，这些用户默认没有密码
+
+* 为每个用户设置满足密码复杂度的密码
+
+* 定期清理不需要的用户，回收权限或者删除用户
+
+
+
+```mysql
+# 创建一个只允许从本地登录的超级用户jack，并允许将权限赋予别的用户
+grant all privileges on *.* to jack@'localhost' identified by "jack" with grant option;
+
+# all privileges：表示所有权限，也可以使用select、update等权限
+# on：指定权限针对哪些库和表
+# *.*：中前面的*号用来指定数据库名，后面的*号用来指定表名
+# to：将权限赋予某个用户
+# jack@'localhost'：表示jack用户，@后面接限制的主机，可以是IP、IP段、域名以及%，%表示任何地方
+# identified by:指定用户的登录密码
+# with grant option：表示该用户可以将自己拥有的权限授权给别人
+# 可以使用grant重复给用户添加权限，权限叠加
+
+# 刷新权限，使权限生效
+flush privileges;
+
+# 查看当前用户的权限
+show grants;
+
+# 查看某个用户的权限
+show grants for 'jack'@'%';
+
+# 回收权限
+revoke delete on *.* from 'jack'@'localhost';
+
+# 删除用户
+select host,user,password from user;
+drop user 'jack'@'localhost';
+
+# 重命名用户
+rename user 'jack'@'%' to 'jim'@'%';
+```
+
+
+
+* *更多：[MySQL之权限管理](https://www.cnblogs.com/Richardzhu/p/3318595.html)*
 
 
 
