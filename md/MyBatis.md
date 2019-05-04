@@ -312,15 +312,12 @@ public class MyBatisUtil {
 #### 测试类
 
 ```java
-public class Test {
-    
-    @Test
-    public void selectAll(){
-        TestDao td = new TestDaoImpl();
-        td.selectAll().forEach((t -> {
-            System.out.println(t);
-        }));
-    }
+@Test
+public void selectAll(){
+	TestDao td = new TestDaoImpl();
+	td.selectAll().forEach((t -> {
+		System.out.println(t);
+	}));
 }
 ```
 
@@ -334,23 +331,130 @@ MyBatis 无需编写 DAO 实现类，直接通过 DAO 接口来定位到 mapper 
 
 ### 如何使用 mapper 动态代理
 
+映射文件 mapper 标签 **添加 namespace** 属性，将当前映射文件与 DAO 接口关联起来。映射文件中的 **id 名要与 DAO 接口中的方法名一致**，将方法和 SQL 语句关联起来
+
 ```xml
 <mapper namespace="com.test.dao.TestDao">
 ```
 
+**测试类**
+
+```java
+private SqlSession ss;
+private TestDao td;
+
+@Test
+public void selectAll(){
+    ss = MyBatisUtil.getSqlSession();
+    // 获得TestDao对象
+    td = ss.getMapper(TestDao.class);
+    
+    td.selectAll().forEach((t -> {
+		System.out.println(t);
+	}));
+}
+```
+
+将 DAO 的实现类删除之后，MyBatis 底层 **只会调用 selectOne() 或 selectList() 方法**。框架选择方法的标准是测试类中用于接收返回值的对象类型。**若接收类型为 List，选择 selectList() 方法；否则选择 selectOne() 方法**
 
 
 
+## 动态 SQL
+
+执行查询操作的时候可能会有多个条件，但用户在输入的时候，填写的条件数不确定，可以使用动态 SQL 来解决这个问题，**动态 SQL 会根据传入的条件动态拼接 SQL 语句**
+
+```xml
+<!-- if标签 -->
+<select id="selectIf" resultType="test">
+	select * from test
+    <!-- 添加1=1为true的条件，当两个条件均未设定只剩下一个where，这时SQL语句就不正确了 -->
+    where 1=1
+    <if test="name!=null and name!=''">
+		and name '%' #{name} '%'
+    </if>
+    <if test="age>=0">
+		and age > #{age}
+    </if>
+</select>
+
+<!-- where标签 -->
+<select id="selectWhere" resultType="test">
+    select * from test
+    <!-- 使用where标签就无需再写1=1了，第一个if标签可以不加and -->
+    <where>
+        <if test="name!=null and name!=''">
+            name '%' #{name} '%'
+        </if>
+        <if test="age>=0">
+            and age > #{age}
+        </if>
+    </where>
+</select>
+
+<!-- choose标签 -->
+<select id="selectWhere" resultType="test">
+    select * from test
+    <!-- 不需要再写and -->
+    <where>
+        <choose>
+        	<when test="name!=null and name!=''">
+            	name '%' #{name} '%'
+        	</when>
+        	<when test="age>=0">
+            	age > #{age}
+        	</when>
+            <otherwise>
+            	1!=1
+            </otherwise>
+		</choose>
+    </where>
+</select>
+
+<!-- foreach标签遍历数组或集合，相当于SQL中的in语句 -->
+<select id="selectForEach" resultType="test">
+    select * from test
+    <!-- 遍历数组使用array，遍历集合使用list-->
+    <if test="array!=null and array.length>0">
+		where id in
+        <!-- collection表示要遍历的类型 -->
+        <!-- open、close、separator表示对遍历内容的SQL拼接 -->
+        <!-- 可以遍历自定义数据类型的集合 -->
+        <foreach collection="array" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </if>
+</select>
+
+<!-- sql标签定义一个可被复用的sql片段，在使用时写上include标签将sql标签中的内容引入 -->
+<sql id="select">
+    select * from test
+</sql>
+
+<select id="selectSQL" resultType="test">
+    <!--使用sql片段-->
+    <include refid="select"/>
+
+    <if test="array!=null and array.length>0">
+		where id in
+        <foreach collection="array" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </if>
+</select>
+```
+
+在 MyBatis 的动态 SQL 中，有时会对一些数据进行比较，可能会导致 xml 文件解析出现问题，可以使用实体符号代替，还可以将这些数据放到 **`<![CDATA[ ]]>`** 里面，这里面的内容 xml 是不会解析的
+
+|   元符号   |      实体符号      |
+| :--------: | :----------------: |
+| `＜`、`<=` |  `&lt;`、`&lt;=`   |
+| `＞`、`>=` |   `&gt`、`&gt;=`   |
+|    `&`     |      `&amp;`       |
+|  `"`、`'`  | `&quot;`、`&apos;` |
 
 
 
-
-
-
-
-
-
-
+## 关联查询
 
 
 
