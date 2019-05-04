@@ -46,7 +46,7 @@ Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 J
 
 
 
-## MyBatis 使用
+## 基础的 MyBatis 项目
 
 ### 搭建步骤
 
@@ -58,7 +58,7 @@ Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 J
 
 
 
-Mybatis 编程步骤
+### Mybatis 编程步骤
 
 1. 创建 SqlSessionFactory
 2. 通过 SqlSessionFactory 创建 SqlSession
@@ -68,9 +68,7 @@ Mybatis 编程步骤
 
 
 
-### 基础的 MyBatis 项目
-
-#### 基本目录结构
+### 基本目录结构
 
 * src/main/java
   * 实体类
@@ -85,7 +83,24 @@ Mybatis 编程步骤
 
 
 
-#### 映射文件（TestMapper.xml）
+#### Maven 项目
+
+Maven 项目需要在 pom.xml 文件中的 build 标签中添加以下内容，因为要在 dao 包下编写 xml 文件，**如果不添加下面内容的话，Maven 是不会将 xml 文件发布到编译后的 classes 目录下**，就会导致 MyBatis 到不到该文件
+
+```xml
+<resources>
+	<resource>
+		<directory>src/main/java</directory>
+		<includes>
+			<include>**/*.xml</include>
+		</includes>
+	</resource>
+</resources>
+```
+
+
+
+#### 映射文件
 
 ```xml
 <!-- 映射文件一般会跟DAO接口放在同一个包下 -->
@@ -96,15 +111,68 @@ Mybatis 编程步骤
 <mapper namespace="com.test.dao.TestDao">
     <!-- resultType，返回的类型 -->
     <select id="selectAll" resultType="test">
-		select * from test
+		select * from test;
     </select>
     
+    <!-- 字段名与实体类中的属性名不一致，可以使用别名或resultMap -->
+    select id,name username from test;
+    
     <!-- paramerType可省略，MyBatis会自动检测 -->
-	<select id="insertOne" paramerType="test">
-		insert into test values (id,name)
+	<insert id="insertOne" paramerType="test">
+		insert into test values (id,name);
+        <!-- 获取主键 -->
+        <!-- order为SQL语句执行之前或之后 -->
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+			SELECT @@identity
+		</selectKey>
+	</insert>
+    
+    <!-- 模糊查询 -->
+    <select id="selectByName" resultType="test">
+		select * from test where name like '%' #{name} '%'
+        <!-- 另一种写法，会有SQL注入问题 -->
+        select * from test where name like '%${name}%'
 	</select>
 </mapper>
 ```
+
+
+
+##### ${} 和 #{} 的区别
+
+* #{} 其实是占位符，以 ? 进行占位，类似 JDBC 的 PreparedStatement，可以防止 SQL 注入的问题， **#{} 里面的内容可以写成任意字符串**。因此如果 SQL 语句需要获取用户的输入从而进行动态拼接的话，就需要使用 #{}
+
+* ${} 是字符串拼接，参数会被直接拼接到 SQL 语句中，会有 SQL 注入问题，如果 SQL 语句由程序员直接写好，不需要用户输入的话，可以使用 ${}，当然更建议使用 #{}
+
+
+
+##### resultType 与 resultMap
+
+* resultType：设置返回的类型，MyBatis 后台会自动创建一个 resultMap，基于属性名来映射到实体类属性上
+* resultMap：将数据库表中的字段与实体类中的属性 **建立映射关系**，这样即使两者名字不一致，MyBatis 也会根据 resultMap 中的映射关系正常执行。**涉及到两张表的操作，即使字段名和实体类属性名一致，也要编写 resultMap 来进行关联**
+* **两者的区别**
+  * resultType 对应的是 Java 对象中的属性，大小写不敏感
+  * resultMap 对应的是对已经定义好了 id 的 resultType 的引用，**大小写敏感**
+
+```xml
+<!-- type属性用来指定要映射的实体类 -->
+<resultMap id="testMapper" type="test">
+    <!-- column表示数据库中的字段名，property表示实体类中的属性名 -->
+    <!-- 在resultMap中添加id的属性指定主键，可以提高MyBatis的查询性能 -->
+    <id column="id" property="id"/>
+    <result column="name" property="username"/>
+</resultMap>
+
+<select id="selectTest" resultMap="testMapper">
+    select id,name from test
+</select>
+```
+
+
+
+##### 别名
+
+![20190504184410](../md.assets/20190504184410.png)
 
 
 
@@ -116,16 +184,27 @@ public class StudentDaoImpl implements StudentDao {
     public List<Test> selectAll() {
         List<Test> test = null;
         try(SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
+            // 返回对象集合
+            // 返回单个对象为selectOne
             stu = sqlSession.selectList("selectAll");
         }
         return test;
+    }
+    
+    @Override
+    public void insertStudent(Student student) {
+        try(SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
+            sqlSession.insert("insertOne", test);
+            // 提交事务
+            sqlSession.commit();
+        }
     }
 }
 ```
 
 
 
-#### 主配置文件（mybatis-config.xml）
+#### 核心配置文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -141,16 +220,20 @@ public class StudentDaoImpl implements StudentDao {
         <!-- 1.默认别名为实体类的首字母小写，可以使用alias手动设置别名 -->
         <typeAlias type="com.test.bean.Test" alias="test"/>
         <!-- 2.指定一个包，MyBatis会自动搜索该包下需要的实体类 -->
-        <!-- 默认别名为实体类的首字母小写，可以在实体类上使用@Alias注解手动设置别名 -->
+        	<!-- 默认别名为实体类的首字母小写，可以在实体类上使用@Alias注解手动设置别名 -->
         <package name="com.test.bean"/>
     </typeAliases>
     
     <environments default="development">
         <environment id="development">
             <!-- 指定MyBatis使用的事务管理器，MyBatis支持两种事务管理器类型 -->
-            <!-- JDBC：通过commit()方法提交，rollback()方法回滚，默认需要手动提交 -->
-            <!-- MANAGED：由容器来管理事务，默认情况下会关闭连接，使用Spring框架之后，无需再配置				     事务管理器，Spring会使用自带的管理器 -->
+            	<!-- JDBC：通过commit()方法提交，rollback()方法回滚，默认需要手动提交 -->
+            	<!-- MANAGED：由容器来管理事务，默认情况下会关闭连接 -->
             <transactionManager type="JDBC"/>
+            <!-- 配置数据源和数据库连接基本属性，有三种内建的数据源类型 -->
+            	<!-- UNPOOLED：不使用连接池，每次请求都会创建一个数据库连接，使用完毕后关闭 -->
+            	<!-- POOLED：使用MyBatis自带的数据库连接池 -->
+            	<!-- JNDI：配置外部数据源 -->
             <dataSource type="POOLED">
                 <property name="driver" value="${driver}"/>
                 <property name="url" value="${url}"/>
@@ -165,7 +248,17 @@ public class StudentDaoImpl implements StudentDao {
         <mapper resource="com/test/dao/TestMapper.xml"/>
         <!-- 2.使用完全限定资源定位符 -->
         <mapper url="D:\MyBatis\src\main\java\com\test\dao\TestMapper.xml"/>
-        <!-- 3.使用完全限定资源定位符 -->
+        <!-- 3.使用映射器接口的完全限定类名，需满足三个要求 -->
+        	<!-- 映射文件名要与DAO接口名称相同 -->
+        	<!-- 映射文件要与接口在同一包中 -->
+        	<!-- 映射文件中的namespace属性值为DAO接口的全类名 -->
+        <mapper class="com.test.dao.TestDao"/>
+        <!-- 4.将包内的映射器接口实现全部注册为映射器，需满足四个要求 -->
+        	<!-- DAO使用mapper动态代理实现 -->
+        	<!-- 映射文件名要与DAO接口名称相同 -->
+        	<!-- 映射文件要与接口在同一包中 -->
+        	<!-- 映射文件中的namespace属性值为DAO接口的全类名 -->
+        <package name="com.test.dao"/>
     </mappers>
 </configuration>
 ```
@@ -200,6 +293,8 @@ public class MyBatisUtil {
     }
 
     public static SqlSession getSqlSession() {
+        // 自动提交事务：ssf.openSession(true);
+        // 括号内为false或不写为不自动提交事务
         return ssf.openSession();
     }
 	
@@ -231,26 +326,17 @@ public class Test {
 
 
 
-#### Maven 项目
+## mapper 动态代理
 
-Maven 项目需要在 pom.xml 文件中的 build 标签中添加以下内容，因为要在 dao 包下编写 xml 文件，**如果不添加下面内容的话，Maven 是不会将 xml 文件发布到编译后的 classes 目录下**，就会导致 MyBatis 到不到该文件
+MyBatis 无需编写 DAO 实现类，直接通过 DAO 接口来定位到 mapper 中的 SQL 语句
+
+
+
+### 如何使用 mapper 动态代理
 
 ```xml
-<resources>
-	<resource>
-		<directory>src/main/java</directory>
-		<includes>
-			<include>**/*.xml</include>
-		</includes>
-	</resource>
-</resources>
+<mapper namespace="com.test.dao.TestDao">
 ```
-
-
-
-
-
-
 
 
 
