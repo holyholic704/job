@@ -387,8 +387,6 @@ drop trigger;
 
 * 定期清理不需要的用户，回收权限或者删除用户
 
-
-
 ```mysql
 # 创建一个只允许从本地登录的超级用户jack，并允许将权限赋予别的用户
 grant all privileges on *.* to jack@'localhost' identified by "jack" with grant option;
@@ -422,11 +420,4 @@ drop user 'jack'@'localhost';
 rename user 'jack'@'%' to 'jim'@'%';
 ```
 
-
-
-* *更多：[MySQL之权限管理](https://www.cnblogs.com/Richardzhu/p/3318595.html)*
-
-
-
-## OTHER
-
+*更多：[MySQL之权限管理](https://www.cnblogs.com/Richardzhu/p/3318595.html)*

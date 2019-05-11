@@ -1,12 +1,12 @@
 ## MyBatis 概述
 
-### MyBatis 是什么
+### MyBatis
 
-MyBatis 是一个基于 Java 的 **持久层框架**，主要作用就是在 Java 中操作数据库，其实就是它对 JDBC 进行了封装，开发者只需要关注 SQL 语句本身，避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集
+MyBatis 是一个基于 Java 的 **持久层框架**，对 JDBC 进行了封装，主要作用就是在 Java 中操作数据库，开发者只需要关注 SQL 语句本身，避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集
 
-### Hibernate 是什么
+### Hibernate
 
-Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 JDBC 进行了封装，它将实体类与数据库表建立映射关系，Hibernate 可以自动生成SQL语句，自动执行
+Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 JDBC 进行了封装，它将实体类与数据库表建立映射关系，Hibernate 可以自动生成 SQL 语句，自动执行
 
 #### 对象关系映射（Object-Relationship-Mapping，ORM）
 
@@ -14,32 +14,11 @@ Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 J
 
 ### MyBatis 与 Hibernate
 
-* MyBatis 是半自动，Hibernate 是全自动
-  * MyBatis 只有基本的字段映射，需要手写 SQL，**灵活度高，优化方便，但移植性差**；Hibernate 可以自动生成 SQL，降低了对象与数据库的耦合性，但不适合复杂的 SQL 语句，无法直接优化 SQL
-* MyBatis 性能更好
-  * Hibernate 使用了 HQL，对 SQL 进行了封装，需要先把 HQL 转化成 SQL 再进行执行
-* Hibernate 有完整的日志系统，MyBatis 除了基本记录功能外，功能薄弱
-* Hibernate 配置更复杂，学习成本更高，但能熟练的使用的话，开发效率要比 MyBatis 高得多
-* Mybatis 需要自行管理映射关系；Hibernate 是完整的 ORM 框架，无需过多关注底层实现，只管理对象即可
-* Hibernate 有更好的二级缓存机制
-  * MyBatis 的二级缓存都是在每个具体的 表-对象 映射中进行详细配置，不同的表可以定义不同的缓存机制，而且还可以通过 Cache-ref 来实现，在命名空间中共享相同的缓存配置和实例
-  * Hibernate 的二级缓存在 SqlSessionFactory 生成的配置文件中进行详细配置，然后在具体的 表-对象 映射中配置是哪种缓存。在使用二级缓存时如果出现脏数据，系统会报错并提示
+![20190509191750](../md.assets/20190509191750.png)
 
 ### 从 JDBC 到 MyBatis
 
-* 数据库连接频繁的开启和关闭本身就造成了资源的浪费，影响系统的性能
-  * 通过连接池反复利用已经建立的连接去访问数据库了，减少连接的开启和关闭的时间。通过 DataSource 进行隔离解耦，统一从 DataSource 里面获取数据库连接
-
-* SQL 语句写在代码中，可读性差，不利于维护，修改 SQL 需要修改 Java 代码
-  * 将 SQL 语句统一放到配置文件中，与 Java 代码分离
-
-* 向 SQL 语句传参很麻烦，占位符需要和参数一一对应，如果传入参数的数量或内容不确定，需要再去修改
-  * MyBatis 可以自动将 Java 对象映射到 SQL 语句中，使用 #{} 动态的将参数嵌入进 SQL
-
-* 对结果集解析麻烦，SQL 变化会导致解析代码变化，而且解析前需要遍历
-  * MyBatis 可以自动将执行结果映射至 Java 对象
-* 有时多个功能的 SQL 语句大部分内容差不多，需要修改时，要修改多个地方，不利于维护
-  * 将重复的 SQL 片段独立成一个 SQL 块，修改时只需要修改一处即可
+![JTOM](../md.assets/JTOM.png)
 
 *更多：[从 JDBC到 MyBatis](https://blog.csdn.net/fjscqjj1/article/details/79653592)*
 
@@ -48,10 +27,10 @@ Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 J
 ### MyBatis 三大基本要素
 
 - 核心接口和类
-- MyBatis 核心配置文件
+- 核心配置文件
 - SQL 映射文件
 
-### 搭建步骤
+### 项目搭建步骤
 
 * 导入 JAR 包：mybatis、mysql-connector-java
 
@@ -66,19 +45,6 @@ Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 J
 3. 通过 SqlSession 执行数据库操作
 4. 调用 session.commit() 提交事务
 5. 调用 session.close() 关闭会话
-
-### 基本目录结构
-
-* src/main/java
-  * 实体类
-  * DAO 接口
-  * DAO 实现类
-  * 工具类
-* src/main/resources
-  * 数据库配置文件
-  * 核心配置文件
-* src/test/java
-  * 测试类
 
 ### Maven 项目
 
@@ -246,7 +212,7 @@ public class StudentDaoImpl implements StudentDao {
 </configuration>
 ```
 
-### 数据库配置文件（db.propertie）
+### 数据库配置文件
 
 ```properties
 driver=com.mysql.jdbc.Driver
@@ -315,9 +281,7 @@ MyBatis 的注解位于 org.apache.ibatis.annotations 包下
 
 DAO 接口即 Mapper 接口。接口的全限名，就是映射文件中的 namespace 的值；接口的方法名，就是映射文件中 Mapper 的 Statement 的 id 值；接口方法内的参数，就是传递给 SQL 的参数
 
-Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 + 方法名拼接字符串作为 key 值，可唯一定位一个 MapperStatement。在 MyBatis 中，每一个 select、insert、update、delete 标签，都会被解析为一个 MapperStatement 对象
-
-DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法名的保存和寻找策略。MyBatis 运行时会使用 **JDK 动态代理** 为 Mapper 接口生成代理对象 proxy，代理对象会拦截接口方法，转而执行 MapperStatement 所代表的 SQL，然后将执行结果返回
+Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 + 方法名拼接字符串作为 key 值，可唯一定位一个 MapperStatement。在 MyBatis 中，每一个 select、insert、update、delete 标签，都会被解析为一个 MapperStatement 对象。DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法名的保存和寻找策略
 
 ### DAO 接口调用要求
 
@@ -338,6 +302,16 @@ DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法�
 * 一通过注解绑定，就是在接口的方法上面加上 @Select、@Update 等注解，里面包含 SQL 语句来绑定
 * 通过 XML 里面写 SQL 来绑定，要指定 XML 映射文件里面的 namespace 为接口的全路径名
 
+### DAO 接口和 XML 文件里的 SQL 是如何建立关系的
+
+MyBatis 在初始化 SqlSessionFactoryBean 的时候，找到 mapperLocations 路径去解析里面所有的 XML 文件，创建 **SqlSource 和 MappedStatement**。MyBatis 会把每个 SQL 标签封装成 SqlSource 对象。把 XML 文件中的每一个 SQL 标签都对应一个 MappedStatement 对象。这里面有两个属性很重要，id 和 sqlSource，id 是全限定类名 + 方法名组成的 ID，sqlSource 就是当前 SQL 标签对应的 SqlSource 对象
+
+创建完 MappedStatement 对象，会将它缓存到 Configuration 中。基本所有的配置信息都维护在 Configuration  对象中。把所有的 XML 都解析完成之后，Configuration 就包含了所有的 SQL 信息。当执行 MyBatis 方法的时候，就通过全限定类名 + 方法名找到 MappedStatement 对象，然后解析里面的 SQL 内容，执行即可
+
+DAO 接口没有实现类，在调用它的时，MyBatis 会使用 **JDK 动态代理** 为 DAO 接口生成代理对象 proxy，当我们调用 DAO 接口方法的时候，代理对象会拦截接口方法，转而执行 MappedStatement 所代表的 SQL，然后将执行结果返回
+
+*更多：[阿里面试题：Mybatis中的 Dao接口和 XML文件里的 SQL是如何建立关系的](https://juejin.im/post/5c9f4af6f265da30bf15c45a)*
+
 ## MyBatis 核心对象与生命周期
 
 * SqlSessionFactoyBuilder：**用过即丢**
@@ -353,9 +327,9 @@ DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法�
 
 ## MyBatis 主要部件
 
-- Configuration：MyBatis 所有的配置信息都保存在 Configuration 对象之中，配置文件中的大部分配置都会存储到该类中
-- SqlSession：MyBatis 工作的主要顶层 API，表示和数据库交互时的会话，完成必要数据库增删改查功能
-- Executor：MyBatis 执行器，是 MyBatis **调度的核心**，负责 SQL 语句的生成和查询缓存的维护
+- Configuration：所有的配置信息都保存在 Configuration 对象之中，配置文件中的大部分配置都会存储到该类中
+- SqlSession：工作的主要顶层 API，表示和数据库交互时的会话，完成必要数据库增删改查功能
+- Executor：执行器，是 MyBatis **调度的核心**，负责 SQL 语句的生成和查询缓存的维护
 - StatementHandler：封装了 JDBC Statement操作，负责对 JDBC statement 的操作
 - ParameterHandler：负责对用户传递的参数转换成 JDBC Statement 所对应的数据类型
 - ResultSetHandler：负责将 JDBC 返回的 ResultSet 结果集对象转换成 List 类型的集合
@@ -363,6 +337,10 @@ DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法�
 - MappedStatement：维护一条 <select|update|delete|insert> 节点的封装
 - SqlSource：根据用户传递的 parameterObject，动态地生成 SQL 语句，将信息封装到 BoundSql 对象中，并返回
 - BoundSql：表示动态生成的 SQL 语句以及相应的参数信息
+
+![20141028140852531](../md.assets/20141028140852531.png)
+
+*更多：[MyBatis的架构设计以及实例分析](https://blog.csdn.net/luanlouis/article/details/40422941)*
 
 ## Executor 执行器
 
@@ -384,10 +362,16 @@ MyBatis 有三种基本的 Executor 执行器，所有的作用范围都严格�
 
 ### 如何使用
 
-在映射文件 mapper 标签 **添加 namespace** 属性，将当前映射文件与 DAO 接口关联起来。映射文件中的 **id 名要与 DAO 接口中的方法名一致**，将方法和 SQL 语句关联起来
+在映射文件 mapper 标签 **添加 namespace** 属性，将当前映射文件与 DAO 接口关联起来。映射文件中的 **id 名要与 DAO 接口中的方法名一致**，将方法和 SQL 语句关联起来，映射文件名要与接口名相同
 
 ```xml
 <mapper namespace="com.test.dao.TestDao">
+```
+
+```xml
+<mappers>
+	<package name="com.test.dao"/>
+</mappers>
 ```
 
 **测试类**
@@ -406,7 +390,7 @@ public void selectAll(){
 		System.out.println(t);
 	}));
     
-    MyBatisUtil.close();
+    MyBatisUtil.close(ss);
 }
 ```
 
@@ -802,7 +786,11 @@ MyBatis 根据对 **关联对象查询的 select 语句的执行时机**，分�
 
 ## 缓存
 
-查询缓存主要是为了提高查询访问速度，当用户执行一次查询后，会将数据结果放到缓存中，下次再执行此查询时直接从缓存中获取数据。如果在缓存中找到了数据那叫做 **命中**
+查询缓存主要是为了提高查询访问速度，当用户执行一次查询后，会将数据结果放到缓存中，下次再执行此查询时直接从缓存中获取数据。如果在缓存中找到了数据叫做 **命中**
+
+### 如何判断某个 SQL 语句是否在缓存中存在
+
+**mapper 中的 id 具有唯一性**，所以通过这个 id 就可以判断缓存中是否存在。如果有两个 SQL 语句一模一样，但 id 不一样，MyBatis 不会为这两个 SQL 语句建立相同缓存。如果一条 select 语句中有查询条件的话，该查询条件也会被作为特征值，即再有相同条件查询的时候，会命中
 
 ### 作用域
 
@@ -820,44 +808,45 @@ MyBatis 根据对 **关联对象查询的 select 语句的执行时机**，分�
 
 ### 一级缓存
 
-也叫作本地缓存，是基于 PerpetualCache 类的 **HashMap 本地缓存**，**作用域是 SqlSession**。同一个 SqlSession 中两次执行相同的 SQL 查询语句，第一次执行完毕后，会将查询结果写入到缓存中，第二次会从缓存中直接获取数据，而不再到数据库中进行查询，减少了数据库的访问，提高查询效率。**一级查询缓存是默认开启状态，且不能关闭**
+也叫作本地缓存，是基于 PerpetualCache 类的 **HashMap 本地缓存**，**作用域是 SqlSession**，**一级缓存默认开启，且不能关闭**
 
-因为 **mapper 中的 id 具有唯一性**，所以 MyBatis 是通过这个 id 来判断缓存中是否存在的。如果有两个 SQL 语句一模一样，但是两者的 id 不一样，此时 MyBatis 是不会为这两个 SQL 语句建立相同缓存的。如果一条 select 语句中有查询条件的话，该查询条件也会被作为特征值，即再有相同条件查询的时候，会命中
+每个 SqlSession 中持有了 Executor，每个 Executor 中有一个 LocalCache 。当用户发起查询时，MyBatis 根据当前执行的语句生成 MappedStatement，在 Local Cache 进行查询，如果缓存命中的话，直接返回结果给用户，如果缓存没有命中的话，查询数据库，结果写入 Local Cache ，最后返回结果给用户
+
+MyBatis 的一级缓存最大范围是 SqlSession 内部，有多个 SqlSession 或者分布式的环境下，数据库写操作会引起脏数据，建议设定缓存级别为 Statement
+
+```xml
+<setting name="localCacheScope" value="SESSION"/>
+```
+
+#### 工作流程
+
+![640](../md.assets/640.jpg)
 
 ### **二级缓存**
 
-内置的二级缓存为也是采用 PerpetualCache，HashMap 本地缓存。与一级缓存不同的是 **二级缓存的生命周期与整个应用同步**，与 SqlSession 是否关闭没有关系。默认不开启二级缓存
+内置的二级缓存也是采用 PerpetualCache 类的 HashMap 本地缓存。与一级缓存不同的是 **二级缓存的生命周期与整个应用同步**，与 SqlSession 是否关闭没有关系。默认不开启二级缓存，开启后，会使用 CachingExecutor 装饰 Executor，进入一级缓存的查询流程前，先在 CachingExecutor 进行二级缓存的查询
 
-使用二级缓存要先序列化实体类，让实体类实现 Serializable 接口，如果该实体类有父类的话，父类也要实现 Serializable 接口。之后，在映射文件中的 mapper 标签下添加 **`<cache/>`** 标签
+在分布式环境下，由于默认的 MyBatis Cache 实现都是基于本地的，分布式环境下必然会出现读取到脏数据，需要使用集中式缓存将 MyBatis 的 Cache 接口实现，有一定的开发成本，直接使用 Redis 等分布式缓存可能成本更低，安全性也更高
+
+#### 开启二级缓存
+
+先 **序列化实体类**，让实体类实现 Serializable 接口，如果该实体类有父类的话，父类也要实现 Serializable 接口。在配置文件中开启二级缓存，之后，在映射文件中的 mapper 标签下添加 **`<cache/>`** 标签
+
+```xml
+<setting name="cacheEnabled" value="true"/>
+```
+
+局部关闭可以只关闭某个 select 查询的二级缓存，在 select 标签中 **将 useCache 属性设置为 false**
 
 #### cache 标签
 
 ```xml
-<!-- 逐出策略，当二级缓存中的对象达到最大值时，通过逐出策略将缓存中的对象移出缓存 -->
-<!-- 默认为LRU，FIFO：先进先出；LRU：未被使用时间最长的 -->
-<cache eviction="LRU"/>
-
-<!-- 刷新缓存的时间间隔，即清空缓存，单位毫秒 -->
-<!-- 一般不指定，即当执行增删改时刷新缓存，长时间未刷新缓存可能会出现过期数据 -->
-<cache flushInterval="100000"/>
-
-<!-- 设置缓存中数据是否只读，只读的缓存会给所有调用者返回缓存对象的相同实例 -->
-<!-- 性能会好一些，但是不能被修改 -->
-<!-- 默认是false，读写的缓存会通过序列化返回缓存对象的拷贝，因为要拷贝对象，会慢一些，但是安全 -->
-<cache readOnly="false"/>
-
-<!-- 二级缓存中可以存放的最多对象个数，默认为1024个 -->
-<cache size="1024"/>
+<cache eviction="LRU" flushInterval="100" readOnly="false" size="1024" />
+<!-- eviction：逐出策略，定义回收的策略，默认为LRU，FIFO：先进先出；LRU：未被使用时间最长的 -->
+<!-- flushInterval：配置一定时间自动刷新缓存，单位是毫秒，一般不指定 -->
+<!-- size：最多缓存对象的个数，默认为1024个 -->
+<!-- readOnly：是否只读，只读的缓存性能会好一些，但是不能被修改，默认是false，会慢一些，但是安全 -->
 ```
-
-#### 关闭二级缓存
-
-```xml
-<!-- 全局关闭，所有查询均不使用二级缓存，默认为true -->
-<setting name="cacheEnabled" value="false"/>
-```
-
-局部关闭可以只关闭某个 select 查询的二级缓存，在 select 标签中 **将 useCache 属性设置为 false**
 
 #### 注意
 
@@ -870,21 +859,23 @@ MyBatis 根据对 **关联对象查询的 select 语句的执行时机**，分�
 * 查询多于修改时使用二级缓存
   * 因为任何增删改操作都将刷新二级缓存，对二级缓存的频繁刷新将降低系统性能
 
+*更多：[聊聊MyBatis缓存机制](https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&mid=2651747419&idx=2&sn=a7c25803179504b7232c0d6777fe4831&chksm=bd12ad168a65240095187adf72f82d0c7f2fcff52987e97fa385065eb63ff843e45dc896189e&mpshare=1&scene=23&srcid=0708i2B3zxQQJCepUAUUrZFw#rd)*
 
+## MyBatis 中设计模式
 
+MyBatis 至少遇到了以下的设计模式的使用
 
+* 建造者模式：如 SqlSessionFactoryBuilder
+* 工厂方法模式：如 SqlSessionFactory、TransactionFactory、TransactionFactory、LogFactory
+* 单例模式：如 ErrorContext、LogFactory
+* 代理模式：MyBatis 实现的核心，如 MapperProxy、ConnectionLogger，用的 JDK 的动态代理；还有 executor.loader 包使用了 cglib 或者 javassist 达到延迟加载的效果
+* 组合模式：如 SqlNode 和各个子类 ChooseSqlNode 等
+* 模板方法模式：如 BaseExecutor 和 SimpleExecutor，还有 BaseTypeHandler 和所有的子类
+* 适配器模式：如 Log 的 MyBatis 接口和它对 JDBC、log4j 等各种日志框架的适配实现
+* 装饰者模式：如 Cache 包中的 cache.decorators 子包中等各个装饰者的实现
+* 迭代器模式：如 PropertyTokenizer
 
-Mybatis中设计模式：
-
-
-
-Mybatis至少遇到了以下的设计模式的使用：
-
-Builder模式，例如SqlSessionFactoryBuilder、XMLConfigBuilder、XMLMapperBuilder、XMLStatementBuilder、CacheBuilder；工厂模式，例如SqlSessionFactory、ObjectFactory、MapperProxyFactory；单例模式，例如ErrorContext和LogFactory；代理模式，Mybatis实现的核心，比如MapperProxy、ConnectionLogger，用的jdk的动态代理；还有executor.loader包使用了cglib或者javassist达到延迟加载的效果；组合模式，例如SqlNode和各个子类ChooseSqlNode等；模板方法模式，例如BaseExecutor和SimpleExecutor，还有BaseTypeHandler和所有的子类例如IntegerTypeHandler；适配器模式，例如Log的Mybatis接口和它对jdbc、log4j等各种日志框架的适配实现；装饰者模式，例如Cache包中的cache.decorators子包中等各个装饰者的实现；迭代器模式，例如迭代器模式PropertyTokenizer；接下来挨个模式进行解读，先介绍模式自身的知识，然后解读在Mybatis中怎样应用了该模式。
-
-
-
-
+*更多：[Mybatis源码解读-设计模式总结](https://blog.csdn.net/qq_35807136/article/details/79931345)*
 
 ## 更多
 
