@@ -26,9 +26,7 @@ Hibernate 是一个开源的全自动的 **对象关系映射框架**，它对 J
 
 ### MyBatis 三大基本要素
 
-- 核心接口和类
-- 核心配置文件
-- SQL 映射文件
+- 核心接口和类、核心配置文件、SQL 映射文件
 
 ### 项目搭建步骤
 
@@ -97,8 +95,8 @@ Maven 项目需要在 pom.xml 文件中的 build 标签中添加以下内容，�
 
 #### ${} 和 #{} 的区别
 
-* ${} 是 **字符串拼接**，参数会被直接拼接到 SQL 语句中，**会有 SQL 注入问题**，如果 SQL 语句由程序员直接写好，不需要用户输入的话，可以使用 ${}，当然更建议使用 #{}
-* #{}是 **预编译处理**，MyBatis 会将 SQL 中的 #{} 替换为 ? 号，调用 PreparedStatement 的 set 方法进行赋值
+* ${} 是 **字符串拼接**，参数会被直接拼接到 SQL 语句中，可能 **会有 SQL 注入问题**，如果 SQL 语句由程序员直接写好，不需要用户输入的话，可以使用 ${}，当然更建议使用 #{}
+* #{} 是 **预编译处理**，MyBatis 会将 SQL 中的 #{} 替换为 ? 号，调用 PreparedStatement 的 set 方法进行赋值
   * #{} 中的内容是实体类的属性名，底层是通过 **反射机制**，调用实体类相关属性的 get 方法来获取值。如果需要获取用户的输入进行动态拼接的话，就用 #{}
   * 可以防止 SQL 注入的问题，因为预编译完成之后，SQL 的结构已经固定，用户的任何输入都不会对 SQL 的结构产生影响。而 SQL 注入是发生在编译的过程中，恶意注入某些特殊字符，最后被编译成了恶意的执行操作
 
@@ -281,7 +279,7 @@ MyBatis 的注解位于 org.apache.ibatis.annotations 包下
 
 DAO 接口即 Mapper 接口。接口的全限名，就是映射文件中的 namespace 的值；接口的方法名，就是映射文件中 Mapper 的 Statement 的 id 值；接口方法内的参数，就是传递给 SQL 的参数
 
-Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 + 方法名拼接字符串作为 key 值，可唯一定位一个 MapperStatement。在 MyBatis 中，每一个 select、insert、update、delete 标签，都会被解析为一个 MapperStatement 对象。DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法名的保存和寻找策略
+Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 + 方法名拼接的字符串作为 key 值，可唯一定位一个 MappedStatement。在 MyBatis 中，每一个 select、insert、update、delete 标签，都会被解析为一个 MappedStatement 对象。DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法名的保存和寻找策略
 
 ### DAO 接口调用要求
 
@@ -308,7 +306,7 @@ MyBatis 在初始化 SqlSessionFactoryBean 的时候，找到 mapperLocations �
 
 创建完 MappedStatement 对象，会将它缓存到 Configuration 中。基本所有的配置信息都维护在 Configuration  对象中。把所有的 XML 都解析完成之后，Configuration 就包含了所有的 SQL 信息。当执行 MyBatis 方法的时候，就通过全限定类名 + 方法名找到 MappedStatement 对象，然后解析里面的 SQL 内容，执行即可
 
-DAO 接口没有实现类，在调用它的时，MyBatis 会使用 **JDK 动态代理** 为 DAO 接口生成代理对象 proxy，当我们调用 DAO 接口方法的时候，代理对象会拦截接口方法，转而执行 MappedStatement 所代表的 SQL，然后将执行结果返回
+DAO 接口是没有实现类的，在调用它的时，MyBatis 会使用 **JDK 动态代理** 为 DAO 接口生成代理对象 proxy，当我们调用 DAO 接口方法的时候，代理对象会拦截接口方法，转而执行 MappedStatement 所代表的 SQL，然后将执行结果返回
 
 *更多：[阿里面试题：Mybatis中的 Dao接口和 XML文件里的 SQL是如何建立关系的](https://juejin.im/post/5c9f4af6f265da30bf15c45a)*
 
@@ -362,7 +360,7 @@ MyBatis 有三种基本的 Executor 执行器，所有的作用范围都严格�
 
 ### 如何使用
 
-在映射文件 mapper 标签 **添加 namespace** 属性，将当前映射文件与 DAO 接口关联起来。映射文件中的 **id 名要与 DAO 接口中的方法名一致**，将方法和 SQL 语句关联起来，映射文件名要与接口名相同
+在映射文件 mapper 标签 **添加 namespace** 属性，将当前映射文件与 DAO 接口关联起来。映射文件中的 **id 名要与 DAO 接口中的方法名一致**，将方法和 SQL 语句关联起来，**映射文件名要与接口名相同**
 
 ```xml
 <mapper namespace="com.test.dao.TestDao">
