@@ -279,7 +279,9 @@ MyBatis 的注解位于 org.apache.ibatis.annotations 包下
 
 DAO 接口即 Mapper 接口。接口的全限名，就是映射文件中的 namespace 的值；接口的方法名，就是映射文件中 Mapper 的 Statement 的 id 值；接口方法内的参数，就是传递给 SQL 的参数
 
-Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 + 方法名拼接的字符串作为 key 值，可唯一定位一个 MappedStatement。在 MyBatis 中，每一个 select、insert、update、delete 标签，都会被解析为一个 MappedStatement 对象。DAO 接口里的方法，是不能重载的，因为是使用全限名 + 方法名的保存和寻找策略
+Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 + 方法名拼接的字符串作为 key 值，可唯一定位一个 MappedStatement。在 MyBatis 中，每一个 SQL 标签，都会被解析为一个 MappedStatement 对象
+
+DAO 接口里的方法，因为是使用全限名 + 方法名的保存和寻找策略，所以不能被重载
 
 ### DAO 接口调用要求
 
@@ -304,7 +306,7 @@ Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 
 
 MyBatis 在初始化 SqlSessionFactoryBean 的时候，找到 mapperLocations 路径去解析里面所有的 XML 文件，创建 **SqlSource 和 MappedStatement**。MyBatis 会把每个 SQL 标签封装成 SqlSource 对象。把 XML 文件中的每一个 SQL 标签都对应一个 MappedStatement 对象。这里面有两个属性很重要，id 和 sqlSource，id 是全限定类名 + 方法名组成的 ID，sqlSource 就是当前 SQL 标签对应的 SqlSource 对象
 
-创建完 MappedStatement 对象，会将它缓存到 Configuration 中。基本所有的配置信息都维护在 Configuration  对象中。把所有的 XML 都解析完成之后，Configuration 就包含了所有的 SQL 信息。当执行 MyBatis 方法的时候，就通过全限定类名 + 方法名找到 MappedStatement 对象，然后解析里面的 SQL 内容，执行即可
+创建完 MappedStatement 对象，会将它缓存到 Configuration 中。把所有的 XML 都解析完成之后，Configuration 就包含了所有的 SQL 信息。当执行 MyBatis 方法的时候，就通过全限定类名 + 方法名找到 MappedStatement 对象，然后解析里面的 SQL 内容，执行即可
 
 DAO 接口是没有实现类的，在调用它的时，MyBatis 会使用 **JDK 动态代理** 为 DAO 接口生成代理对象 proxy，当我们调用 DAO 接口方法的时候，代理对象会拦截接口方法，转而执行 MappedStatement 所代表的 SQL，然后将执行结果返回
 
