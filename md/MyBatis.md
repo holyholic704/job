@@ -304,7 +304,10 @@ DAO 接口里的方法，因为是使用全限名 + 方法名的保存和寻找�
 
 ### DAO 接口和 XML 文件里的 SQL 是如何建立关系的
 
-MyBatis 在初始化 SqlSessionFactoryBean 的时候，找到 mapperLocations 路径去解析里面所有的 XML 文件，创建 **SqlSource 和 MappedStatement**。MyBatis 会把每个 SQL 标签封装成 SqlSource 对象。把 XML 文件中的每一个 SQL 标签都对应一个 MappedStatement 对象。这里面有两个属性很重要，id 和 sqlSource，id 是全限定类名 + 方法名组成的 ID，sqlSource 就是当前 SQL 标签对应的 SqlSource 对象
+MyBatis 在初始化 SqlSessionFactoryBean 的时候，找到 mapperLocations 路径去解析里面所有的 XML 文件，创建 **SqlSource 和 MappedStatement**。MyBatis 会把每个 SQL 标签封装成 SqlSource 对象。把 XML 文件中的每一个 SQL 标签都对应一个 MappedStatement 对象。这里面有两个属性很重要，id 和 sqlSource
+
+* id 是全限定类名 + 方法名组成的 ID
+* sqlSource 就是当前 SQL 标签对应的 SqlSource 对象
 
 创建完 MappedStatement 对象，会将它缓存到 Configuration 中。把所有的 XML 都解析完成之后，Configuration 就包含了所有的 SQL 信息。当执行 MyBatis 方法的时候，就通过全限定类名 + 方法名找到 MappedStatement 对象，然后解析里面的 SQL 内容，执行即可
 

@@ -127,10 +127,4 @@
 |      `:set nu`      |                   显示行号                   |
 |     `:set nonu`     |                   取消行号                   |
 
-
-
-![vi-vim-cheat-sheet-sch1](../md.assets/vi-vim-cheat-sheet-sch1.gif)
-
-
-
 ### vim的暂存档、救援回复与开启时的警告讯息（待添加）

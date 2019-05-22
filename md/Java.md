@@ -1337,3 +1337,4 @@ Class[] inter = c.getInterfaces();
 ```
 
 *更多：[深入解析 Java反射（）](https://www.sczyh30.com/posts/Java/java-reflection-1/#%E5%9B%9B%E3%80%81%E5%8F%8D%E5%B0%84%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)、[深入解析 Java反射（2）](https://www.sczyh30.com/posts/Java/java-reflection-2/)*
+

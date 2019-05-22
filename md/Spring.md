@@ -1,6 +1,6 @@
 ## Spring
 
-开源的轻量级框架，主要用来简化 Java 应用的开发，并通过POJO为基础的编程模型促进良好的编程习惯
+开源的轻量级框架，主要用来简化 Java 应用的开发
 
 ### 优点
 
@@ -125,23 +125,11 @@ IoC 容器其实就是一个大工厂，用来管理我们所有的对象以及�
 
 * 根据 bean 配置信息在容器内部创建 bean 定义注册表
 * 根据注册表加载、实例化 bean、建立 bean 与 bean 之间的依赖关系
-* 将这些准备就绪的 bean 放到 Map 缓存池中，等待应用程序调用
+* 将准备就绪的 bean 放到 Map 缓存池中，等待应用程序调用
 
 #### IoC 容器的工作机制
 
-
-
-![517313-20160607151122855-1777635642](../md.assets/517313-20160607151122855-1777635642.jpg)
-
-* ResourceLoader 从存储介质中加载 Spring 配置信息，并使用 Resource 表示这个配置文件的资源
-* BeanDefinitionReader 读取 Resource 所指向的配置文件资源，然后解析配置文件。配置文件中每一个`<bean>` 解析成一个 BeanDefinition 对象，并保存到 BeanDefinitionRegistry 中
-* 容器扫描 BeanDefinitionRegistry 中的 BeanDefinition，使用 Java 的反射机制自动识别出 Bean 后处理后器的 bean，然后调用这些 Bean 后处理器对 BeanDefinitionRegistry 中的 BeanDefinition 进行加工处理。主要完成以下两项工作
-  * 对使用到占位符的 `<bean>` 元素标签进行解析，得到最终的配置值，这意味对一些半成品式的BeanDefinition 对象进行加工处理并得到成品的 BeanDefinition 对象
-  * 对 BeanDefinitionRegistry 中的 BeanDefinition 进行扫描，通过反射机制找出所有属性编辑器的 Bean （实现 PropertyEditor 接口 的 Bean），并自动将它们注册到容器的属性编辑器注册表中（PropertyEditorRegistry）
-
-* Spring 容器从 BeanDefinitionRegistry 中取出加工后的 BeanDefinition，并调用 InstantiationStrategy 着手进行 bean 实例化的工作
-* 在实例化 bean 时，Spring 容器使用 BeanWrapper 对 bean 进行封装，BeanWrapper 提供了很多以反射机制操作 bean 的方法，它将结合该 bean 的 BeanDefinition 以及容器中属性编辑器，完成 bean 属性的设置工作
-* 利用容器中注册的 Bean 后处理器，对已经完成属性设置工作的 bean 进行后续加工，直接装配出一个准备就绪的 bean
+![1649](../md.assets/1649.png)
 
 *更多：[Spring容器初始化过程](https://www.cnblogs.com/duanxz/p/3787884.html)*
 
@@ -187,17 +175,7 @@ public void test() {
 
 #### BeanFactory 和 ApplicationContext 的区别
 
-* BeanFactroy 是以 **延迟加载** 形式来注入 bean 的。在读取配置文件之后不会创建里面 bean 的对象，即只有在使用到某个 bean 时，才会进行加载实例化，但这样就难以发现一些可能存在的配置问题。如果 bean 的某一个属性没有注入，会到第一次使用 getBean 方法才会抛出异常
-  * 应用启动的时候占用资源很少，对资源要求较高的应用，或者需要在一些配置较差的机器中运行程序，比较有优势，但事务的管理、AOP 功能将会失效
-
-* ApplicationContext 是在容器启动时，**一次性创建了所有的 bean 对象**。在容器启动时，就可以发现一些可能存在的配置问题，有利于检查所依赖属性是否注入。ApplicationContext 启动后就预载入所有的单实例 bean，确保当你需要的时候，可以立马使用
-  * 所有的 bean 在启动的时候都加载，系统运行的速度快
-  * 在启动的时候加载了所有的 bean，可以在系统启动的时候，尽早的发现系统中的配置问题，建议web应用，在启动的时候就把所有的 bean 都加载了，把费时的操作放到系统启动中完成
-  * 唯一的不足是占内存空间，当应程序配置 bean 较多时，程序启动较慢
-
-* BeanFactory 通常以编程的方式被创建，ApplicationContext 还能以声明的方式创建，如使用 ContextLoader
-
-* BeanFactory 和 ApplicationContext 都支持 BeanPostProcessor、BeanFactoryPostProcessor，但两者之间的区别是：BeanFactory 需要手动注册，而 ApplicationContext 则是自动注册
+![20190520151418](../md.assets/20190520151418.png)
 
 *更多：[IoC-spring 的灵魂](https://juejin.im/post/593386ca2f301e00584f8036)、[Spring IOC知识点一网打尽！](https://segmentfault.com/a/1190000014979704)*
 
@@ -248,10 +226,10 @@ public class MyBeanFactory {
 
 #### Java 代码装配
 
-编写配置类，被 @Configuration 修饰的类就是配置类，使用配置类创建 bean
+编写配置类，被 **@Configuration 修饰的类就是配置类**，使用配置类创建 bean
 
-- 使用 @Bean 来修饰方法，该方法返回一个对象
-- Spring内部会将该对象加入到Spring容器中
+- 使用 **@Bean** 来修饰方法，该方法返回一个对象
+- Spring 内部会将该对象加入到 Spring 容器中
 - **容器中 bean 的 ID 默认为方法名**
 
 ```java
@@ -265,7 +243,7 @@ public class MyConfiguration {
 }
 ```
 
-测试类需要使用 @ContextConfiguration 加载配置类的信息，需要引入 spring-test 包
+测试类需要使用 **@ContextConfiguration** 加载配置类的信息，需要引入 spring-test 包
 
 ```java
 @ContextConfiguration(classes = ContextConfiguration.class)
@@ -277,7 +255,6 @@ public class StudentTest {
         pd.say();
     }
 }
-
 ```
 
 #### 自动化装配
@@ -312,14 +289,14 @@ public class PersonDaoImpl implements PersonDao {
 
 ![20190518204607](../md.assets/20190518204607.png)
 
-* request、session、globalSession 作用域，只有在 Web 应用中使用 Spring 时才有效
+* request、session、globalSession 作用域，**只有在 Web 应用中使用 Spring 时才有效**
 * 在配置文件中有个 lazy-init 属性，只对单例模式有效，使用后对象会在使用的时候才创建
 
 ```xml
 <bean id="test" scope="singleton" init-lazy="true" class="com.test.test"/>
 ```
 
-* 还可以使用 @Scope 注解在实现类上使用
+* 还可以使用 **@Scope 注解在实现类上使用**
 
 ### Bean 生命周期
 
@@ -334,11 +311,9 @@ public class PersonDaoImpl implements PersonDao {
 * 如果 bean 实现了 InitializingBean 接口，将会调用 afterPropertiesSet 方法
 * 如果 bean 在配置文件中配置了 init-method 属性会自动调用其配置的初始化方法
 * 如果 bean 实现了 BeanPostProcessor 接口，将会调用 postProcessAfterInitialization(Objec tObj,String s) 方法
-* 此时 bean 已经准备就绪，并且是单例的，可以被应用程序使用了，他们将会一直驻留在应用上下文中，直到该应用上下文被销毁
+* **此时 bean 已经准备就绪，并且是单例的**，可以被应用程序使用了，他们将会一直驻留在应用上下文中，直到该应用上下文被销毁
 * 当 bean 不再需要时，会进行清理阶段，如果 bean 实现了 DisposableBean 接口，将会调用 destroy 方法
 * 如果 bean 在配置文件中配置了 destroy-method 属性会自动调用其配置的销毁方法
-* 如果这个Bean的Spring配置中配置了destroy-method属性，会自动调
-  用其配置的销毁方法。
 
 #### BeanPostProcessor 接口
 
@@ -346,13 +321,12 @@ public class PersonDaoImpl implements PersonDao {
 
 ```java
 public class bpp implements BeanPostProcessor {
-    @Override
+    
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         System.out.println("postProcessBeforeInitialization");
         return bean;
     }
 
-    @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if ("personService".equals(beanName)) {
             InvocationHandler handler = ((Object obj, Method method, Object[] objs) -> {
@@ -393,21 +367,7 @@ public class bpp implements BeanPostProcessor {
 
 ## DI
 
-依赖注入（Dependency Injection）是 IoC 常用的实现方式，是指程序运行过程中，若需要调用另一个对象协助时，无须在代码中创建被调用者，而是依赖于外部容器，由外部容器创建后传递给程序。依赖注入让 Spring 的 Bean 之间以配置文件的方式组织在一起，而不是以硬编码的方式耦合在一起。有三种常用的注入方式：setter 方法注入，构造方法注入，基于注解的注入
-
-### DAO 接口和实现类
-
-```java
-public interface PersonDao {
-    void say();
-}
-
-public class PersonDaoImpl implements PersonDao {
-    public void say() {
-        System.out.println("fuck you!");
-    }
-}
-```
+依赖注入（Dependency Injection）是 IoC 常用的实现方式，**是指程序运行过程中，若需要调用另一个对象协助时，无须在代码中创建被调用者，而是依赖于外部容器，由外部容器创建后传递给程序**。依赖注入让 Spring 的 Bean 之间以配置文件的方式组织在一起，而不是以硬编码的方式耦合在一起。有三种常用的注入方式：setter 方法注入，构造方法注入，基于注解的注入
 
 ### setter 注入
 
@@ -484,9 +444,9 @@ public class PersonDaoImpl implements PersonDao {
 ```
 
 * @Component：指定把一个对象加入 IoC 容器，该注解中的内容用来指定该 bean 的 id，Spring 中还提供了等效的注解，通常会使用下面注解来代替 @Component
-  * @Repository：在持久层使用
-  * @Service：在业务逻辑层使用
-  * @Controller：在控制层使用
+  * **@Repository：在持久层使用**
+  * **@Service：在业务逻辑层使用**
+  * **@Controller：在控制层使用**
 * @Autowired：**默认根据类型自动装配**
   * 可以配合 @Qualifier 让 @Autowired 根据名称自动装配
   * 由 Spring 提供
@@ -506,7 +466,7 @@ public class PersonDaoImpl implements PersonDao {
 - no：默认方式，**不进行自动装配**
 - byName：**根据名称自动装配**，容器会试图匹配、装配和该 bean 的属性具有相同名字的 bean
 - byType：**根据类型自动装配**，容器会试图匹配、装配和该 bean 的属性具有相同类型的 bean。如果有多个 bean 符合条件，则抛出错误
-- constructor：类似于byType，但是要 **提供构造器参数**，如果没有确定的带参数的构造器参数类型，将会抛出异常
+- constructor：类似于 byType，但是要 **提供构造器参数**，如果没有确定的带参数的构造器参数类型，将会抛出异常
 - autodetect：首先会尝试使用 constructor 进行自动装配，如果失败再尝试使用 byType。在 Spring3.0 之后已经被标记为 @Deprecated
 
 *更多：[spring的 5种自动装配方式](https://blog.csdn.net/weixin_39220472/article/details/80643439)*
@@ -521,7 +481,7 @@ public class PersonDaoImpl implements PersonDao {
 
 ## AOP
 
-面向切面编程（Aspect Orient Programming），是面向对象编程的一种补充，**在运行时，动态地将代码切入到类的指定方法、指定位置上的编程思想**。可以分离日志记录、事务管理等非业务逻辑代码与业务代码，降低模块之间的耦合度，提高了扩展性和复用性
+面向切面编程（Aspect Orient Programming），是面向对象编程的一种补充，**在运行时，动态地将代码切入到类的指定方法、指定位置上的编程思想**。可以分离日志记录、事务管理等非业务逻辑代码与业务代码，降低模块之间的耦合度，提高了代码的扩展性和复用性
 
 ### Spring AOP 原理
 
@@ -530,7 +490,7 @@ Spring AOP 使用纯 Java 实现，它不需要专门的编译过程，也不需
 * 如果被代理类实现了接口，会默认使用 JDK 动态代理。如果没有实现接口，会使用 CGLIB 动态代理
 
 * 如果是单例的话最好使用 CGLIB 代理。因为 JDK 在创建代理对象时的性能要高于 CGLIB 代理，而生成代理对象的运行性能却比 CGLIB 的低
-* 从耦合度上讲，JDK 要好于额外需要依赖字节码处理框架 ASM 的 CGLIB
+* 从耦合度上讲，JDK 要好于额外需要依赖字节码处理框架的 CGLIB
 
 ### AOP 的实现
 
@@ -546,20 +506,15 @@ AOP 除了有 Spring AOP 实现外，还有 AspectJ。AspectJ 是 **语言级别
 
 * 目标对象（Target）
   * **将要被增强的对象**，即包含主业务逻辑的类的对象
-
 * 切面（Aspect）
   * 泛指 **非业务逻辑**，常用的切面有通知，实际就是对业务逻辑的一种增强
-
 * 连接点（JoinPoint）
   * **可以被切面织入的方法**，通常业务接口中的方法均为连接点
-
 * 切入点（Pointcut）
   * **切面具体织入的方法**。被 final 修饰的方法不能作为连接点和切入点，因为是不能被修改的，不能被增强
-
 * 织入（Weaving）
 
   - **将切面代码插入到目标对象的过程**
-
 * 通知（Advice）
 
   * **是切面的一种实现**，可以完成简单织入功能。通知定义了增强代码切入到目标代码的时间点，通知类型不同，切入时间不同。**切入点定义切入的位置，通知定义切入的时间**
@@ -797,49 +752,203 @@ Spring 支持 XML 和注解的方式进行事务配置。事务的配置通常�
 
 Spring 事务的本质其实就是数据库对事务的支持，没有数据库的事务支持，Spring 是无法提供事务功能的。真正的数据库层的事务提交和回滚是通过 binlog 或者 redo log 实现的
 
-### 实现声明式事务的四种方式
+### PlatformTransactionManager
+
+Spring 并不直接管理事务，而是 **提供了多种事务管理器**，将事务管理的职责委托给 Hibernate 等持久化机制所提供的相关平台框架的事务来实现。 Spring 事务管理器的接口是：**PlatformTransactionManager** ，通过这个接口，Spring 为各个平台如 JDBC、Hibernate 等都提供了对应的事务管理器
+
+- DataSourceTransactionManager：使用 JDBC 或 MyBatis 进行数据持久化时使用
+- HibernateTransactionManager：使用 Hibernate 进行数据持久化时使用
+- JpaTransactionManager：使用 JPA 进行数据持久化时使用
+
+PlatformTransactionManager 中定义了三个方法
+
+```java
+// 根据指定的传播行为，返回当前活动的事务或创建一个新事务
+TransactionStatus getTransaction(TransactionDefinition definition)
+
+// 使用事务目前的状态提交事务
+void commit(TransactionStatus status)
+
+// 对执行的事务进行回滚
+void rollback(TransactionStatus status)
+```
+
+### TransactionDefinition
+
+事务管理器接口通过 **`getTransaction(TransactionDefinition definition)`** 方法来得到一个事务，这个方法里面的参数是 **TransactionDefinition** ，这个接口定义了一些基本的事务属性
+
+TransactionDefinition 接口中定义了 5 个方法以及一些表示事务属性的常量比如隔离级别、传播行为等等的常量
+
+```java
+// 返回事务的传播行为
+int getPropagationBehavior()
+
+// 返回事务的隔离级别，事务管理器根据它来控制另外一个事务可以看到本事务内的哪些数据
+int getIsolationLevel()
+
+// 返回事务的名字
+String getName()
+    
+// 返回事务必须在多少秒内完成
+int getTimeout()
+
+// 返回是否优化为只读事务
+boolean isReadOnly()
+```
+
+* 事务属性可以理解成事务的一些基本配置，描述了事务策略如何应用到方法上。事务属性包含 5 个方面
+  * 隔离级别、传播行为、回滚规则、是否只读、事务超时
+
+#### 事务隔离级别
+
+并发事务带来的问题：脏读、更新丢失、不可重复读、幻读
+
+* TransactionDefinition 接口中定义了五个表示隔离级别的常量
+
+![20190521151610](../md.assets/20190521151610.png)
+
+#### 事务传播行为
+
+当事务方法被另一个事务方法调用时，必须指定事务应该如何传播，为了解决业务层方法之间互相调用的事务问题，**事务传播行为是加在方法上的**
+
+![20190521152718](../md.assets/20190521152718.png)
+
+#### 回滚规则
+
+这些规则定义了哪些异常会导致事务回滚而哪些不会。默认情况下，**发生运行时异常时会回滚，发生一般性异常时不会回滚**。不过，对于一般性异常，我们也可以手工设置其回滚方式。**不要在 Service 层捕获异常**，如果一定要捕获的话，在 catch 中再次抛出异常即可
+
+#### 事务只读属性
+
+对事务性资源进行只读操作或者是读写操作。所谓事务性资源就是指那些被事务管理的资源，比如数据源等。如果确定只对事务性资源进行只读操作，那么我们可以将事务标志为只读的，以提高事务处理的性能。**在 TransactionDefinition 中以 boolean 类型来表示该事务是否只读**
+
+#### 事务超时属性
+
+一个事务所允许执行的最长时间，如果 **超过该时间限制但事务还没有完成，则自动回滚事务**。在 TransactionDefinition 中以 int 的值来表示超时时间，其单位是秒
+
+
+常量 **TIMEOUT_DEFAULT** 定义了事务底层默认的超时时限，及不支持事务超时时限设置的 none 值。事务的超时时限起作用的条件比较多，且超时的时间计算点较复杂。所以，该值一般就使用默认值即可，**默认值是 -1**
+
+### TransactionStatus
+
+用来记录事务的状态，该接口定义了一组方法，用来获取或判断事务的相应状态信息
+
+```java
+// 是否是新的事物
+boolean isNewTransaction(); 
+    
+// 是否有恢复点
+boolean hasSavepoint(); 
+    
+// 设置为只回滚
+void setRollbackOnly();  
+    
+// 是否为只回滚
+boolean isRollbackOnly(); 
+    
+// 是否已完成
+boolean isCompleted; 
+```
+
+*更多：[可能是最漂亮的Spring事务管理详解](https://juejin.im/post/5b00c52ef265da0b95276091)*
+
+### Spring 事务管理
+
+Spring 支持两种方式的事务管理
+
+- **编程式事务管理：** 通过 Transaction Template 手动管理事务，实际应用中很少使用
+- **使用 XML 配置声明式事务：** 推荐使用，代码侵入性最小，实际是通过AOP实现
+
+#### 实现声明式事务的四种方式
 
 * 基于 TransactionInterceptor 的声明式事务：Spring 声明式事务的基础，通常不建议使用这种方式
 * 基于 TransactionProxyFactoryBean 的声明式事务：第一种方式的改进版本，简化的配置文件的书写，Spring 早期推荐的声明式事务管理方式，但是在 Spring 2.0 中已经不推荐了
 * 基于 `<tx>` 和 `<aop>` 命名空间的声明式事务管理：目前推荐的方式，其最大特点是与 Spring AOP 结合紧密，可以充分利用切点表达式的强大支持，使得管理事务更加灵活
 * 基于 @Transactional 的全注解方式：将声明式事务管理简化到了极致。开发人员只需在配置文件中加上一行启用相关后处理 Bean 的配置，然后在需要实施事务管理的方法或者类上使用 @Transactional 指定事务规则即可实现事务管理，而且功能也不必其他方式逊色
 
+#### 使用 XML 配置事务
 
+```xml
+<!-- 事务管理器 -->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <!-- 数据源 -->
+    <property name="dataSource" ref="dataSource"/>
+</bean>
 
+<!-- 通知 -->
+<tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+        <!-- 传播行为 -->
+        <tx:method name="save*" propagation="REQUIRED"/>
+        <tx:method name="insert*" propagation="REQUIRED"/>
+        <tx:method name="add*" propagation="REQUIRED"/>
+        <tx:method name="create*" propagation="REQUIRED"/>
+        <tx:method name="delete*" propagation="REQUIRED"/>
+        <tx:method name="update*" propagation="REQUIRED"/>
+        <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+        <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+        <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+    </tx:attributes>
+</tx:advice>
 
+<!-- 切面 -->
+<aop:config>
+    <!--切入点必须是在service层-->
+    <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.test.service.*.*(..))"/>
+</aop:config>
+```
 
+#### 使用注解配置事务
 
+配置文件除了要添加事务管理器外，还需添加注解事务驱动
 
+```xml
+<tx:annotation-driven transaction-manager="transactionManager"/>
+```
 
+* **@Transactional**
+  * 该注解可以 **用于类和方法上**，@Transactional 若用在方法上，**只能用于 public方法上**。如果用于非 public 方法，Spring 不会报错，但不会将指定事务织入到该方法中。因为 Spring 会忽略掉所有非 public 方法上的 @Transactional
+  * @Transactional 的作用可以传播到子类，即如果父类标了子类就不用标了
 
+* @Transactional 中的属性
 
+![20190521162250](../md.assets/20190521162250.png)
 
+### 事务的嵌套失效
 
+嵌套是子事务套在父事务中执行，子事务是父事务的一部分，在进入子事务之前，父事务建立一个回滚点，叫 **save point**，然后执行子事务，这个子事务的执行也算父事务的一部分，然后子事务执行结束，父事务继续执行
 
+* 如果 **子事务回滚**，会发生什么
+  * 父事务会回滚到进入子事务前建立的 save point，然后尝试其他的事务或者其他的业务逻辑，父事务之前的操作不会受到影响，更 **不会自动回滚**
 
+* 如果 **父事务回滚**，会发生什么
+  * **父事务回滚，子事务也会跟着回滚**。因为父事务结束之前，子事务是不会提交的，正因为如此，所以才说子事务是父事务的一部分
+
+* 事务的提交，是什么情况
+  * 子事务先提交，父事务再提交。子事务是父事务的一部分，由父事务统一提交
+
+*更多：[一文带你认识 Spring事务](https://segmentfault.com/a/1190000018075069)、[面试分享：最全Spring事务面试考点整理](https://zhuanlan.zhihu.com/p/59731142)*
 
 ## Spring 中都用到了哪些设计模式
 
-**工厂模式**
+* 工厂模式
+  * BeanFactory 就是简单工厂模式的体现，用来创建对象的实例
 
-BeanFactory就是简单工厂模式的体现，用来创建对象的实例；
+* 单例模式
+  * Bean 默认为单例模式
 
-**单例模式**
+* 代理模式
+  * Spring 的 AOP 功能用到了 JDK 的动态代理和 CGLIB 字节码生成技术
 
-Bean默认为单例模式。
+* 模板方法
+  * 用来解决代码重复的问题。比如 RestTemplate、JmsTemplate、JpaTemplate
 
-**代理模式**
+* 观察者模式
+  * 定义对象键一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都会得到通知被制动更新，如 Spring 中 listener 的实现 ApplicationListener
 
-Spring的AOP功能用到了JDK的动态代理和CGLIB字节码生成技术；
-
-**模板方法**
-
-用来解决代码重复的问题。比如. RestTemplate, JmsTemplate, JpaTemplate。
-
-**观察者模式**
-
-定义对象键一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都会得到通知被制动更新，如Spring中listener的实现--ApplicationListener。
+*更多：[详解设计模式在Spring中的应用](https://zhuanlan.zhihu.com/p/61653019)*
 
 ## 更多
 
 * [Spring学习与面试](https://github.com/Snailclimb/JavaGuide/blob/master/docs/system-design/framework/Spring学习与面试.md)
+* [69个spring面试题及答案](https://www.cnblogs.com/huajiezh/p/5790946.html)
+* [阿里的Spring框架面试题到底有多难？这五大问题你又掌握了多少](https://zhuanlan.zhihu.com/p/54917703)
