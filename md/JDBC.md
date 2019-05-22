@@ -276,25 +276,39 @@ try (Connection con = DBUtil.getConnection();
 
 可以使用 setNull 方法来把 Null 值绑定到指定的变量上，需要传入参数的索引以及 SQL 字段的类型
 
-## 数据库服务器相关信息
-
-使用 DatabaseMetaData 可以获取到服务器的信息。当和数据库的连接成功建立了之后，可以通过调用getMetaData()方法来获取数据库的元信息。DatabaseMetaData里面有很多方法，通过它们可以获取到数据库的产品名称，版本号，配置信息等。
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 批处理
 
 可以一次性为数据库执行大量查询，JDBC 支持通过 Statement 和 PreparedStatement 的 addBatch() 以及executeBatch() 进行批处理。批处理比一次执行一个语句更快，因为数据库调用的数量较少
+
+```java
+String add = "insert into user values (?,?)";
+
+try (Connection con = DBUtil.getConnection();
+     PreparedStatement ps = con.prepareStatement(add)
+) {
+    for (int i = 0; i < 200; i++) {
+        ps.setInt(1, i + 100);
+        ps.setString(2, "test" + (i + 100));
+        
+        // 添加到批处理中
+        ps.addBatch();
+        if (i % 2 == 100) {
+            // 执行批处理
+            ps.executeBatch();
+            // 清空批处理
+            // 如果数据量太大，所有数据存入批处理，内存肯定溢出
+            ps.clearBatch();
+        }
+    }
+    // 不是所有的%2==100，剩下的再执行一次批处理
+    ps.executeBatch();
+    // 再清空
+    ps.clearBatch();
+
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+```
 
 ## RowSet
 
