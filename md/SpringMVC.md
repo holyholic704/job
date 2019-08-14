@@ -6,7 +6,7 @@
 
 MVC 是一种设计模式，它强制的将应用程序的输入、处理、输出分开。使用了 MVC 的应用程序被分为 3 个核心部件：视图（View）、模型（Model）、控制器（Controller）。它们各司其职，既分工明确又相互合作
 
-* 实现了功能模块和显示模块的分离，降低了耦合性，还提高了系统的可维护性、可扩展性和组件的可复用性
+* 实现了功能模块和显示模块的分离，降低了耦合度，还提高了系统的可维护性、可扩展性和组件的可复用性
 
 - 降低了系统的性能，增加了程序源码的复杂性，增加了开发成本，有时会导致级联的修改
 
@@ -20,10 +20,9 @@ MVC 是一种设计模式，它强制的将应用程序的输入、处理、输�
 
 将整个业务应用划分为：表现层（UI）、业务逻辑层（BLL）、数据访问层（DAL）。区分层次的目的即为了实现 **高内聚，低耦合** 的思想
 
-* 表现层：就是展现给用户的界面，即用户在使用一个系统的时候他的所见所得
+* 表现层：展现给用户的界面，即用户在使用一个系统的时候他的所见所得
   * 表现层只能作为一个外壳，不能包含任何的逻辑处理过程
-* 业务逻辑层：针对具体问题的操作，也可以说是对数据层的操作，对数据业务逻辑处理
-  * 业务逻辑层是系统架构中最核心的部分，主要负责对数据层的操作
+* 业务逻辑层：针对具体问题的操作，也可以说是对数据层的操作，对数据业务逻辑处理，系统架构中最核心的部分
 * 数据访问层：该层所做事务直接操作数据库，针对数据的增添、删除、修改、更新、查找等
 
 #### 三层架构与 MVC
@@ -49,8 +48,8 @@ MVC 是一种设计模式，它强制的将应用程序的输入、处理、输�
 ### Spring MVC 与 Struts2 的区别
 
 * 框架机制
-  * Spring MVC 是通过 **servlet** 的方式进行拦截，在第一次请求发送时初始化，**随着容器关闭而销毁**
-  * Struts2 是通过 **filter** 的方式进行拦截，在容器初始化时加载，**晚于 servlet 销毁**
+  * Spring MVC 是通过 **Servlet** 的方式进行拦截，在第一次请求发送时初始化，**随着容器关闭而销毁**
+  * Struts2 是通过 **Filter** 的方式进行拦截，在容器初始化时加载，**晚于 servlet 销毁**
 
 * 拦截机制
   * Spring MVC是 **方法级别** 上的拦截，一个请求对应着一个 controller 中的方法，请求参数会封装到方法参数中。controller 类中的属性被方法所共享，controller 类 **默认是单例** 的，在请求发送时不会创建对象
@@ -63,7 +62,7 @@ MVC 是一种设计模式，它强制的将应用程序的输入、处理、输�
 
 ### Spring MVC 的控制器是不是单例模式
 
-是单例模式，所以在多线程访问的时候有线程安全问题，不要用同步，会影响性能，解决方案是在控制器里面不能写字段
+是单例模式，所以在多线程访问的时候有线程安全问题，不要用同步，会影响性能，最好的解决方案是在控制器里面不能写字段
 
 ## Spring MVC 项目
 
@@ -96,12 +95,12 @@ MVC 是一种设计模式，它强制的将应用程序的输入、处理、输�
 </servlet-mapping>
 ```
 
-*  param-name 中的 contextConfigLocation 是固定写法
+*  param-name 中的 **contextConfigLocation 是固定写法**
   * DispatcherServlet 继承了 FrameworkServlet，在这个类中有个 contextConfigLocation 成员变量，所以在 param-name 中将其命名为 contextConfigLocation
 
 ### 配置文件
 
-* 文件名需跟 init-param 中的 param-value 保持一致
+* 配置文件名需跟 init-param 中的 param-value 保持一致
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -122,7 +121,9 @@ MVC 是一种设计模式，它强制的将应用程序的输入、处理、输�
 
 ### Controller
 
-* 通常称这样的类为 Controller，作用类似于 servlet，或者可以认为在 Spring MVC 里面，就是使用了 Controller 来代替了 servlet，它提供了比 servlet 更加丰富的功能
+* 创建一个类实现 Controller 接口
+
+* 通常称这样的类为 Controller，作用类似于 Servlet，也可以认为在 Spring MVC 里面，就是使用了 Controller 来代替了 Servlet，它提供了比 Servlet 更加丰富的功能
 
 ```java
 public class TestController implements Controller {
@@ -159,38 +160,20 @@ mv.setViewName("test");
 
 ## Spring MVC 主要组件
 
-* 前端控制器（DispatcherServlet），不需要程序员开发，由框架提供
-  * Spring MVC 的入口。接收请求、响应结果，**相当于转发器**。是整个流程控制的中心，由它调用其它组件处理用户的请求，减少了组件之间的耦合度
-
-* 处理器映射器（HandlerMapping），不需要程序员开发，由框架提供
-  * 根据请求的 URL 来查找 Handler
-
-* 处理器适配器（HandlerAdapter）
-  * 通过 HandlerAdapter 对处理器进行执行，这是适配器模式的应用，通过扩展适配器可以对更多类型的处理器进行执行
-
-* 处理器（Handler），需要程序员开发
-  * 也就是我们平常说的 Controller 控制器。Handler 是继 DispatcherServlet 前端控制器的后端控制器，在 DispatcherServlet 的控制下 Handler 对具体的用户请求进行处理。由于 Handler 涉及到具体的用户业务请求，所以一般情况需要程序员根据业务需求开发 Handler
-  * 编写 Handler 的时候要按照 HandlerAdapter 要求的规则去编写，这样适配器才可以正确的去执行 Handler
-
-* 视图解析器（ViewResolver），不需要程序员开发，由框架提供
-  * 负责将处理结果生成 View 视图，View Resolver 首先根据逻辑视图名解析成物理视图名即具体的页面地址，再生成 View 视图对象，最后对 View 进行渲染将处理结果通过页面展示给用户
-  * Spring MVC 提供了很多的 View 视图类型：jstlView、freemarkerView、pdfView 等。 一般需要通过页面标签或页面模版技术将模型数据通过页面展示给用户，所以需要由程序员根据业务需求开发具体的页面
-
-* 视图（View），需要程序员开发
-  * View 是一个接口，它的实现类支持不同的视图类型：jsp，freemarker，pdf 等
+![20190525103109](../md.assets/20190525103109.png)
 
 ### Spring MVC 工作流程
 
 ![20180708224853769](../md.assets/20180708224853769.png)
 
-* 用户发送请求至前端控制器 DispatcherServlet
-* DispatcherServlet 收到请求后，调用 HandlerMapping 处理器映射器，请求获取 Handler
-* 处理器映射器根据请求 URL 找到具体的处理器，生成处理器对象及处理器拦截器（如果有则生成）一并返回给 DispatcherServlet
-* DispatcherServlet 调用 HandlerAdapter 处理器适配器
-* HandlerAdapter 经过适配调用具体处理器（Handler，也叫后端控制器）
+* 用户发送请求至 DispatcherServlet
+* DispatcherServlet 收到请求后，调用 HandlerMapping，请求获取 Handler
+* HandlerMapping 根据请求 URL 找到具体的 Handler，生成处理器对象及处理器拦截器（如果有则生成）一并返回给 DispatcherServlet
+* DispatcherServlet 调用 HandlerAdapter
+* HandlerAdapter 经过适配调用具体 Handler
 * Handler 执行完成返回 ModelAndView
 * HandlerAdapter 将 Handler 执行结果 ModelAndView 返回给 DispatcherServlet
-* DispatcherServlet 将 ModelAndView 传给 ViewResolver 视图解析器进行解析
+* DispatcherServlet 将 ModelAndView 传给 ViewResolver 进行解析
 * ViewResolver 解析后返回具体 View
 * DispatcherServlet 对 View 进行渲染视图（即将模型数据填充至视图中）
 * DispatcherServlet 响应用户
@@ -207,14 +190,14 @@ mv.setViewName("test");
 ### 设置 url-pattern 为 `/`
 
 * 只要是在 web.xml 文件中找不到匹配的 URL，它们的访问请求都将交给 DispatcherServlet 处理，静态资源：CSS、JS、图片，也会被拦截并交给 DispatcherServlet 处理
-* 该配置方式不会拦截 JSP 和 JSPX 文件，因为在 Tomcat 中的 web.xml 文件中已经添加的相应的处理方式了，他会交给 JspServlet 来处理，即可以正常访问系统中的 JSP 文件。在 Restful 风格中常用
+* 该配置方式不会拦截 JSP 和 JSPX 文件，因为在 Tomcat 中的 web.xml 文件中已经添加的相应的处理方式了，他会交给 JspServlet 来处理，即可以正常访问系统中的 JSP 文件。在 RESTful 风格中常用
 
 ### 静态资源的访问
 
 有三种方法可以解决静态资源访问的问题
 
 * 使用 **defaultServlet**
-  * 在 Tomca 中的 web.xml，有一个叫做 DefaultServlet 的配置。当系统找不到处理某次 URL 请求该交由谁处理的时候，就会交给这个 Servlet 处理
+  * 在 Tomcat 中的 web.xml，有一个叫做 defaultServlet 的配置。当系统找不到处理某次 URL 请求该交由谁处理的时候，就会交给这个 Servlet 处理
   * 在 web.xml 文件中添加下面配置，要添加在 DispatcherServlet 的前面，这样系统就会将带有下面后缀名的请求交给 defaultservlet 来处理
 
 ```xml
@@ -238,11 +221,10 @@ mv.setViewName("test");
   * 在配置文件中添加即可，该方式会对所有的请求进行处理，然后交由相应的 Servlet
   * 这种方式其实最终也是由 DefaultServlet 来处理
 * 使用 **`mvc:resources`**
-  * 只需要在配置文件中添加下面内容即可，这样会交给 Spring MVC 的 ResourceHttpRequestHandler 类来处理
+  * 只需在配置文件中添加下面配置，会交给 Spring MVC 的 ResourceHttpRequestHandler 类来处理
 
 ```xml
-<!-- mapping表示对该资源的请求 -->
-<!-- location表示静态资源所在目录 -->
+<!-- mapping表示对该资源的请求，location表示静态资源所在目录 -->
 <mvc:resources mapping="/css/**" location="/css/" />
 ```
 
@@ -338,7 +320,7 @@ public String test(@PathVariable(required=true) String name)
 
 ### @ResponseBody
 
-在 Controller 方法中返回字符串，Spring MVC 会根据字符串跳转到相应的资源中。如果只想返回一个字符串，在方法上添加一个 @ResponseBody 即可
+在 Controller 方法中返回字符串，Spring MVC 会根据字符串跳转到相应的资源中。如果单纯的想返回一个字符串，在方法上添加 @ResponseBody 即可
 
 ```java
 // produces处理中文乱码
@@ -351,15 +333,15 @@ public String test(){
 
 ## Controller 返回值
 
-Controller 方法可以有不同的返回值，可以返回任意类型，一般返回 String
+Controller 中的方法可以返回任意类型，一般返回 String
 
 ### 返回 ModelAndView
 
-可以跳转到页面和传递参数，如果只使用一项功能就显得多余了
+可以跳转到资源页面和传递参数，但如果只需要使用其中一项功能就显得多余了
 
 ### 返回 String
 
-可以跳转到页面
+可以跳转到资源页面
 
 ```java
 @RequestMapping("/hello")
@@ -369,7 +351,7 @@ public String test(){
 }
 ```
 
-如果需要在 Controller 的方法中跳转到外部资源，如百度等，需要在配置文件中配置一个 BeanNameViewResolver 类，这个类被称作是视图解析器
+如果需要跳转到外部资源，需要在配置文件中配置一个 BeanNameViewResolver 类，这个类被称作是视图解析器
 
 ```xml
 <!-- 视图解析器 -->
@@ -415,7 +397,7 @@ public String test(Model model){
 
 当 **方法的参数列表中的参数名和表单中的参数名一致** 时，Spring MVC 会自动为其赋值，通过这种方式就可以在 Controller 中获取表单提交的数据了
 
-Controller 的方法里面，可以写多个或者不写参数，
+Controller 的方法里面，可以写多个或者不写参数
 
 - 参数列表中如果没有表单中的参数名则不会自动赋值
 - 参数列表中如果出现表单中没有的参数名则为 Null
@@ -505,8 +487,6 @@ public ModelAndView test(Test test){
 
 ### 针对 Get 方式的乱码问题
 
-由于参数是通过 URL 传递的，所以上面通过request设置的编码格式是不起作用的
-
 * 在每次发生请求之前对 URL 进行编码
 
 ```java
@@ -527,7 +507,7 @@ String s = new String(request.getParamter("name").getBytes("ISO8859-1"),"utf-8")
 
 ## 转发与重定向
 
-Spring MVC 底层其实就是一个 Servlet，因此在 Spring MVC 中也存在转发和重定向的概念。对于转发的页面，可以是在 WEB-INF 目录下的页面；而重定向的页面，是不能在 WEB-INF 目录下的。因为重定向相当于用户再次发出一次请求，而用户是 **不能直接访问 WEB-INF 目录下的资源的**。根据所要跳转的的资源，可以分为跳转到 JSP 页面和跳转到其他 Controller
+Spring MVC 底层其实就是一个 Servlet，因此在 Spring MVC 中也存在转发和重定向的概念。对于转发的页面，可以是在 WEB-INF 目录下的页面；而重定向的页面，是不能在 WEB-INF 目录下的。因为重定向相当于用户再次发出一次请求，**而用户是不能直接访问 WEB-INF 目录下的资源的**。根据所要跳转的的资源，可以分为跳转到 JSP 页面和跳转到其他 Controller
 
 ### 返回 ModelAndView 时的转发
 
@@ -598,7 +578,7 @@ response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 - 在配置文件中配置 JSON 的映射
 - 在接收 AJAX 方法里面可以直接返回 Object、List 等，**但方法前面要加上 @ResponseBody**
 
-```java
+```xml
 <!--解决返回json数据乱码问题 -->
 <bean id="stringHttpMessageConverter"
       class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -624,7 +604,7 @@ response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 
 ## 拦截器
 
-拦截器（interceptor）是 Spring MVC 中提供的一种类似 filter 过滤器的技术，只是拦截器只能拦截 Controller 的请求，而 filter 可以过滤所有请求，其他内容大体上两者是近似的。常用作权限控制
+拦截器（Interceptor）是 Spring MVC 中提供的一种类似 Filter 过滤器的技术，拦截器只能拦截 Controller 的请求，而 Filter 可以过滤所有请求，其他内容大体上两者是近似的。常用作权限控制
 
 定一个类实现 HandlerInterceptor 接口，这样就创建了一个拦截器，该接口中有三个方法
 
@@ -632,18 +612,18 @@ response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 // 该方法在Controller中的方法执行之前执行
 // 其返回值为boolean，若为true，则紧接着会执行Controller方法
 // 且会将afterCompletion()方法压栈进入入到一个专门的方法栈中等待执行
-preHandle(request, response, Object handler)：
+preHandle(request, response, Object handler);
 
 // 该方法在Controller方法执行之后执行，Controller方法若最终未被执行，则该方法不会执行
 // 由于该方法是在Controller方法执行完后执行，且该方法参数中包含ModelAndView
 // 所以该方法可以修改Controller方法的处理结果数据，且可以修改跳转方向
-postHandle(request, response, Object handler, modelAndView)：
+postHandle(request, response, Object handler, modelAndView);
 
 // 当preHandle()方法返回true时，会将该方法放到专门的方法栈中
 // 等到对请求进行响应的所有工作完成之后才执行该方法
 // 即该方法是在中央调度器渲染（数据填充）了响应页面之后执行的
 // 此时对ModelAndView再操作也对响应无济于事
-afterCompletion(request, response, Object handler, Exception ex)：
+afterCompletion(request, response, Object handler, Exception ex);
 ```
 
 在配置文件中注册拦截器，
@@ -661,11 +641,7 @@ afterCompletion(request, response, Object handler, Exception ex)：
 
 ### 拦截器的工作流程
 
-![Interceptor (1)](../md.assets/Interceptor (1).png)
-
-* 多个拦截器时，会形成拦截器链。拦截器链的执行顺序，与其注册顺序一致
-
-![Interceptor (2)](../md.assets/Interceptor (2).png)
+![20190525111443](../md.assets/20190525111443.png)
 
 ## 异常处理
 
@@ -673,9 +649,9 @@ afterCompletion(request, response, Object handler, Exception ex)：
 
 ### 使用 Spring MVC 中的异常处理器
 
-当系统出现异常之后，可以让 Spring MVC 跳转到指定的 JSP 中，这样用户体验比较好，开发者来也方便定位问题
+当系统出现异常时，可以让 Spring MVC 跳转到指定的 JSP 中，这样用户体验比较好，开发者来也方便定位问题
 
-自定义一个异常
+* 自定义一个异常
 
 ```java
 public class MyException extends Exception {
@@ -689,7 +665,7 @@ public class MyException extends Exception {
 }
 ```
 
-在配置文件中添加异常处理的相关配置
+* 在配置文件中添加异常处理的相关配置
 
 ```xml
 <!-- 配置异常处理器SimpleMappingExceptionResolver -->
@@ -717,9 +693,9 @@ ${ex.message}
 
 ### 自定义异常处理器
 
-如果需要在项目中捕获特定的异常，然后再根据捕获的异常做一些操作的时候，按照以前的写法，需要在每次捕获异常之后或者抛出之前进行操作，这段代码就会重复的出现在很多类里面，导致代码冗余，此时可以通过自定义异常处理器来解决
+如果需要在项目中捕获特定的异常，然后再根据捕获的异常做一些操作的时候，使用之以前的写法，需要在每次捕获异常之后或者抛出之前进行操作，这段代码就会重复的出现在很多类里面，导致代码冗余，此时可以通过自定义异常处理器来解决
 
-自定义异常处理器，需要实现 HandlerExceptionResolver 接口，并且该类需要在配置文件中进行注册
+* 自定义异常处理器，需要实现 HandlerExceptionResolver 接口，并且该类需要在配置文件中进行注册
 
 ```java
 public class MyExceptionResolver implements HandlerExceptionResolver {
@@ -780,9 +756,9 @@ public ModelAndView test(Exception ex){
 
 ## 类型转换器
 
-从前台提交到 Controller 中方法的表单数据会根据在方法参数中定义的类型来自动转换，不用强制转换。这个是通过 Spring MVC 中的默认类型转换器（converter）来实现的，不过这些默认转换器不是万能的，如日期等类型就不能转换，可以自定义一个类型转换器来进行日期类型的转换。Spring MVC 会根据编写的类型转换器将 JSP 提交的 String 类型的数据转换为 Date 类型
+从前台提交到 Controller 中方法的表单数据会根据在方法参数中定义的类型来自动转换，不用强制转换。这个是通过 Spring MVC 中的默认类型转换器（converter）来实现的，但这些默认转换器不是万能的，如日期等类型就不能转换，可以自定义一个类型转换器来进行日期类型的转换。Spring MVC 会根据编写的类型转换器将 JSP 提交的 String 类型的数据转换为 Date 类型
 
-创建一个类实现 Converter 接口，该接口中的泛型，**前面的类是待转换的类型，后面的是转换之后的类型**
+* 创建一个类实现 Converter 接口，该接口中的泛型，**前面的类是待转换的类型，后面的是转换之后的类型**
 
 ```java
 public class DateConverter implements Converter<String, Date> {
@@ -801,7 +777,7 @@ public class DateConverter implements Converter<String, Date> {
 }
 ```
 
-配置文件
+* 配置文件
 
 ```xml
 <!-- 注册注解驱动 -->
@@ -840,7 +816,7 @@ public class Test{
 
 在 Java 中有一个 bean validation 的数据验证规范，该规范的实现者有很多，其中 Hibernate validator 使用的较多，它是 Hibernate 框架下的一款用于数据校验的框架，而一般统称的 Hibernate 特指的是 Hibernate ORM
 
-首先需要导入 hibernate-validator 包，然后在配置文件中注册一个验证器
+* 首先需要导入 hibernate-validator 包，然后在配置文件中注册一个验证器
 
 ```xml
 <!--验证器-->
@@ -852,7 +828,7 @@ public class Test{
 <mvc:annotation-driven validator="validator"/>
 ```
 
-创建 JavaBean，在需要校验的属性上面添加相应的注解
+* 创建 JavaBean，在需要校验的属性上面添加相应的注解
 
 ```java
 public class Test {
@@ -904,26 +880,7 @@ public ModelAndView test(@Validated User user, BindingResult br) {
 
 ### Hibernate Validator 中常用的验证注解
 
-- @AssertFalse 验证注解的元素值是 false
-- @AssertTrue 验证注解的元素值是 true
-- @DecimalMax（value=x） 验证注解的元素值小于等于指定的十进制value 值
-- @DecimalMin（value=x） 验证注解的元素值大于等于指定的十进制value 值
-- @Digits(integer=整数位数, fraction=小数位数)验证注解的元素值的整数位数和小数位数上限
-- @Future 验证注解的元素值（日期类型）比当前时间晚
-- @Max（value=x） 验证注解的元素值小于等于指定的 value值
-- @Min（value=x） 验证注解的元素值大于等于指定的 value值
-- @NotNull 验证注解的元素值不是 null
-- @Null 验证注解的元素值是 null
-- @Past 验证注解的元素值（日期类型）比当前时间早
-- @Pattern(regex=正则表达式) 验证注解的元素值不指定的正则表达式匹配
-- @Size(min=最小值, max=最大值) 验证注解的元素值的在 min 和 max （包含）指定区间之内，如字符长度、集合大小
-- @Valid 该注解主要用于字段为一个包含其他对象的集合或map或数组的字段，或该字段直接为一个其他对象的引用，这样在检查当前对象的同时也会检查该字段所引用的对象。
-- @NotEmpty 验证注解的元素值不为 null 且不为空（字符串长度不为 0、集合大小不为 0）
-- @Range(min=最小值, max=最大值)验证注解的元素值在最小值和最大值之间
-- @NotBlank 验证注解的元素值不为空（不为 null、去
-- 除首位空格后长度为 0），不同于@NotEmpty， @NotBlank 只应用于字符串且在比较时会去除字符串的空格
-- @Length(min=下限, max=上限) 验证注解的元素值长度在 min 和 max 区间内
-- @Email 验证注解的元素值是 Email，也可以通过正则表达式和 flag 指定自定义的 email 格式
+![20190525141052](../md.assets/20190525141052.png)
 
 ## 文件上传
 
@@ -950,6 +907,7 @@ public ModelAndView upload(MultipartFile photo, HttpSession session) {
         String path = session.getServletContext().getRealPath("/upload");
         // 获取文件名称
         String filename = photo.getOriginalFilename();
+        
         // 限制文件上传的类型，getContentType为获得上传文件的类型
         if ("image/jpeg".equals(photo.getContentType())) {
             File file = new File(path, filename);
@@ -977,10 +935,10 @@ public ModelAndView upload(MultipartFile photo, HttpSession session) {
     <!-- 设置字符编码防止文件名乱码 -->
     <property name="defaultEncoding" value="utf-8"/>
     
-    <!-- 设置上传文件的总大小，单位是字节b -->
+    <!-- 设置上传文件的总大小，单位是字节 -->
     <property name="maxUploadSize" value="1048576"/>
     
-    <!-- 设置单个上传文件的大小，单位是字节b -->
+    <!-- 设置单个上传文件的大小，单位是字节 -->
     <property name="maxUploadSizePerFile" value="1048576"/>
     
     <!-- 设置内存缓冲区的大小，当超过该值的时候会写入到临时目录 -->
@@ -1052,6 +1010,7 @@ public ModelAndView upload(@RequestParam MultipartFile[] mf, HttpSession session
     ModelAndView mv = new ModelAndView();
     //获取服务器上传的文件路径
     String path = session.getServletContext().getRealPath("/upload");
+    
     for (MultipartFile mpf : mf) {
         if (!photo.isEmpty()) {
             //获取文件名称
@@ -1077,7 +1036,7 @@ public ModelAndView upload(@RequestParam MultipartFile[] mf, HttpSession session
 
 表现层状态转化（Representational State Transfer）是一种架构风格，跟编程语言或者平台无关，采用 HTTP 做传输协议，根据 RESTful 原则所理解，网络上任何一个资源就是一个实体，比如网上的一张图片，一首歌，一个服务等等，这些实体都可以通过 URI（统一资源标识符）来定位
 
-如果一个架构支持 RESTful，那么就称它为 RESTful 架构
+如果一个架构支持 RESTful，就称它为 RESTful 架构
 
 - 每一个 URI 代表一种资源
 - 客户端和服务器之间，传递这种资源的某种表现层
@@ -1104,18 +1063,14 @@ www.test/items/one/001
 
 ### 相关注解
 
-- @RestController
-  - 通常使用 AJAX+JSON 来实现 RESTful 架构风格，请求和响应的数据都使用 JSON 格式，需要在 Ccontroller 的每个方法上加上 @ResponseBody 来标注该方法返回值放到响应体中，这样就太麻烦了。此时就可以使用 @RestController 来代替之前的 @Controller，这样就标注了当前 Controller 中的每个方法的返回值要放到响应体中，就不用在每个方法上写 @ResponseBody 了
-- @RequestBody
+- @RestController：用来替代 @Controller，相当于 @Controller + @ResponseBody
+  - 通常请求和响应的数据都使用 JSON 格式，需要在 Controller 的每个方法上加上 @ResponseBody 来标注该方法返回值放到响应体中，这样就太麻烦了。此时就可以使用 @RestController 来代替之前的 @Controller，这样就标注了当前 Controller 中的每个方法的返回值要放到响应体中，就不用在每个方法上写 @ResponseBody 了
+- @RequestBody：将 JSON 转化为 JavaBean
   - RESTful 风格的请求数据是使用 JSON 格式，此时我们在要接收请求参数的 JavaBean 前面添加 @RequestBody 就可以将请求的数据赋值到相应的 bean 属性中
-- @GetMapping
-  * 用来替代 @RequestMapping，特点是 @GetMapping 只处理 get 方式的请求
-- @PostMapping
-  * 用来替代 @RequestMapping，特点是 @PostMapping 只处理 post 方式的请求
-- @PutMapping
-  * 用来替代 @RequestMapping，特点是 @PutMapping 只处理 put 方式的请求
-- @DeleteMapping
-  * 用来替代 @RequestMapping，特点是 @DeleteMapping 只处理 delete 方式的请求
+- @GetMapping：用来替代 @RequestMapping，只处理 get 方式的请求
+- @PostMapping：用来替代 @RequestMapping，只处理 post 方式的请求
+- @PutMapping：用来替代 @RequestMapping，只处理 put 方式的请求
+- @DeleteMapping：用来替代 @RequestMapping，只处理 delete 方式的请求
 
 ### URL 与 URI
 

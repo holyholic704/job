@@ -1,7 +1,3 @@
-## Linus Torvalds
-
-![linus](../md.assets/linus.jpg)
-
 ## 什么是 Git
 
 目前世界上最先进的分布式版本控制系统
@@ -10,7 +6,7 @@
 
 ![20190509172745](../md.assets/20190509172745.png)
 
-*更多：[详细透彻解读Git与SVN的区别](https://blog.csdn.net/hellow__world/article/details/72529022)*
+*更多：[详细透彻解读 Git与 SVN的区别](https://blog.csdn.net/hellow__world/article/details/72529022)*
 
 ## Git 的优缺点
 

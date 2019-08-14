@@ -52,7 +52,7 @@ char 类型变量是用来存储 Unicode 编码的字符的，Unicode 编码字�
 
 ### 参数传递
 
-Java 中方法参数传递方式是 **按值传递**。基本类型，传递的是基本类型的字面量值的拷贝，不改变其值。引用类型，传递的是该参量所引用的对象在堆中地址值的拷贝，改变其值
+Java 中方法参数传递方式是 **按值传递**。基本类型，传递的是基本类型的 **字面量值的拷贝**，不改变其值。引用类型，传递的是该参量所引用的对象在堆中 **地址值的拷贝**，改变其值
 
 String 类虽然是引用数据类型，但它做参数传递时和基本数据类型是一样的
 
@@ -831,7 +831,7 @@ public class Person implements Cloneable {
 // 深拷贝：不仅拷贝了Person对象，也拷贝了date成员变量
 public class Person implements Cloneable {
     // 可变的成员变量
-    public  Date date;
+    public Date date;
 
     @Override
     public Object clone() throws CloneNotSupportedException {

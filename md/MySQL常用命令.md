@@ -13,8 +13,6 @@ service mysql stop
 service mysql restart
 ```
 
-
-
 ### 连接 MySQL
 
 ```bash
@@ -22,8 +20,6 @@ mysql -h [主机地址] -u [用户名] -p [密码]
 # 可以省略空格
 mysql -h[主机地址] -u[用户名] -p[密码]
 ```
-
-
 
 ### 修改密码
 
@@ -41,8 +37,6 @@ update user set password = password('新密码') where user = 'root';
 flush privileges;
 ```
 
-
-
 ## 对数据库进行操作
 
 ```mysql
@@ -58,6 +52,12 @@ show databases;
 # 显示数据库的定义信息
 show create database [数据库名];
 
+# 显示表的定义信息
+show create table [表名];
+
+# 显示表中字段的定义信息
+show full columns from [表名];
+
 # 修改数据库字符编码
 alter database [数据库名] character set [字符编码];
 
@@ -70,8 +70,6 @@ select database();
 # 切换数据库
 use [数据库名];
 ```
-
-
 
 ## 对表进行操作
 
@@ -94,8 +92,6 @@ CREATE TABLE `表名` (
 	PRIMARY KEY (`字段名`)
 ) ENGINE = [存储引擎] DEFAULT CHARSET = [字符编码];
 ```
-
-
 
 ```mysql
 # 查看数据库中所有的表
@@ -138,8 +134,6 @@ drop table [表名];
 truncate table [表名];
 ```
 
-
-
 ## 对字段进行操作
 
 ### 增删改
@@ -158,8 +152,6 @@ delete from [表名] where [字段名] = [值];
 # 没有where条件会修改所有的数据
 update [表名] set [字段名] = [值] where [字段名] = [值];
 ```
-
-
 
 ### 查
 
@@ -205,8 +197,6 @@ select [字段名] from [表名] order by [字段名] desc;
 select [字段名] from [表名] where id = 1 order by [字段名] desc;
 ```
 
-
-
 ### 模糊查询
 
 ```mysql
@@ -222,8 +212,6 @@ select [字段名] from [表名] where position('end' in 字段名);
 # instr，同locate
 select [字段名] from [表名] where instr(字段名,'end') > 0;
 ```
-
-
 
 ### 处理函数
 
@@ -255,20 +243,6 @@ select rand();
 # 生成0~100随机数
 select round(rand()*100) 字段名 from [表名];
 
-# case when语句，计算条件列表并返回多个可能结果
-case [字段名]
-when [条件] then [处理]
-else [其他]
-end
-# 如给名为user1薪水加100，user2薪水减200，其他人薪水加50
-select id,name,(
-	case name
-	when 'user1' then sal + 100
-	when 'user2' then sal - 200
-	else sal + 50
-) as sal
-from test;
-
 # 格式化日期，转换为字符串
 select date_format(日期类型数据,日期格式)；
 
@@ -286,8 +260,6 @@ select str_to_date(日期字符串,日期格式);
 %i，分
 %s，秒
 ```
-
-
 
 ### 聚合函数
 
@@ -310,8 +282,6 @@ select min(字段名) from [表名];
 select count(字段名) from [表名];
 ```
 
-
-
 ### 去重
 
 ```mysql
@@ -319,8 +289,6 @@ select count(字段名) from [表名];
 # 只能出现在所有字段最前面，后面如果有多个字段即为多字段联合去重
 select destinct 字段名 from [表名];
 ```
-
-
 
 ### 分组
 
@@ -339,8 +307,6 @@ select [字段名] from [表名] group by id having id != 1;
 * where 是在 group by 之前完成过滤
 * having 是在 group by 之后完成过滤
 
-
-
 ### 返回的记录的数目
 
 ```mysql
@@ -351,21 +317,15 @@ select [字段名] from [表名] limit [起始下标],[截取长度];
 select [字段名] from [表名] limit [截取长度];
 ```
 
-
-
 ### 合并结果集
 
 ```mysql
-# UNION 操作符用于连接两个以上的 SELECT 语句的结果组合到一个结果集合中。多个 SELECT 语句会删除重复的数据。
-
-# union，将查询的结果集合并
+# union操作符用于连接两个以上的select语句的结果组合到一个结果集合中。多个select语句会删除重复的数据
 # 合并结果集时查询字段的个数必须一致，多个select语句会删除重复的数据
 select id from test
 union
 select name from test
 ```
-
-
 
 ## select 语句执行顺序
 
@@ -377,8 +337,6 @@ select name from test
 6. order by：对 select 生成的临时表，进行重新排序，生成新的临时表
 7. limit：对最终生成的临时表的数据行，进行截取
 
-
-
 ## explain 命令
 
 用来分析 SQL 语句执行时是否高效，MySQL 5.6 之前只允许解释 select 语句，之后非 select 语句也可以被解释了
@@ -387,21 +345,13 @@ select name from test
 explain [SQL语句];
 ```
 
-
-
 ### 输出结果
 
 输出的结果有 10 列：`id、select_type、table、type、possible_keys、key、key_len、ref、rows、Extra`
 
-
-
 ![2019-04-29_142435](../md.assets/2019-04-29_142435.png)
 
-
-
-* *[面试前必须知道的MySQL命令【explain】](https://segmentfault.com/a/1190000017278335)*
-
-
+*更多：[面试前必须知道的 MySQL命令【explain】](https://segmentfault.com/a/1190000017278335)*
 
 ## 连接查询
 
@@ -427,8 +377,6 @@ select a.name,b.name from atable a,btable b where a.id = b.id
 * 外连接：连接结果不仅包含符合连接条件的行同时也包含自身不符合条件的行。包括左外连接、右外连接和全外连接（MySQL不支持）
   * 左外连接：左边表数据行全部保留，右边表保留符合连接条件的行
   * 右外连接：右边表数据行全部保留，左边表保留符合连接条件的行
-
-
 
 ## 子查询
 
@@ -462,8 +410,6 @@ where
   id in (select id from other)
 ```
 
-
-
 ### in 与 exists
 
 exists 表示存在，常与子查询配合使用，会检查子查询是否至少会返回一行数据，子查询不返回任何数据，只返回 true 或 false 
@@ -491,15 +437,61 @@ where
   exists (select id from other)
 ```
 
+*更多：[在MySQL里，有个和 in一样的东东叫做 exists，但是它比 in更牛叉，你会么](https://segmentfault.com/a/1190000008709410)*
 
+## 条件控制
 
-* *更多：[在MySQL里，有个和in一样的东东叫做exists，但是它比in更牛叉，你会么](https://segmentfault.com/a/1190000008709410)*
+### if...then...else...end if
 
+````mysql
+create procedure ifthen()
+begin
+if 1 > 3 then
+	select 'fuck';
+else
+	select 'shit';
+end if;
+end
+````
 
+### if...then...elseif...then...end if
+
+````mysql
+create procedure elseif()
+begin
+	declare a int;	# 定义变量
+	declare b int;
+	set a = 1;	# 赋值
+	set b = 2;
+if a > b then
+	select 'fuck';
+elseif a = b then
+	select 'damn';
+else
+	select 'shit';
+end if;
+end
+````
+
+### case...when...then...end case
+
+````mysql
+create procedure casewhen()
+begin
+case number
+when 1 then
+	select 'fuck';
+when 2 then
+	select 'shit';
+else
+	select 'damn';
+end case;
+end
+````
 
 ## 循环
 
-### while...do...end while循环
+### while...do...end while
 
 ```mysql
 create procedure ww()
@@ -510,12 +502,8 @@ while i < 10 do
 	insert into test values(i);
 	set i = i + 1;
 end while;
-end;
-
-call ww();
+end
 ```
-
-
 
 ### repeat...until...end repeat
 
@@ -527,14 +515,10 @@ set i = 0;
 repeat
 	insert into test values(i);
 	set i = i + 1;
-	until i < 10;
+until i > 10;
 end repeat;
-end;
-
-call pp();
+end
 ```
-
-
 
 ### loop...end loop
 
@@ -550,8 +534,5 @@ loop_lable:loop
 	leave loop_lable;
 	end if;
 end loop;
-end;
-
-call ll();
+end
 ```
-
