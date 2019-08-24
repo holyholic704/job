@@ -1,4 +1,4 @@
-##  String MVC
+##  Spring MVC
 
 也叫作 Spring Web MVC，是一个基于 MVC 的表现层框架，主要用来简化 web 应用程序开发。是 Spring 的一个模块，**无需中间整合层来整合**
 
@@ -600,7 +600,7 @@ response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 ### @RequestBody 与 @ResponseBody
 
 * 如果传递进来的数据就是 JSON 格式的话，需要 @RequestBody 将请求的 JSON 数据转成 Java 对象
-* 如果需要将 Java 对象转成 JSON 数据输出就需要用到 @RequestBody 
+* 如果需要将 Java 对象转成 JSON 数据输出就需要用到 @ResponseBody 
 
 ## 拦截器
 

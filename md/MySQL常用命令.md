@@ -16,59 +16,52 @@ service mysql restart
 ### 连接 MySQL
 
 ```bash
-mysql -h [主机地址] -u [用户名] -p [密码]
 # 可以省略空格
-mysql -h[主机地址] -u[用户名] -p[密码]
+mysql -h [主机地址] -u [用户名] -p [密码]
 ```
 
 ### 修改密码
 
-**未登录 mysql**
+* 未登录 mysql
 
 ```bash
 mysqladmin -u[用户名] -p password [新密码]
 # 回车后输入原来的密码
 ```
-**登录 mysql**
+* 登录 mysql
 
 ```mysql
-use mysql；
-update user set password = password('新密码') where user = 'root';
-flush privileges;
+USE mysql；
+UPDATE user SET password = password('新密码') WHERE user = 'root';
+FLUSH PRIVILEGES;
 ```
 
 ## 对数据库进行操作
 
 ```mysql
 # 创建数据库
-create database [数据库名];
+CREATE DATABASE [数据库名];
 
 # 创建数据库并设置字符编码
-create database [数据库名] character set [字符编码];
-
-# 显示所有的数据库
-show databases;
-
-# 显示数据库的定义信息
-show create database [数据库名];
-
-# 显示表的定义信息
-show create table [表名];
-
-# 显示表中字段的定义信息
-show full columns from [表名];
+CREATE DATABASE [数据库名] CHARACTER SET [字符编码];
 
 # 修改数据库字符编码
-alter database [数据库名] character set [字符编码];
+ALTER DATABASE [数据库名] CHARACTER SET [字符编码];
+
+# 显示所有的数据库
+SHOW DATABASES;
+
+# 显示数据库的定义信息
+SHOW CREATE DATABASE [数据库名];
 
 # 删除数据库
-drop database [数据库名];
+DROP DATABASE [数据库名];
 
 # 查看当前使用的数据库
-select database();
+SELECT DATABASE();
 
 # 切换数据库
-use [数据库名];
+USE [数据库名];
 ```
 
 ## 对表进行操作
@@ -83,7 +76,6 @@ CREATE TABLE `user` (
 ) ENGINE = INNODB DEFAULT CHARSET = utf8;
 
 # 命令解释如下 
-
 CREATE TABLE `表名` (
 	`字段名` [字段类型] [约束条件],
 	...
@@ -95,43 +87,46 @@ CREATE TABLE `表名` (
 
 ```mysql
 # 查看数据库中所有的表
-show tables;
+SHOW TABLES;
 
 # 查看系统支持的存储引擎
-show engines；
+SHOW ENGINES；
 
 # 查看表的字段信息
-desc [表名];
+DESC [表名];
 
 # 显示表的定义信息
-show create table [表名];
+SHOW CREATE TABLE [表名];
+
+# 显示表中字段的定义信息
+SHOW FULL COLUMNS FROM [表名];
 
 # 添加字段和约束
-alter table [表名] add [字段名] [数据类型] [约束条件];
+ALTER TABLE [表名] ADD [字段名] [数据类型] [约束条件];
 
 # 修改字段和约束
-alter table [表名] modify [字段名] [数据类型] [约束条件];
+ALTER TABLE [表名] MODIFY [字段名] [数据类型] [约束条件];
 
 # 修改表的存储引擎
-alter table [表名] engine = [存储引擎];
+ALTER TABLE [表名] ENGINE = [存储引擎];
 
 # 修改表名
-rename table [表名] to [新表名];
+RENAME TABLE [表名] TO [新表名];
 
 # 修改表的字符编码
-alter table [表名] character set [字符编码];
+ALTER TABLE [表名] CHARACTER SET [字符编码];
 
 # 修改字段名
-alter table [表名] change [字段名] [新字段名] [数据类型];
+ALTER TABLE [表名] CHANGE [字段名] [新字段名] [数据类型];
 
 # 删除字段
-alter table [表名] drop [字段名];
+ALTER TABLE [表名] DROP [字段名];
 
 # 删除表
-drop table [表名];
+ALTER TABLE [表名];
 
 # 删除表数据，保留表结构
-truncate table [表名];
+TRUNCATE TABLE [表名];
 ```
 
 ## 对字段进行操作
@@ -141,60 +136,50 @@ truncate table [表名];
 ```mysql
 # 插入数据
 # 可以使用null插入空值，日期和字符要使用单引号
-insert into [表名] (字段名) values (值);
-insert into [表名] values (值);
+INSERT INTO [表名] (字段名) VALUES (值);
+INSERT INTO [表名] VALUES (值);
 
 # 删除数据
 # 没有where条件会删除所有的数据
-delete from [表名] where [字段名] = [值];
+DELETE FROM [表名] WHERE [字段名] = [值];
 
 # 修改数据
 # 没有where条件会修改所有的数据
-update [表名] set [字段名] = [值] where [字段名] = [值];
+UPDATE [表名] SET [字段名] = [值] WHERE [字段名] = [值];
 ```
 
 ### 查
 
 ```mysql
 # 查询数据
-# 没有where条件会查找所有的数据
 # 不建议使用*，因为会先将其编译成字段，然后再去查询，会影响一些性能，而且也不明确
-select [字段名] from [表名] where [字段名] = [值];
+SELECT [字段名] FROM [表名] WHERE [字段名] = [值];
 
 # 在mysql中<>表示不等于，!=也表示不等于，两者的含义和使用方式是一样的
-select [字段名] from [表名] where [字段名] != [值];
-select [字段名] from [表名] where [字段名] <> [值];
+SELECT [字段名] FROM [表名] WHERE [字段名] != [值];
+SELECT [字段名] FROM [表名] WHERE [字段名] <> [值];
 
 # between...and...，按范围查找
-select [字段名] from [表名] where id between 1 and 3;
-select [字段名] from [表名] where id not between 1 and 3;
-# 等价于
-select [字段名] from [表名] where id >= 1 and id <= 3;
-select [字段名] from [表名] where id < 1 or id > 3;
+SELECT [字段名] FROM [表名] WHERE id BETWEEN 1 AND 3;	# 包括1和3
+SELECT [字段名] FROM [表名] WHERE id NOT BETWEEN 1 AND 3;	# 不包括1和3
 
 # and的优先级大于or
-# 如要查询name为user，id为1或2
-select [字段名] from [表名] where name = 'user' and id = 1 or id = 2;
-# 错误写法为
-select [字段名] from [表名] where (name = 'user' and id = 1) or id = 2;
+# 如要查询name为user，id为1或2，错误写法为
+SELECT [字段名] FROM [表名] WHERE name = 'user' AND id = 1 OR id = 2;
 # 正确写法为
-select [字段名] from [表名] where name = 'user' and (id = 1 or id = 2);
+SELECT [字段名] FROM [表名] WHERE name = 'user' AND (id = 1 OR id = 2);
 
 # in，表示只要满足其中一项条件即可，也可以采用or来表示，采用in会更简洁一些
-select [字段名] from [表名] where id in (1,2);
 # not in，则表示不满足其中任何一项，并且结果集不能有null，否则没有返回结果
-select [字段名] from [表名] where id not in (1,2);
+SELECT [字段名] FROM [表名] WHERE id IN (1,2);
 
 # is null，查询为空的数据
-select [字段名] from [表名] where name is null;
 # is not null，查询不为空的数据
-select [字段名] from [表名] where name is not null;
+SELECT [字段名] FROM [表名] WHERE name IS NULL;
 
-# order by，排序，可排序多个字段
-# 默认为升序排列asc，降序排列使用desc
-select [字段名] from [表名] order by [字段名] desc;
+# order by，排序，可排序多个字段，默认为升序排列asc，降序排列使用desc
 # 如存在where子句，order by必须放到where语句后面
-select [字段名] from [表名] where id = 1 order by [字段名] desc;
+SELECT [字段名] FROM [表名] ORDER BY [字段名] DESC;
 ```
 
 ### 模糊查询
@@ -202,92 +187,48 @@ select [字段名] from [表名] where id = 1 order by [字段名] desc;
 ```mysql
 # like
 # _表示匹配一个任意字符，%匹配任意个任意字符
-select [字段名] from [表名] where name like '_end';
+SELECT [字段名] FROM [表名] WHERE name LIKE '_end';
 
 # 更高效的模糊查询，可以使用索引
 # locate，>0可以省略，=0表示不包括该条件的所有数据，<0结果为null
-select [字段名] from [表名] where locate('end',字段名) > 0;
+SELECT [字段名] FROM [表名] WHERE LOCATE('end',字段名) > 0;
 # position
-select [字段名] from [表名] where position('end' in 字段名);
+SELECT [字段名] FROM [表名] WHERE POSITION('end' in 字段名);
 # instr，同locate
-select [字段名] from [表名] where instr(字段名,'end') > 0;
+SELECT [字段名] FROM [表名] WHERE INSTR(字段名,'end') > 0;
 ```
 
 ### 处理函数
 
-```mysql
-# 转换为大写
-select lower(字段名) from [表名];
-
-# 转换为小写
-select upper(字段名) from [表名];
-
-# 截取子串，下标从1开始
-select substr(字段名，起始下标，截取长度) from [表名];
-
-# 获取字段中值的长度
-select length(字段名) from [表名];
-
-# 空值处理
-# 有null参与的运算结果都为null，建议先使用ifnull函数处理，将null替换为0或别的值
-select ifnull(字段名，替换值) from [表名];
-
-# 去除首尾空格，MySQL默认去除字段后面的空格
-select trim(字段名) from [表名];
-
-# 四舍五入
-select round(字段名，保留的小数位数) from [表名];
-
-# 生成随机数
-select rand();
-# 生成0~100随机数
-select round(rand()*100) 字段名 from [表名];
-
-# 格式化日期，转换为字符串
-select date_format(日期类型数据,日期格式)；
-
-# 字符串转日期
-select str_to_date(日期字符串,日期格式);
-
-# 日期格式
-%Y，四位的年份
-%y，两位的年份
-%m，月份，01,02，...
-%c，月份，1,2，...
-%d，日
-%H，24小时制
-%h，12小时制
-%i，分
-%s，秒
-```
+- 转换为小写：**`LOWER(字段名)`**
+- 转换为大写：**`UPPER(字段名)`**
+- 截取子串，下标从1开始：**`SUBSTR(字段名)`**
+- 获取字段中值的长度：**`LENGTH(字段名)`**
+- 空值处理：**`IFNULL(字段名)`**
+  - 有 NULL 参与的运算结果都为 NULL ，建议先使用 IFNULL 函数处理，将 NULL 替换为 0 或别的值
+- 去除首尾空格，MySQL 默认去除字段后面的空格：**`TRIM(字段名)`**
+- 四舍五入：**`ROUND(字段名，保留的小数位数)`**
+- 生成随机数：**`RAND()`**
+  - 生成 0~100 随机数：**`ROUND(RAND()*100)`**
+- 格式化日期，转换为字符串：**`DATE_FORMAT(日期类型数据,日期格式)`**
+- 字符串转日期：**`STR_TO_DATE(日期字符串,日期格式)`**
 
 ### 聚合函数
 
 聚合函数在计算时会 **自动忽略空值，不能直接写在where语句的后面。聚合函数可以一起使用**
 
-```mysql
-# 求和
-select sum(字段名) from [表名];
-
-# 取平均值
-select avg(字段名) from [表名];
-
-# 取最大值，日期也可以进行比较
-select max(字段名) from [表名];
-
-# 取最小值
-select min(字段名) from [表名];
-
-# 计算数据总数，不会统计数据为null的记录
-select count(字段名) from [表名];
-```
+- 求和：**`SUM(字段名)`**
+- 取平均值：**`AVG(字段名)`**
+- 取最大值，日期也可以进行比较：**`MAX(字段名)`**
+  - 取最小值：**`MIN(字段名)`**
+- 计算数据总数，不会统计数据为 NULL 的记录：**`COUNT(字段名)`**
 
 ### 去重
 
 ```mysql
 # 去除重复记录，将查询结果中某一字段的重复记录去除掉
 # 只能出现在所有字段最前面，后面如果有多个字段即为多字段联合去重
-select destinct 字段名 from [表名];
+SELECT DESTINCT 字段名 FROM [表名];
 ```
 
 ### 分组
@@ -297,10 +238,10 @@ select destinct 字段名 from [表名];
 # order by语句只能放在group by语句后面
 # 如果想对分组的数据进行过滤，需要使用having子句。
 # 能够在where后过滤的数据不要放到having中进行过滤，否则影响SQL询句的执行效率
-select [字段名] from [表名] group by id having id != 1;
+SELECT [字段名] FROM [表名] GROUP BY id HAVING id != 1;
 ```
 
-**where和having区别**
+**where 和 having 区别**
 
 * where 和 having 都是为了完成数据的过滤，它们后面都是添加条件
 
@@ -312,9 +253,9 @@ select [字段名] from [表名] group by id having id != 1;
 ```mysql
 # limit子句可以获取前几条或中间某几行数据，下标从0开始
 # 主要用来分页处理，limit关键字只在MySQL中起作用
-select [字段名] from [表名] limit [起始下标],[截取长度];
+SELECT [字段名] FROM [表名] LIMIT [起始下标],[截取长度];
 # 如果只给定一个参数，表示返回最大的记录行数目
-select [字段名] from [表名] limit [截取长度];
+SELECT [字段名] FROM [表名] LIMIT [截取长度];
 ```
 
 ### 合并结果集
@@ -322,9 +263,9 @@ select [字段名] from [表名] limit [截取长度];
 ```mysql
 # union操作符用于连接两个以上的select语句的结果组合到一个结果集合中。多个select语句会删除重复的数据
 # 合并结果集时查询字段的个数必须一致，多个select语句会删除重复的数据
-select id from test
-union
-select name from test
+SELECT id FROM test
+UNION
+SELECT name FROM test
 ```
 
 ## select 语句执行顺序
@@ -342,7 +283,7 @@ select name from test
 用来分析 SQL 语句执行时是否高效，MySQL 5.6 之前只允许解释 select 语句，之后非 select 语句也可以被解释了
 
 ```mysql
-explain [SQL语句];
+EXPLAIN [SQL语句];
 ```
 
 ### 输出结果
@@ -359,22 +300,22 @@ explain [SQL语句];
 
 ```mysql
 # 内连接，inner可省略
-select a.name,b.name from atable a inner join btable b on a.id = b.id
+SELECT a.name,b.name FROM atable a INNER JOIN btable b ON a.id = b.id
 
 # 右连接，outer可省略
-select a.name,b.name from atable a right outer join btable b on a.id = b.id
+SELECT a.name,b.name FROM atable a RIGHT OUTER JOIN btable b ON a.id = b.id
 
 # 左连接
-select a.name,b.name from atable a left join btable b on a.id = b.id
+SELECT a.name,b.name FROM atable a LEFT JOIN btable b ON a.id = b.id
 
 # 也可以直接使用where语句进行查询
-select a.name,b.name from atable a,btable b where a.id = b.id
+SELECT a.name,b.name FROM atable a,btable b WHERE a.id = b.id
 ```
 
 **内连接与外连接的区别**
 
 * 内连接：指连接结果仅包含符合连接条件的行，参与连接的两个表都应该符合连接条件
-* 外连接：连接结果不仅包含符合连接条件的行同时也包含自身不符合条件的行。包括左外连接、右外连接和全外连接（MySQL不支持）
+* 外连接：连接结果不仅包含符合连接条件的行同时也包含自身不符合条件的行。包括左外连接、右外连接和全外连接（MySQL 不支持）
   * 左外连接：左边表数据行全部保留，右边表保留符合连接条件的行
   * 右外连接：右边表数据行全部保留，左边表保留符合连接条件的行
 
@@ -385,29 +326,29 @@ select 语句嵌套 select 语句被称为子查询，select 子句可出现在 
 ```mysql
 # 以下命令只做参考，没有实际用途
 # select后
-select
+SELECT
   id,
   (
-	select name
- 	from other
- 	where id = 1
+	SELECT name
+ 	FROM other
+ 	WHERE id = 1
   ) name
-from test
+FROM test
 
 # from后
-select
+SELECT
   a.name,b.name
-from
+FROM
   test a,
-  (select name from other) b
+  (SELECT name FROM other) b
 
 # where后
-select
+SELECT
   id,name
-from
+FROM
   test
-where
-  id in (select id from other)
+WHERE
+  id IN (SELECT id FROM other)
 ```
 
 ### in 与 exists
@@ -421,72 +362,72 @@ exists 表示存在，常与子查询配合使用，会检查子查询是否至�
 
 ```mysql
 # in语句只会执行一次，会查出子句中的所有id字段并且缓存起来，之后，检查test表的id是否和子句中的id相当，如果相等则加入结果期，直到遍历完test的所有记录
-select
+SELECT
   id,name
-from
+FROM
   test
-where
-  id in (select id from other)
+WHERE
+  id IN (SELECT id FROM other)
 
 # exists语句会执行test.length次，它不会去缓存exists的结果集
-select
+SELECT
   id,name
-from
+FROM
   test
-where
-  exists (select id from other)
+WHERE
+  EXISTS (SELECT id FROM other)
 ```
 
-*更多：[在MySQL里，有个和 in一样的东东叫做 exists，但是它比 in更牛叉，你会么](https://segmentfault.com/a/1190000008709410)*
+*更多：[在 MySQL里，有个和 in一样的东东叫做 exists，但是它比 in更牛叉，你会么](https://segmentfault.com/a/1190000008709410)*
 
 ## 条件控制
 
 ### if...then...else...end if
 
 ````mysql
-create procedure ifthen()
-begin
-if 1 > 3 then
-	select 'fuck';
-else
-	select 'shit';
-end if;
-end
+CREATE PROCEDURE ifthen()
+BEGIN
+IF 1 > 3 THEN
+	SELECT 'fuck';
+ELSE
+	SELECT 'shit';
+END IF;
+END
 ````
 
 ### if...then...elseif...then...end if
 
 ````mysql
-create procedure elseif()
-begin
-	declare a int;	# 定义变量
-	declare b int;
-	set a = 1;	# 赋值
-	set b = 2;
-if a > b then
-	select 'fuck';
-elseif a = b then
-	select 'damn';
-else
-	select 'shit';
-end if;
-end
+CREATE PROCEDURE elseif()
+BEGIN
+	DECLARE a INT;	# 定义变量
+	DECLARE b INT;
+	SET a = 1;	# 赋值
+	SET b = 2;
+IF a > b THEN
+	SELECT 'fuck';
+ELSEIF a = b THEN
+	SELECT 'damn';
+ELSE
+	SELECT 'shit';
+END IF;
+END
 ````
 
 ### case...when...then...end case
 
 ````mysql
-create procedure casewhen()
-begin
-case number
-when 1 then
-	select 'fuck';
-when 2 then
-	select 'shit';
-else
-	select 'damn';
-end case;
-end
+CREATE PROCEDURE casewhen()
+BEGIN
+CASE number
+WHEN 1 THEN
+	SELECT 'fuck';
+WHEN 2 THEN
+	SELECT 'shit';
+ELSE
+	SELECT 'damn';
+END CASE;
+END
 ````
 
 ## 循环
@@ -494,45 +435,45 @@ end
 ### while...do...end while
 
 ```mysql
-create procedure ww()
-begin
-declare i int;
-set i = 0;
-while i < 10 do
-	insert into test values(i);
-	set i = i + 1;
-end while;
-end
+CREATE PROCEDURE ww()
+BEGIN
+DECLARE i int;
+SET i = 0;
+WHILE i < 10 DO
+	INSERT INTO test VALUES(i);
+	SET i = i + 1;
+END WHILE;
+END
 ```
 
 ### repeat...until...end repeat
 
 ```mysql
-create procedure pp()
-begin
-declare i int;
-set i = 0;
-repeat
-	insert into test values(i);
-	set i = i + 1;
-until i > 10;
-end repeat;
-end
+CREATE PROCEDURE pp()
+BEGIN
+DECLARE i INT;
+SET i = 0;
+REPEAT
+	INSERT INTO test VALUES(i);
+	SET i = i + 1;
+UNTIL i > 10;
+END repeat;
+END
 ```
 
 ### loop...end loop
 
 ```mysql
-create procedure ll()
-begin
-declare i int;
-set i = 0;
-loop_lable:loop
-	insert into test values(i);
-	set i = i + 1;
-	if i >= 10 then
-	leave loop_lable;
-	end if;
-end loop;
-end
+CREATE PROCEDURE ll()
+BEGIN
+DECLARE i INT;
+SET i = 0;
+loop_lable:LOOP
+	INSERT INTO test VALUES(i);
+	SET i = i + 1;
+	IF i >= 10 THEN
+	LEAVE loop_lable;
+	END IF;
+END LOOP;
+END
 ```

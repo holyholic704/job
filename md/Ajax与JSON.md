@@ -4,19 +4,17 @@ Ajax（Asynchronous JavaScript and XML）异步 JavaScript 和 XML，是一种�
 
 通过在后台与服务器进行少量数据交换，可以在不重新加载整个网页的情况下，对网页的某部分进行更新，使网页实现异步更新
 
-### 优缺点
+### 优点
 
-**优点**
-
-* 异步请求，不妨碍用户浏览页面或者其他操作
-* 局部刷新，无需重新刷新页面
+* **异步请求**，不妨碍用户浏览页面或者其他操作
+* **局部刷新**，无需重新刷新页面
 * 界面与应用分离。有利于分工合作、减少非技术人员对页面的修改造成的 Web 应用程序错误、提高效率、也更加适用于现在的发布系统
 * 基于标准被广泛支持，不需要下载浏览器插件或者小程序，但需要客户允许 JavaScript 在浏览器上执行
 * 前端和后端负载平衡，将一些后端的工作移到前端，减少服务器与带宽的负担
 
-**缺点**
+### 缺点
 
-* 对浏览器机制的破坏，无法使用 back 和 History，破坏浏览器前进、后退按钮的正常功能
+* **对浏览器机制的破坏**，无法使用 back 和 History，破坏浏览器前进、后退按钮的正常功能
 * 安全问题，暴露了与服务器交互的细节，易受到黑客攻击
 * 对搜索引擎支持较弱
 * 不能很好支持移动设备
@@ -25,7 +23,7 @@ Ajax（Asynchronous JavaScript and XML）异步 JavaScript 和 XML，是一种�
 * 客户端肥大，太多客户段代码造成开发上的成本
 
 ### Ajax 工作原理
-相当于在客户端与服务端之间加了一个抽象层（Ajax 引擎），使用户请求和服务器响应异步化，并不是所有的请求都提交给服务器，像一些数据验证和数据处理都交给 Ajax 引擎来完成，只有确认需要向服务器读取新数据时才右 Ajax 引擎向服务器提交请求
+相当于在客户端与服务端之间加了一个抽象层（Ajax 引擎），使用户请求和服务器响应异步化，并不是所有的请求都提交给服务器，像一些数据验证和数据处理都交给 Ajax 引擎来完成，只有确认需要向服务器读取新数据时，才会让 Ajax 引擎向服务器提交请求
 
 *更多：[AJAX工作原理及其优缺点](https://www.cnblogs.com/SanMaoSpace/archive/2013/06/15/3137180.html)*
 
@@ -60,11 +58,7 @@ if(window.XMLHttpRequest) {
 
 ### XMLHttpRequest 工作原理
 
-传统的 Web 前端与后端的交互中，浏览器直接访问 Tomcat 的 Servlet 来获取数据，Servlet 通过转发把数据发送给浏览器
-
-当使用 Ajax 之后，浏览器会先把请求发送到 XMLHttpRequest 异步对象之中，异步对象对请求进行封装，然后再与发送给服务器。服务器并不是以转发的方式响应，而是以流的方式把数据返回给浏览器
-
-XMLHttpRequest 异步对象会 **不停监听服务器状态的变化**，得到服务器返回的数据，就写到浏览器上。因为不是转发的方式，所以是无刷新就能够获取服务器端的数据
+传统的 Web 前端与后端的交互中，浏览器直接访问 Tomcat 的 Servlet 来获取数据，Servlet 通过转发把数据发送给浏览器。当使用 Ajax 之后，浏览器会先把请求发送到 XMLHttpRequest 异步对象之中，异步对象对请求进行封装，然后再与发送给服务器。XMLHttpRequest 异步对象会 **不停监听服务器状态的变化**，得到服务器返回的数据，就写到浏览器上。因为不是转发的方式，而是以 **流** 的方式把数据返回给浏览器，所以是无刷新就能够获取服务器端的数据
 
 ![63651-20161218091406308-2001323373](../md.assets/63651-20161218091406308-2001323373.png)
 
@@ -152,16 +146,12 @@ function checkUsername() {
 
     // 创建http请求
     httpRequest.open("POST", "Servlet1", true);
-    
     // 因为使用的是post方式，所以需要设置消息头
     httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
     // 指定回调函数
     httpRequest.onreadystatechange = res;
-
     // 得到文本框的数据
     var name = document.getElementById("username").value;
-
     // 发送http请求，把要检测的用户名传递进去
     httpRequest.send("username=" + name);
 }
@@ -172,7 +162,6 @@ function res() {
 	if(httpRequest.readyState==4) {
         // 判断状态码是否为200，即服务器响应一切正常
         if(httpRequest.status==200) {
-            
             // 得到服务端返回的文本数据
             var text = httpRequest.responseText;
 			//把服务端返回的数据写在div上
@@ -231,13 +220,12 @@ $(function () {
 * timeout：设置请求超时时间，单位为毫秒
 * success：请求成功后自动调用此函数
 * error：请求失败时自动调用此函数
-* 
 
 ## JSON
 
 JSON（JavaScript Object Notation）JavaScript 对象表示法，是一种数据交换格式，独立于编程语言，可以用来存储和交换文本信息，类似 XML。JSON 的数据格式是以 **名-值对** 的方式存储的，可以将其看做是一个字符串
 
-* javaScript 原生支持 JSON，解析速度会很快
+* JavaScript 原生支持 JSON，解析速度会很快
 
 * 非常利于人类阅读和编写，同时也利于机器的解析和生成
 
@@ -255,13 +243,13 @@ var person = [{name:"囧",age:18},{name:"豌豆射手",count:28}];
 
 ### JSON 数据类型
 
-JSON 中的数据类型包括：对象、字符串、数字、布尔值、Null 和数组
+JSON 中的数据类型包括：对象、字符串、数字、布尔值、NULL 和数组
 
 * JSON 中的对象类型十分简单，JSON 本身就是对象，也就是 **被一对花括号 `{}` 包裹的键值对的列表**。对象可以嵌套使用，对象可以包含多个键值对，**键必须是字符串，值可以是合法的 JSON 数据类型**
 * JSON 中字符串必须并且只能使用双引号包裹起来。**在 JSON 中，键都是字符串类型**。在 Javascript 中，使用 **单引号和双引号没有任何区别**。但是 JSON 不是 Javascript 对象字面量，它只是基于 Javascript 对象字面量
 * JSON 中的数字类型可以是整数、小数、负数或者是指数
-* JSON 中的布尔值仅可使用小写形式：true 或 false，其他任何写法都会报错
-* JSON 中，使用 Null 表示一无所有、不存在等意思
+* JSON 中的 **布尔值只可使用小写形式**：true 或 false，其他任何写法都会报错
+* JSON 中，使用 NULL 表示一无所有、不存在等意思
 * JSON 中数组始终应该 **被方括号 `[]` 包裹**，数组中的值使用逗号隔开。这些值可以是任何合法的 JSON 数据类型。在数组中也可包含不同数据类型的值，但应该避免这样使用
 
 ## 更多

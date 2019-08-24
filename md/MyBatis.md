@@ -1,7 +1,5 @@
 ## MyBatis 概述
 
-### MyBatis
-
 MyBatis 是一个基于 Java 的 **持久层框架**，对 JDBC 进行了封装，主要作用就是在 Java 中操作数据库，开发者只需要关注 SQL 语句本身，避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集
 
 ### Hibernate
@@ -105,7 +103,7 @@ Maven 项目需要在 pom.xml 文件中的 build 标签中添加以下内容，�
 * resultType：设置返回的类型，MyBatis 后台会自动创建一个 resultMap，基于属性名来映射到实体类属性上
 * resultMap：将数据库表中的字段与实体类中的属性 **建立映射关系**，即使两者名字不一致，也会根据映射关系正常执行。**涉及到两张表的操作，即使字段名和实体类属性名一致，也要编写 resultMap 来进行关联**
 * **两者的区别**
-  * resultType 对应的是 Java 对象中的属性，大小写不敏感
+  * resultType 对应的是 Java 对象中的属性，**大小写不敏感**
   * resultMap 对应的是对已经定义好了 id 的 resultType 的引用，**大小写敏感**
 
 ```xml
@@ -279,9 +277,9 @@ MyBatis 的注解位于 org.apache.ibatis.annotations 包下
 
 DAO 接口即 Mapper 接口。接口的全限名，就是映射文件中的 namespace 的值；接口的方法名，就是映射文件中 Mapper 的 Statement 的 id 值；接口方法内的参数，就是传递给 SQL 的参数
 
-Mapper 接口是没有实现类的，当调用接口方法时，接口全限名 + 方法名拼接的字符串作为 key 值，可唯一定位一个 MappedStatement。在 MyBatis 中，每一个 SQL 标签，都会被解析为一个 MappedStatement 对象
+Mapper 接口是没有实现类的，当调用接口方法时，接口 **全限名 + 方法名** 拼接的字符串作为 key 值，可唯一定位一个 MappedStatement。在 MyBatis 中，每一个 SQL 标签，都会被解析为一个 MappedStatement 对象
 
-DAO 接口里的方法，因为是使用全限名 + 方法名的保存和寻找策略，所以不能被重载
+- DAO 接口里的方法，因为是使用全限名 + 方法名的保存和寻找策略，所以 **不能被重载**
 
 ### DAO 接口调用要求
 
@@ -365,7 +363,9 @@ MyBatis 有三种基本的 Executor 执行器，所有的作用范围都严格�
 
 ### 如何使用
 
-在映射文件 mapper 标签 **添加 namespace** 属性，将当前映射文件与 DAO 接口关联起来。映射文件中的 **id 名要与 DAO 接口中的方法名一致**，将方法和 SQL 语句关联起来，**映射文件名要与接口名相同**
+1. 在映射文件 mapper 标签 **添加 namespace** 属性，将当前映射文件与 DAO 接口关联起来
+2. 映射文件中的 **id 名要与 DAO 接口中的方法名一致**
+3. 将方法和 SQL 语句关联起来，**映射文件名要与接口名相同**
 
 ```xml
 <mapper namespace="com.test.dao.TestDao">
@@ -729,7 +729,7 @@ public class Course {
 
 ### 基本原理
 
-使用 CGLIB 创建目标对象的代理对象，当调用目标方法时，进入拦截器方法，如调用 a.getB().getName()，拦截器 invoke() 方法发现 a.getB() 是 null 值，那么就会单独发送事先保存好的查询关联 B 对象的 SQL，把 B 查询上来，然后调用 a.setB(b)，于是 A 的对象 b 属性就有值了，接着完成 a.getB().getName() 方法的调用
+使用 CGLIB 创建目标对象的代理对象，当调用目标方法时，进入拦截器方法，如调用 a.getB().getName()，拦截器 invoke() 方法发现 a.getB() 是 Null 值，那么就会单独发送事先保存好的查询关联 B 对象的 SQL，把 B 查询上来，然后调用 a.setB(b)，于是 A 的对象 b 属性就有值了，接着完成 a.getB().getName() 方法的调用
 
 ### 关联对象加载时机
 
@@ -785,7 +785,7 @@ MyBatis 根据对 **关联对象查询的 select 语句的执行时机**，分�
 </settings>
 ```
 
-若只希望某些查询支持深度延迟加载的话，可以在 resultMap 中的 collection 或 association 添加 **fetchType 属性**，配置为 **lazy 为开启深度延迟**，配置 **eager 为不开启**。fetchType 属性将取代全局配置参数 lazyLoadingEnabled 的设置
+- 若只希望某些查询支持深度延迟加载的话，可以在 resultMap 中的 collection 或 association 添加 **fetchType 属性**，配置为 **lazy 为开启深度延迟**，配置 **eager 为不开启**。fetchType 属性将取代全局配置参数 lazyLoadingEnabled 的设置
 
 ## 缓存
 
@@ -839,7 +839,7 @@ MyBatis 的一级缓存最大范围是 SqlSession 内部，有多个 SqlSession 
 <setting name="cacheEnabled" value="true"/>
 ```
 
-局部关闭可以只关闭某个 select 查询的二级缓存，在 select 标签中 **将 useCache 属性设置为 false**
+- 局部关闭可以只关闭某个 select 查询的二级缓存，在 select 标签中 **将 useCache 属性设置为 false**
 
 #### cache 标签
 
@@ -862,7 +862,7 @@ MyBatis 的一级缓存最大范围是 SqlSession 内部，有多个 SqlSession 
 * 查询多于修改时使用二级缓存
   * 因为任何增删改操作都将刷新二级缓存，对二级缓存的频繁刷新将降低系统性能
 
-*更多：[聊聊MyBatis缓存机制](https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&mid=2651747419&idx=2&sn=a7c25803179504b7232c0d6777fe4831&chksm=bd12ad168a65240095187adf72f82d0c7f2fcff52987e97fa385065eb63ff843e45dc896189e&mpshare=1&scene=23&srcid=0708i2B3zxQQJCepUAUUrZFw#rd)*
+*更多：[聊聊 MyBatis缓存机制](https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&mid=2651747419&idx=2&sn=a7c25803179504b7232c0d6777fe4831&chksm=bd12ad168a65240095187adf72f82d0c7f2fcff52987e97fa385065eb63ff843e45dc896189e&mpshare=1&scene=23&srcid=0708i2B3zxQQJCepUAUUrZFw#rd)*
 
 ## MyBatis 中设计模式
 
