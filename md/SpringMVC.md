@@ -4,7 +4,7 @@
 
 ### MVC
 
-MVC 是一种设计模式，它强制的将应用程序的输入、处理、输出分开。使用了 MVC 的应用程序被分为 3 个核心部件：视图（View）、模型（Model）、控制器（Controller）。它们各司其职，既分工明确又相互合作
+MVC 是一种设计模式，它强制的将应用程序的输入、处理、输出分开。使用了 MVC 的应用程序被分为 3 个核心部件：模型（Model）、视图（View）、控制器（Controller）。它们各司其职，既分工明确又相互合作
 
 * 实现了功能模块和显示模块的分离，降低了耦合度，还提高了系统的可维护性、可扩展性和组件的可复用性
 
@@ -49,7 +49,7 @@ MVC 是一种设计模式，它强制的将应用程序的输入、处理、输�
 
 * 框架机制
   * Spring MVC 是通过 **Servlet** 的方式进行拦截，在第一次请求发送时初始化，**随着容器关闭而销毁**
-  * Struts2 是通过 **Filter** 的方式进行拦截，在容器初始化时加载，**晚于 servlet 销毁**
+  * Struts2 是通过 **Filter** 的方式进行拦截，在容器初始化时加载，**晚于 Servlet 销毁**
 
 * 拦截机制
   * Spring MVC是 **方法级别** 上的拦截，一个请求对应着一个 controller 中的方法，请求参数会封装到方法参数中。controller 类中的属性被方法所共享，controller 类 **默认是单例** 的，在请求发送时不会创建对象
@@ -167,12 +167,9 @@ mv.setViewName("test");
 ![20180708224853769](../md.assets/20180708224853769.png)
 
 * 用户发送请求至 DispatcherServlet
-* DispatcherServlet 收到请求后，调用 HandlerMapping，请求获取 Handler
-* HandlerMapping 根据请求 URL 找到具体的 Handler，生成处理器对象及处理器拦截器（如果有则生成）一并返回给 DispatcherServlet
-* DispatcherServlet 调用 HandlerAdapter
-* HandlerAdapter 经过适配调用具体 Handler
-* Handler 执行完成返回 ModelAndView
-* HandlerAdapter 将 Handler 执行结果 ModelAndView 返回给 DispatcherServlet
+* DispatcherServlet 收到请求后，调用 HandlerMapping，根据请求 URL 找到具体的 Handler，生成处理器对象及处理器拦截器（如果有则生成）一并返回给 DispatcherServlet
+* DispatcherServlet 调用 HandlerAdapter，经过适配调用具体 Handler
+* Handler 执行完成返回 ModelAndView 给 HandlerAdapter，再返回给 DispatcherServlet
 * DispatcherServlet 将 ModelAndView 传给 ViewResolver 进行解析
 * ViewResolver 解析后返回具体 View
 * DispatcherServlet 对 View 进行渲染视图（即将模型数据填充至视图中）
@@ -604,7 +601,7 @@ response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 
 ## 拦截器
 
-拦截器（Interceptor）是 Spring MVC 中提供的一种类似 Filter 过滤器的技术，拦截器只能拦截 Controller 的请求，而 Filter 可以过滤所有请求，其他内容大体上两者是近似的。常用作权限控制
+拦截器（Interceptor）是 Spring MVC 中提供的一种类似 Filter 过滤器的技术，**拦截器只能拦截 Controller 的请求，而 Filter 可以过滤所有请求**，其他内容大体上两者是近似的。常用作权限控制
 
 定一个类实现 HandlerInterceptor 接口，这样就创建了一个拦截器，该接口中有三个方法
 
@@ -626,7 +623,7 @@ postHandle(request, response, Object handler, modelAndView);
 afterCompletion(request, response, Object handler, Exception ex);
 ```
 
-在配置文件中注册拦截器，
+在配置文件中注册拦截器
 
 ```xml
 <!--注册拦截器-->
@@ -706,7 +703,6 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
         mv.addObject("ex", ex);
         //设置默认异常处理页面
         mv.setViewName("error/error");
-
         //判断ex是否是MyException
         if (ex instanceof MyException) {
             //可以在这里面编写捕获到该异常之后的操作
@@ -1077,10 +1073,3 @@ www.test/items/one/001
 * URL：统一资源定位符，可以提供找到某个资源的路径，例如常见的网址等
 * URI：统一资源标识符，可以唯一标识一个资源
 * 一般一个 URL 也是一个 URI，即 URL 可以看做是 URI 的子集
-
-
-
-
-
-
-
