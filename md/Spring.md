@@ -159,7 +159,7 @@ BeanFactory 的子接口，除了提供 BeanFactory 所具有的功能外，提�
 - 统一的资源文件访问方式
 - 提供在监听器中注册 bean 的事件
 - 同时加载多个文件
-- 载入多个（有继承关系）上下文，便得每一个上下文都专注于一个特定的层次，比如应用的 web 层
+- 载入多个（有继承关系）上下文，便得每一个上下文都专注于一个特定的层次，比如应用的 Web 层
 
 ```java
 @Test
@@ -307,10 +307,10 @@ public class PersonDaoImpl implements PersonDao {
 * 如果 bean 实现了 BeanNameAware 接口，将会调用 setBeanName 方法，传入 bean 的 id
 * 如果 bean 实现了 BeanFactoryAware 接口，将会调用 setBeanFactory 方法，传入 BeanFactory 的实例
 * 如果 bean 实现了 ApplicationContextAware 接口，将会调用 setApplicationContext 方法，传入应用上下文的引用
-* 如果 bean 实现了 BeanPostProcessor 接口，将会调用 postProcessBeforeInitialization(Object Obj,String s) 方法
+* 如果 bean 实现了 BeanPostProcessor 接口，将会调用 `postProcessBeforeInitialization(Object Obj,String s)` 方法
 * 如果 bean 实现了 InitializingBean 接口，将会调用 afterPropertiesSet 方法
 * 如果 bean 在配置文件中配置了 init-method 属性会自动调用其配置的初始化方法
-* 如果 bean 实现了 BeanPostProcessor 接口，将会调用 postProcessAfterInitialization(Objec tObj,String s) 方法
+* 如果 bean 实现了 BeanPostProcessor 接口，将会调用 `postProcessAfterInitialization(Objec tObj,String s)` 方法
 * **此时 bean 已经准备就绪，并且是单例的**，可以被应用程序使用了，他们将会一直驻留在应用上下文中，直到该应用上下文被销毁
 * 当 bean 不再需要时，会进行清理阶段，如果 bean 实现了 DisposableBean 接口，将会调用 destroy 方法
 * 如果 bean 在配置文件中配置了 destroy-method 属性会自动调用其配置的销毁方法

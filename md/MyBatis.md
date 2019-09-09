@@ -322,7 +322,7 @@ DAO 接口是没有实现类的，在调用它的时，MyBatis 会使用 **JDK �
   * 一旦被创建就在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。**在应用运行期间不要重复创建多次**，因此 SqlSessionFactory 的最佳作用域是 **应用作用域**，如使用单例模式
 
 * SqlSession：**Session**
-  * 每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例 **不是线程安全** 的，因此 **不能被共享** ，所以最佳的作用域是 **请求或方法作用域**。绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，如 Servlet 框架中的 HttpSession。如果现在正在使用一种 Web 框架，要考虑 SqlSession 放在一个和 HTTP 请求对象相似的作用域中。换句话说，每次收到的 HTTP 请求，就可以打开一个 SqlSession，返回一个响应，就关闭它，**应该把关闭操作放到 finally 块中** 以确保每次都能执行关闭
+  * 每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例 **不是线程安全** 的，因此 **不能被共享** ，所以最佳的作用域是 **请求或方法作用域**。绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，如 Servlet 框架中的 HttpSession。如果现在正在使用一种 Web 框架，要考虑 SqlSession 放在一个和 HTTP 请求对象相似的作用域中。即每次收到的 HTTP 请求，就可以打开一个 SqlSession，返回一个响应，就关闭它，**应该把关闭操作放到 finally 块中** 以确保每次都能执行关闭
 * 映射器实例：**Session**
   * 映射器是一些由你创建的、绑定你映射的语句的接口。映射器接口的实例是从 SqlSession 中获得的，因此，映射器实例的最大作用域是和请求它们的 SqlSession 相同的，最佳作用域是 **方法作用域**。映射器实例应该在调用它们的方法中被请求，用过即丢，不需要显式地关闭映射器实例。尽管在整个请求作用域保持映射器实例也不会有什么问题，但就像 SqlSession 一样，在这个作用域上管理太多的资源的话会难于控制，最好把映射器放在方法作用域内
 
@@ -335,7 +335,7 @@ DAO 接口是没有实现类的，在调用它的时，MyBatis 会使用 **JDK �
 - ParameterHandler：负责对用户传递的参数转换成 JDBC Statement 所对应的数据类型
 - ResultSetHandler：负责将 JDBC 返回的 ResultSet 结果集对象转换成 List 类型的集合
 - TypeHandler：负责 Java 数据类型和 JDBC 数据类型之间的映射和转换
-- MappedStatement：维护一条 <select|update|delete|insert> 节点的封装
+- MappedStatement：维护一条 `<select|update|delete|insert>` 节点的封装
 - SqlSource：根据用户传递的 parameterObject，动态地生成 SQL 语句，将信息封装到 BoundSql 对象中，并返回
 - BoundSql：表示动态生成的 SQL 语句以及相应的参数信息
 
@@ -405,11 +405,11 @@ MyBatis 使用 RowBounds 对象进行分页，`RowBounds(offset, limit)`，它�
 
 ## MyBatis 插件运行原理
 
-MyBatis 可以针对 ParameterHandler、ResultSetHandler、StatementHandler、Executor 四种接口编写插件，MyBatis 使用 JDK 的动态代理，为需要拦截的接口生成代理对象以实现接口方法拦截功能，每当执行这四种接口对象的方法时，就会进入拦截方法，具体就是 InvocationHandler 的 invoke() 方法，当然，只会拦截那些你指定需要拦截的方法
+MyBatis 可以针对 ParameterHandler、ResultSetHandler、StatementHandler、Executor 四种接口编写插件，MyBatis 使用 JDK 的动态代理，为需要拦截的接口生成代理对象以实现接口方法拦截功能，每当执行这四种接口对象的方法时，就会进入拦截方法，具体就是 InvocationHandler 的 invoke 方法，当然，只会拦截那些你指定需要拦截的方法
 
 ### 如何编写一个插件
 
-实现 MyBatis 的 Interceptor 接口并复写 intercept() 方法，然后在给插件编写注解，指定要拦截哪一个接口的哪些方法即可，然后在配置文件中配置编写的插件
+实现 MyBatis 的 Interceptor 接口并复写 intercept 方法，然后在给插件编写注解，指定要拦截哪一个接口的哪些方法即可，然后在配置文件中配置编写的插件
 
 ## 动态 SQL
 
@@ -813,7 +813,7 @@ MyBatis 根据对 **关联对象查询的 select 语句的执行时机**，分�
 
 也叫作本地缓存，是基于 PerpetualCache 类的 **HashMap 本地缓存**，**作用域是 SqlSession**，**一级缓存默认开启，且不能关闭**
 
-每个 SqlSession 中持有了 Executor，每个 Executor 中有一个 LocalCache 。当用户发起查询时，MyBatis 根据当前执行的语句生成 MappedStatement，在 Local Cache 进行查询，如果缓存命中的话，直接返回结果给用户，如果缓存没有命中的话，查询数据库，结果写入 Local Cache ，最后返回结果给用户
+每个 SqlSession 中持有了 Executor，每个 Executor 中有一个 LocalCache 。当用户发起查询时，MyBatis 根据当前执行的语句生成 MappedStatement，在 LocalCache 进行查询，如果缓存命中的话，直接返回结果给用户，如果缓存没有命中的话，查询数据库，结果写入 LocalCache ，最后返回结果给用户
 
 MyBatis 的一级缓存最大范围是 SqlSession 内部，有多个 SqlSession 或者分布式的环境下，数据库写操作会引起脏数据，建议设定缓存级别为 Statement
 

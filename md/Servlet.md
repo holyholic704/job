@@ -8,10 +8,6 @@ Servlet 是一门用于开发动态 Web 资源的技术，可以运行在 Web �
 2. 响应客户请求阶段：调用 service 方法
 3. 终止阶段：调用 destroy 方法
 
-### Servlet 类
-
-
-
 ### Servlet 工作流程
 
 ![servlet](../md.assets/servlet.png)
@@ -46,13 +42,13 @@ Servlet 不是线程安全的，多线程并发的读写会导致数据不同步
 
 #### GenericServlet 类为什么有两个 init 方法
 
-如果在子类中想要调用 init 方法的话，需要重写 init 方法，但这个重写的 init(ServletConfig) 方法 **必须要调用父类的 init(ServletConfig) 方法**，即在第一句必须写上 super.init(config)，否则将无法获取到ServletConfig对象。若 ServletConfig 对象未获取，程序在运行时就有可能会出现空指针异常。为了避免这个问题的出现，在 GenericServlet 类中自己定义了一个 **没有参数的 init 方法**，**该方法就是让子类去重写的**，子类重写该方法时，无需编写 super.init(config)，为了保证该无参方法在初始化时执行，在 init(ServletConfig config) 方法中对其进行了调用
+如果在子类中想要调用 init 方法的话，需要重写 init 方法，但这个重写的 init(ServletConfig) 方法 **必须要调用父类的方法**，即在第一句必须写上 super.init(config)，否则将无法获取到 ServletConfig 对象。若 ServletConfig 对象未获取，程序在运行时就有可能会出现空指针异常。为了避免这个问题的出现，在 GenericServlet 类中自己定义了一个 **没有参数的 init 方法**，**该方法就是让子类去重写的**，子类重写该方法时，无需编写 super.init(config)，为了保证该无参方法在初始化时执行，在 init(ServletConfig config) 方法中对其进行了调用
 
 ## web.xml
 
 web.xml 属于部署描述符，在整个 Java 中只要是容器都会存在部署描述符，此部署描述符可以控制整个 Web 中各个组件的运行状态，也可以配置整个窗口的状态
 
-- web.xml 配置的时候要注意先后顺序。**监听器 -> 过滤器 -> Servlet**
+- web.xml 配置的时候要注意先后顺序：**监听器 -> 过滤器 -> Servlet**
 
 ### 设置欢迎页面
 
@@ -101,9 +97,9 @@ url-pattern 标签用于对请求进行筛选匹配，对当前注册的 Servlet
 
 * 精确路径模式：请求路径必须与 url-pattern 的值完全相同才可被当前 Servlet 处理
 
-* 通配符路径模式：该模式中的路径由精确路径部分与通配符部分两部分组成。请求路径中只有携带了url-pattern 值中指定的精确路径部分才可被当前 Servlet 处理
+* 通配符路径模式：该模式中的路径由精确路径部分与通配符部分两部分组成。请求路径中只有携带了 url-pattern 值中指定的精确路径部分才可被当前 Servlet 处理
 
-该模式中的路径由两部分组成：精确路径部分与通配符部分。请求路径中只有携带了url-pattern值中指定的精确路径部分才可被当前 Servlet 处理。
+该模式中的路径由两部分组成：精确路径部分与通配符部分。请求路径中只有携带了 url-pattern 值中指定的精确路径部分才可被当前 Servlet 处理。
 
 * 后辍名模式：请求路径最后的资源名称必须携带中指定的后辍名，其请求才可被当前 Servlet 处理
 
@@ -149,7 +145,7 @@ url-pattern 标签用于对请求进行筛选匹配，对当前注册的 Servlet
 
 - URI（Uniform Resource Identifier）：统一资源标识符，可以唯一标识一个资源
 
-* URL (Uniform Resource Locator）：统一资源定位符，可以提供找到某个资源的路径，例如常见的网址等
+* URL（Uniform Resource Locator）：统一资源定位符，可以提供找到某个资源的路径，例如常见的网址等
 
 * URN（Uniform Resource Name）：是唯一标识的一部分，就是一个特殊的名字
 
@@ -359,7 +355,7 @@ PrintWriter out = response.getWriter();
 out.write(str);
 ````
 
-使用 PrintWriter 流处理字节数据，会导致数据丢失，因此在编写下载文件功能时，要使用 OutputStream 流，避免使用 PrintWrite r流，因为 OutputStream 流是字节流，可以处理任意类型的数据，而 PrintWriter 流是字符流，只能处理字符数据，如果用字符流处理字节数据，会导致数据丢失
+使用 PrintWriter 流处理字节数据，会导致数据丢失，因此在编写下载文件功能时，要使用 OutputStream 流，避免使用 PrintWriter 流，因为 OutputStream 流是字节流，可以处理任意类型的数据，而 PrintWriter 流是字符流，只能处理字符数据，如果用字符流处理字节数据，会导致数据丢失
 
 - Servlet 向 OutputStream 或 PrintWriter 对象中写入的数据将 **被 Servlet 引擎从 response 里面获取**，Servlet 引擎将这些数据当作响应消息的正文，然后再与响应状态行和各响应头组合后输出到客户端
 
@@ -397,9 +393,9 @@ out.write(str);
 |            |                             转发                             |                            重定向                            |
 | ---------- | :----------------------------------------------------------: | :----------------------------------------------------------: |
 |            |                          服务器行为                          |                          客户端行为                          |
-| 请求响应   |                 只发出一次请求，收到一次响应                 |                 发出两次请求，接收到两次响应                 |
+| 请求响应   |               **只发出一次请求，收到一次响应**               |               **发出两次请求，接收到两次响应**               |
 | 跳转       |                  只能跳转到当前应用的资源中                  | 不仅可以跳转到当前应用的其它资源，也可以跳转到到其它应用中资源 |
-| 地址栏显示 | 转发是服务器请求资源，服务器直接访问目标地址的 URL,把那个 URL 的响应内容读取过来，然后把这些内容再发给浏览器。浏览器根本不知道服务器发送的内容从哪里来的，所以它的地址栏还是原来的地址 | 重定向是服务端根据逻辑，发送一个状态码，告诉浏览器重新去请求那个地址，所以地址栏显示的是新的 URL |
+| 地址栏显示 | 服务器请求资源，去直接访问目标地址的 URL，把那个 URL 的响应内容读取过来，然后把这些内容再发给浏览器。浏览器根本不知道服务器发送的内容从哪里来的，所以它的地址栏还是原来的地址 | 服务端根据逻辑，发送一个状态码，告诉浏览器重新去请求那个地址，所以地址栏显示的是新的 URL |
 | 数据共享   |      转发页面和转发到的页面可以共享 request 里面的数据       |                         不能共享数据                         |
 | 使用场景   |       一般用于用户登陆的时候，根据角色转发到相应的模块       |     一般用于用户注销登陆时返回主页面和跳转到其它的网站等     |
 | 效率       |                              高                              |                              低                              |
@@ -536,8 +532,6 @@ Servlet 中的监听器是用于监听 Web 常见对象 HttpServletRequest、Htt
 	<listener-class>com.test.listener.FirstListener</listener-class>
 </listener>
 ````
-
-
 
 ### 监听器的分类
 
@@ -734,16 +728,6 @@ JSP 是一种 Servlet，但与 HttpServlet 的工作方式不太一样。HttpSer
 - JSP 中的内置对象都是必须通过 **HttpServletRequest 对象，HttpServletResponse 对象、HttpServlet 对象** 得到，**Servlet 中没有内置对象**
 
 ### JSP 隐式对象
-
-- request：
-- response：
-- pageContext：
-- session：
-- application：
-- out：
-- config：
-- page：
-- exception：
 
 #### 作用域
 

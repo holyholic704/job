@@ -4,7 +4,7 @@ JDBC（Java DataBase Connectivity），是 Sun 公司提供的一套 **操作数
 
 Sun 公司制定了 JDBC 标准，各大数据库厂商会提供数据库驱动现这个标准，这样 Java 才可以通过 JDBC 来操作实现了这个标准的数据库。各个数据库厂商会将各自的数据库驱动打成 JAR 包对外发布，开发者在使用时需要下载与当前数据库匹配的数据库驱动 JAR 包
 
-* JDBC 规范让 Java 程序和数据库驱动实现了松耦合，使切换不同的数据库变得更加简单
+* JDBC 规范让 Java 程序和数据库驱动实现了 **松耦合**，使切换不同的数据库变得更加简单
 
 ### JDBC 是如何实现 Java 程序和 JDBC 驱动的松耦合的
 
@@ -25,10 +25,10 @@ Sun 公司制定了 JDBC 标准，各大数据库厂商会提供数据库驱动�
 ### CLOB 和 BLOB 数据类型
 
 * CLOB：**字符大对象**，由具有关联代码页的单字节字符组成的字符串
-  * 适用于存储面向文本的信息，信息量可能超出常规 varchar 数据类型的限制（上限为 32K 字节）
+  * 适用于存储面向文本的信息，信息量可能超出常规 varchar 数据类型的限制
 
 * BLOB：**二进制大对象**，由字节组成的二进制字符串，没有关联的代码页
-  * 适用于存储图像，语音，图形和其他类型的业务或特定于应用程序的数据。此数据类型可以存储大于 varbinary 的二进制数据（上限为 32K 字节）
+  * 适用于存储图像，语音，图形和其他类型的业务或特定于应用程序的数据。此数据类型可以存储大于 varbinary 的二进制数据
 
 ## 使用 JDBC
 
@@ -343,7 +343,7 @@ Connection 对象提供了 `void setAutoCommit(boolean flag)`，可以禁用连�
 
 ### JDBC 连接隔离级别
 
-可以通过  getTransactionIsolation 方法获取隔离级别信息，并使用 setTransactionIsolation 方法设置它
+可以通过 getTransactionIsolation 方法获取隔离级别信息，并使用 setTransactionIsolation 方法设置它
 
 * TRANSACTION_READ_UNCOMMITTED：读未提交
 
@@ -354,7 +354,7 @@ Connection 对象提供了 `void setAutoCommit(boolean flag)`，可以禁用连�
 
 ## DataSource
 
-即数据源，跟 DriverManager 相比，功能要更强大。可以用它来创建数据库连接，当然驱动的实现类会实际去完成这个工作。除了能创建连接外，它还提供了如下的特性
+数据源，跟 DriverManager 相比，功能要更强大。可以用它来创建数据库连接，当然驱动的实现类会实际去完成这个工作。除了能创建连接外，它还提供了如下的特性
 
 * 缓存 PreparedStatement 以便更快的执行
 * 可以设置连接超时时间
@@ -384,8 +384,7 @@ Connection 对象提供了 `void setAutoCommit(boolean flag)`，可以禁用连�
 
 主要用来 **分配、管理、释放数据库的连接**。数据库连接池首先会创建若干个 Connection 对象并将这些对象放入到池中，当系统需要使用 Connection 对象时，数据库连接池会从池中分配一个事先创建好的 Connection 对象给系统，当系统使用完毕或超时后，数据库连接池会将该 Connection 对象重新放入到池中。这样就减少了创建 Connection 对象所耗费的资源和时间，可以提高对数据库操作的性能
 
-- 数据库的连接的建立和关闭是非常消耗资源的
-- 频繁地打开、关闭连接造成系统性能低下
+- 数据库的连接的建立和关闭是非常消耗资源的，频繁地打开、关闭连接造成系统性能低下
 
 ### 数据库连接池的作用
 
@@ -506,3 +505,6 @@ public static Connection getConnection() {
     }
 }
 ```
+
+
+

@@ -66,7 +66,7 @@ MVC 是一种设计模式，它强制的将应用程序的输入、处理、输�
 
 ## Spring MVC 项目
 
-### 创建 SpringMVC 步骤
+### 创建 Spring MVC 步骤
 
 1. 导入 JAR 包：spring-webmvc
 2. 在 web.xml 中注册中央控制器
@@ -269,7 +269,7 @@ mv.setViewName("test");
 
 ```java
 // 要求请求中必须携带请求参数id与name
-@RequestMapping(value="/hello" ,  params={"id" , "name"}) 
+@RequestMapping(value="/hello" , params={"id" , "name"}) 
 
 // 要求请求中不能携带参数id，但必须携带参数name
 @RequestMapping(value="/hello" , params={"!id" , "name"}) 
