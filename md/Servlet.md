@@ -14,7 +14,7 @@ Servlet 是一门用于开发动态 Web 资源的技术，可以运行在 Web �
 
 ### Servlet 的特点
 
-* Servlet 是 **单例多线程** 的，只创建一个 Servlet 对象，但是每次请求都会起一个线程并在自己线程栈内存中执行 service 方法。为了保证其线程安全性，一般情况下是 **不建议在 Servlet 类中定义可修改的成员变量**，因为每个线程均可修改这个成员变量，会出现线程安全问题
+* Servlet 是 **单例多线程** 的，只创建一个 Servlet 对象，但是每次请求都会起一个线程并在自己线程栈内存中执行 service 方法。为了保证其线程安全性，**不建议在 Servlet 类中定义可修改的成员变量**，因为每个线程均可修改这个成员变量，会出现线程安全问题
 
 * 一个 Servlet 实例 **只会执行一次无参构造器与 init 方法**，并且是在 **第一次访问时执行**。用户每提交一次对当前 Servlet 的请求，就会执行一次 service 方法。一个 Servlet 实例只会执行一次 destroy 方法，在应用停止时执行
 
@@ -32,13 +32,13 @@ Servlet 不是线程安全的，多线程并发的读写会导致数据不同步
 
 ### 创建 Servlet 的三种方式
 
-* 定一个类实现 javax.servlet.**Servlet** 接口
+* 实现 javax.servlet.**Servlet** 接口
 
-* 定义一个类继承 javax.servet.**GenericServlet** 类
+* 继承 javax.servet.**GenericServlet** 类
   * 该类是一个抽象类，实现了 Servlet 接口和 ServletConfig 接口并重写了除了 service 方法以外的全部方法，这样子类在继承 GenericServlet 类时，只需重写 service 方法
 
-* 定义一个类继承 javax.servlet.http.**HttpServlet** 类，实际开发中经常使用继承 HttpServlet 类的方式创建一个 Servlet
-  * **HttpServlet 的子类不需要重写 service 方法**，倘若重写了该方法后可能会导致所编写的 Servlet 无法正常工作
+* 继承 javax.servlet.http.**HttpServlet** 类，常用
+  * **HttpServlet 的子类不需要重写 service 方法**，若重写了该方法后可能会导致所编写的 Servlet 无法正常工作
 
 #### GenericServlet 类为什么有两个 init 方法
 
@@ -55,8 +55,6 @@ web.xml 属于部署描述符，在整个 Java 中只要是容器都会存在部
 在浏览器地址栏中直接通过项目名称访问时，默认显示的页面就是欢迎页面，可以是 `.html、.jsp`，可以通过 welcome-file-list 进行设置。**可以为应用设置多个欢迎页面，但只会有一个起作用**，系统加载这些欢迎页面的顺序与其代码的顺序相同，即 **由上到下逐个查找**，一旦找到，则马上显示，不会再向下查找
 
 - 如果当前应用没有指定欢迎页面，则系统会从当前项目的根目录下依次查找 index.html、index.htm、index.jsp 文件，**如果这些文件不存在的话，浏览器会报出 404 错误**
-
-及 index.jsp 文件，如果这些文件不存在的话，浏览器会报出 404 错误
 
 ### 配置 Servlet
 
@@ -80,7 +78,7 @@ web.xml 属于部署描述符，在整个 Java 中只要是容器都会存在部
 添加 load-on-startup 的作用是，**标记是否在 Tomcat 启动时创建并初始化这个 Servlet实例**。它的值必须是一个 **整数**，表示 Servlet 应该被载入的顺序
 
 - 如果该元素不存在或者这个数为负时，则容器会当该 Servlet 被请求时，再加载
-- 当值大于等于 0 时，表示容器在启动时就加载并初始化这个 Servlet，**数值越小，该 Servlet的优先级就越高**，其被创建的也就越早
+- 当值大于等于 0 时，表示容器在启动时就加载并初始化这个 Servlet，**数值越小，该 Servlet 的优先级就越高**，被创建的也就越早
 - 当值相同时，容器会自己选择创建顺序
 
 ````xml
@@ -120,7 +118,7 @@ url-pattern 标签用于对请求进行筛选匹配，对当前注册的 Servlet
 ```
 
 - `/*` 与 `/` 的区别：表示所有请求均会被当前 Servlet 所处理。如果一个 Servlet 的 url-pattern 是 `/*` 或 `/`，则该 Servlet 表示默认映射，**当一个请求找不到相应的 URL 的 Servlet 时，系统会调用这个默认映射的 Servlet**
-  - 使用 `/*`：表示当前的 Servlet 会拦截用户对于静态资源（.css、.js、.html、.jpg、.png 等）与动态资源（.jsp 等）的请求。即用户不会直接获取到这些资源文件，而是将请求交给当前 Servlet 来处理了
+  - 使用 `/*`：表示当前的 Servlet 会拦截用户对于静态资源（`.css、.js、.html、.jpg、.png` 等）与动态资源（`.jsp` 等）的请求。即用户不会直接获取到这些资源文件，而是将请求交给当前 Servlet 来处理了
   - 使用 `/`：表示当前的 Servlet 会拦截用户对于静态资源，**但对于动态资源的请求，是不进行拦截的**。即用户请求的静态资源文件是不能直接获取到的
 
 #### url-pattern 路径优先级
@@ -365,8 +363,8 @@ out.write(str);
 
 响应时会产生乱码的原因是在 HTTP 协议中规定，默认响应体的字符编码为 ISO-8859-1。所以，若要解决乱码问题，就需要修改响应体的默认编码。一般情况下，有两种方式可以修改：
 
-* HttpServletResponse 的 **`setCharacterEncoding(“utf-8”)`** 方法，将编码修改为 UTF-8，然后再通过 **`setHead(“Content-type”,”text/html;charset=UTF-8″)`** 方法告诉客户端浏览器的编码方式
-* 为了简便操作，开发者可以直接使用 HttpServletResponse 的 **`setContentType(“text/html;charset=utf-8”)`**方法，告诉浏览器的编码方式，该方法相当于方法一种的两条代码
+* HttpServletResponse 的 **`setCharacterEncoding(“utf-8”)`** 方法，将编码修改为 UTF-8，然后再通过 **`setHead("Content-type","text/html;charset=UTF-8")`** 方法告诉客户端浏览器的编码方式
+* 为了简便操作，开发者可以直接使用 HttpServletResponse 的 **`setContentType("text/html;charset=utf-8")`**方法，告诉浏览器的编码方式，该方法相当于方法一种的两条代码
 
 * 注意，设置响应编码时必须在 PrintWriter 对象产生之前先设置，否则将不起作用
 
@@ -399,7 +397,7 @@ out.write(str);
 | 数据共享   |      转发页面和转发到的页面可以共享 request 里面的数据       |                         不能共享数据                         |
 | 使用场景   |       一般用于用户登陆的时候，根据角色转发到相应的模块       |     一般用于用户注销登陆时返回主页面和跳转到其它的网站等     |
 | 效率       |                              高                              |                              低                              |
-|            |                     不会执行转发后的代码                     |                      会执行转发后的代码                      |
+|            |                     不会执行转发后的代码                     |                     会执行重定向后的代码                     |
 
 * 转发通过 RequestDispatcher 对象的 **`forward(HttpServletRequest request,HttpServletResponse response)`** 方法实现的。RequestDispatcher 可以通过 HttpServletRequest 的 getRequestDispatcher 方法获得
   * `request.getRequestDispatcher("/test.jsp").forward(request, response)`
@@ -602,11 +600,11 @@ Session 中的数据只有 **存放在 JVM 堆内存中的实现了 Serializable
 
 ## Filter
 
-Filter 是 Servlet 规范的三大组件之一，另外两个分别是 Servlet 和 Listener。Filter 也称为过滤器，**可以在请求到达目标资源之前先对请求进行拦截过滤**，即对请求进行一些处理；**也可以在响应到达客户端之前先对响应进行拦截过滤**，即对响应进行一些处理
+Filter 是 Servlet 规范的三大组件之一。Filter 也称为过滤器，**可以在请求到达目标资源之前先对请求进行拦截过滤**，即对请求进行一些处理；**也可以在响应到达客户端之前先对响应进行拦截过滤**，即对响应进行一些处理
 
 通过 Filter 技术，可以对 Web 服务器管理的所有 Web 资源，如 JSP、Servlet、静态图片文件、静态 HTML 文件等进行拦截，从而实现一些特殊的功能。如实现 URL 级别的权限访问控制、过滤敏感词汇、压缩响应信息、计算系统的响应时间等一些高级功能
 
-Servlet API中提供了一个Filter接口，开发web应用时，如果编写的Java类实现了这个接口，则把这个java类称之为过滤器Filter。通过Filter技术，开发人员可以实现用户在访问某个目标资源之前，对访问的请求和响应进行拦截
+Servlet API 中提供了一个 Filter 接口，开发 Web 应用时，如果编写的 Java 类实现了这个接口，则把这个 Java 类称之为过滤器 Filter。通过 Filter 技术，开发人员可以实现用户在访问某个目标资源之前，对访问的请求和响应进行拦截
 
 ### Filter 的特点
 
