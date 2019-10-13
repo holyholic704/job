@@ -42,7 +42,7 @@ Java 语言是强类型语言，不同的数据类型，在内存中分配了不
 
 char 类型是用来存储 Unicode 编码的字符的，Unicode 编码字符集中包含了汉字
 
-- Unicode 类编码占用两个字节，所以 char 类型的变量也是占用两个字节
+- Unicode 类编码占用 2 个字节，所以 char 类型的变量也是占用 2 个字节
 
 #### short s1 = 1，s1 = s1 + 1 与 short s1 = 1，s1 += 1
 
@@ -1000,7 +1000,7 @@ try 块里面的内容称为监控区域。Java 方法在运行过程中出现�
 * finally 中有 return
   * 会直接返回，不会再去返回 try 或者 catch 中的返回值
 
-* finally 中对于返回变量做的改变会影响最终的返回结果吗
+* finally 中对于返回变量做的改变是否会影响最终的返回结果
   * 如果 try 和 catch 的 return 是一个变量时且函数是从其中一个返回时，后面 finally 中语句即使有对返回的变量进行赋值的操作时，也不会影响返回的值
 
 *更多：[finally 和 return的执行顺序](https://blog.csdn.net/jdfk423/article/details/80406297)*

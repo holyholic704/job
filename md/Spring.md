@@ -233,7 +233,7 @@ public class MyBeanFactory {
 - **容器中 bean 的 ID 默认为方法名**
 
 ```java
-@org.springframework.context.annotation.Configuration
+@Configuration
 public class MyConfiguration {
     @Bean
     public PersonDao pd(){
@@ -303,7 +303,7 @@ public class PersonDaoImpl implements PersonDao {
 ![06ebc4a3c94e5662382d](../md.assets/06ebc4a3c94e5662382d.png)
 
 * 实例化一个 bean 对象
-* 对实例化的 bean 进行配置，也就是依赖注入
+* 对实例化的 bean 进行配置，即依赖注入
 * 如果 bean 实现了 BeanNameAware 接口，将会调用 setBeanName 方法，传入 bean 的 id
 * 如果 bean 实现了 BeanFactoryAware 接口，将会调用 setBeanFactory 方法，传入 BeanFactory 的实例
 * 如果 bean 实现了 ApplicationContextAware 接口，将会调用 setApplicationContext 方法，传入应用上下文的引用
@@ -367,7 +367,7 @@ public class bpp implements BeanPostProcessor {
 
 ## DI
 
-依赖注入（Dependency Injection）是 IoC 常用的实现方式，**是指程序运行过程中，若需要调用另一个对象协助时，无须在代码中创建被调用者，而是依赖于外部容器，由外部容器创建后传递给程序**。依赖注入让 Spring 的 Bean 之间以配置文件的方式组织在一起，而不是以硬编码的方式耦合在一起。有三种常用的注入方式：setter 方法注入，构造方法注入，基于注解的注入
+依赖注入（Dependency Injection）是 IoC 常用的实现方式，**是指程序运行过程中，如果需要调用另一个对象协助时，无须在代码中创建被调用者，而是依赖于外部容器，由外部容器创建后传递给程序**。依赖注入让 Spring 的 Bean 之间以配置文件的方式组织在一起，而不是以硬编码的方式耦合在一起。有三种常用的注入方式：setter 方法注入，构造方法注入，基于注解的注入
 
 ### setter 注入
 
@@ -819,7 +819,7 @@ boolean isReadOnly()
 
 #### 事务只读属性
 
-对事务性资源进行只读操作或者是读写操作。所谓事务性资源就是指那些被事务管理的资源，比如数据源等。如果确定只对事务性资源进行只读操作，那么我们可以将事务标志为只读的，以提高事务处理的性能。**在 TransactionDefinition 中以 boolean 类型来表示该事务是否只读**
+对事务性资源进行只读操作或者是读写操作。所谓事务性资源就是指那些被事务管理的资源，如数据源等。如果确定只对事务性资源进行只读操作，那么我们可以将事务标志为只读的，以提高事务处理的性能。**在 TransactionDefinition 中以 boolean 类型来表示该事务是否只读**
 
 #### 事务超时属性
 

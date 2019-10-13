@@ -68,31 +68,6 @@ con.close();
 
 Connection、Statement、ResultSet 都继承了 AutoCloseable 接口，因此可以使用 try-with-resources 的方式关闭这些资源
 
-```java
-String url = "jdbc:mysql://localhost:3306/test";
-String username = "root";
-String password = "1234";
-String sql = "select * from user";
-
-try {
-    Class.forName("com.mysql.jdbc.Driver");
-} catch (ClassNotFoundException e) {
-    e.printStackTrace();
-}
-
-try (Connection con = DriverManager.getConnection(url, username, password);
-     Statement st = con.createStatement();
-     ResultSet rs = st.executeQuery(sql))
-	{
-    while (rs.next()) {
-        System.out.print(rs.getObject("id") + "\t");
-        System.out.println(rs.getObject("name"));
-    }
-} catch (SQLException e) {
-    e.printStackTrace();
-}
-```
-
 #### 使用工具类注册驱动和获取连接
 
 数据库配置文件：db.properties
@@ -316,9 +291,8 @@ try (Connection con = DBUtil.getConnection();
 
 RowSet 对象默认是可滚动，可更新的，因此如果数据库系统不支持 ResultSet 实现类似的功能，可以使用 RowSet 来实现。RowSet 分为两大类
 
-* **连接型 RowSet**：这类对象与数据库进行连接，和 ResultSet 类似。JDBC 接口只提供了一种连接型 RowSet
-  * JdbcRowSet
-
+* **连接型 RowSet**：这类对象与数据库进行连接，和 ResultSet 类似
+  * JDBC 接口只提供了一种连接型 RowSet：JdbcRowSet
 * **离线型RowSet**：这类对象 **不需要和数据库进行连接**，更轻量级，更容易序列化，适用于在网络间传递数据
   * **CachedRowSet**：可以通过他们获取连接，执行查询并读取 ResultSet 的数据到 RowSet 里。可以在离线时对数据进行维护和更新，然后重新连接到数据库里，并回写改动的数据
   * **WebRowSet**：继承自 CachedRowSet，可以读写 XML 文档
