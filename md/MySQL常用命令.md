@@ -1,4 +1,4 @@
-## 开始使用
+## 使用
 
 ### 启动、重启和关闭
 
@@ -228,7 +228,7 @@ SELECT [字段名] FROM [表名] WHERE INSTR(字段名,'end') > 0;
 ```mysql
 # 去除重复记录，将查询结果中某一字段的重复记录去除掉
 # 只能出现在所有字段最前面，后面如果有多个字段即为多字段联合去重
-SELECT DESTINCT 字段名 FROM [表名];
+SELECT DISTINCT 字段名 FROM [表名];
 ```
 
 ### 分组
@@ -381,19 +381,6 @@ WHERE
 *更多：[在 MySQL里，有个和 in一样的东东叫做 exists，但是它比 in更牛叉，你会么](https://segmentfault.com/a/1190000008709410)*
 
 ## 条件控制
-
-### if...then...else...end if
-
-````mysql
-CREATE PROCEDURE ifthen()
-BEGIN
-IF 1 > 3 THEN
-	SELECT 'fuck';
-ELSE
-	SELECT 'shit';
-END IF;
-END
-````
 
 ### if...then...elseif...then...end if
 

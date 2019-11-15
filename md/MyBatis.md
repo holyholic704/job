@@ -133,7 +133,7 @@ public class StudentDaoImpl implements StudentDao {
         List<Test> test = null;
         try(SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
             // 返回对象集合
-            stu = sqlSession.selectList("selectAll");
+            test = sqlSession.selectList("selectAll");
         }
         return test;
     }
@@ -182,7 +182,7 @@ public class StudentDaoImpl implements StudentDao {
             <dataSource type="POOLED">
                 <property name="driver" value="${driver}"/>
                 <property name="url" value="${url}"/>
-                <property name="username" value="${user}"/>
+                <property name="username" value="${username}"/>
                 <property name="password" value="${password}"/>
             </dataSource>
         </environment>
@@ -213,7 +213,7 @@ public class StudentDaoImpl implements StudentDao {
 ```properties
 driver=com.mysql.jdbc.Driver
 url=jdbc:mysql://127.0.0.1:3306/test
-user=root
+username=root
 password=1234
 ```
 
@@ -243,18 +243,6 @@ public class MyBatisUtil {
             ss.close();
         }
     }
-}
-```
-
-### 测试类
-
-```java
-@Test
-public void selectAll(){
-	TestDao td = new TestDaoImpl();
-	td.selectAll().forEach((t -> {
-		System.out.println(t);
-	}));
 }
 ```
 

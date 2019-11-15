@@ -211,7 +211,7 @@ $(function () {
   - xml：返回 XML 文档，可用 jQuery 处理
   - html：返回纯文本 HTML 信息，包含的 script 标签会在插入 dom 时执行
   - script：返回纯文本 JavaScript 代码。不会自动缓存结果。除非设置了 cache 参数。在远程请求时（不在同一个域下），所有 POST 请求都将转为 GET 请求
-  - json：返回 JSON 数据 
+  - json：返回 JSON 数据
   - jsonp：返回 JSONP 数据
   - text：返回纯文本字符串
 * async：默认为 true，即所有请求均为异步请求。设置 false 为发送同步请求
