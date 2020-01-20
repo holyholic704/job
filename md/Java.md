@@ -114,7 +114,7 @@ System.out.println(a == c);
 // false，非new生成的Integer变量指向的是常量池中的对象，而使用new生成的变量指向堆中新建的对象
 // 两者在内存中的地址不同
 Integer d = 10;
-System.out.println(a == d);		
+System.out.println(a == d);
 
 // true，两个非new生成的Integer对象比较时，如果两个变量的值在区间-128到127之间，Java会进行缓存
 // 除Integer外，Byte、Short、Long、Character、Boolean都支持缓存池
