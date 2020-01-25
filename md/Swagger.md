@@ -179,6 +179,17 @@ public Docket docketVIP() {
 
 #### 常用注解
 
+```java
+@Api(value = "接口", description = "这是个接口")
+public interface PageControllerApi {
+    @ApiOperation("分页查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页码", required = true, paramType = "path", dataType = "int"),
+            @ApiImplicitParam(name = "size", value = "每页记录", required = true, paramType = "path", dataType = "int")})
+    public ResponseResult findList(int page, int size, PageRequest pageRequest);
+}
+```
+
 - `@Api`：修饰整个类，描述 Controller 的作用
   - ~~description：描述信息，已过时~~
   - value：URL 的路径值
@@ -209,8 +220,8 @@ public Docket docketVIP() {
     - form：以 form 表单的形式提交，仅支持 POST，**不常用**
   - dataType：参数的数据类型，默认 String
 - `@ApiImplicitParams`：用于方法上包含一组参数说明
-- `@ApiModel`：对类进行说明，描述一个 Model 的信息，表示参数用实体类接收
-- `@ApiModelProperty`：注解用于方法、字段，表示对 Model 属性的说明或者数据操作更改，配合 `@ApiModel` 一起使用
+- `@ApiModel`：对类进行说明，描述一个实体类的信息，表示参数用实体类接收
+- `@ApiModelProperty`：注解用于方法、字段，表示对实体类属性的说明或者数据操作更改，配合 `@ApiModel` 一起使用
 - `@ApiIgnore`：用于类或方法上，表示不需要 Swagger 处理
 - `@ApiError` ：发生错误返回的信息
 - `@ApiResponse`：用在请求的方法上，表示不同的响应
