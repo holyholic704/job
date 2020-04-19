@@ -1822,18 +1822,3 @@ List<?> v = list[1];
 借助于无限定通配符却可以，？代表未知类型，所以它涉及的操作都基本上与类型无关，因此 JVM 不需要针对它对类型作判断，因此它能编译通过
 
 *更多：[泛型就这么简单](https://segmentfault.com/a/1190000014120746)、[java 泛型详解](https://blog.csdn.net/s10461/article/details/53941091)、[Java 泛型，你了解类型擦除吗](https://blog.csdn.net/briblue/article/details/76736356)、[JAVA泛型通配符T，E，K，V区别](https://www.jianshu.com/p/95f349258afb)*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
