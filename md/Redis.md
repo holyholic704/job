@@ -659,7 +659,7 @@ $ redis-check-aof --fix
 
 用户可以向 Redis 发送 **`bgrewriteaof`** 命令来进行重写，与创建快照命令 `bgsave` 的原理相似，AOF 文件重写也需要用到子进程，可能会导致性能问题。也可以通过修改配置文件进行重写
 
-```
+```conf
 auto-aof-rewrite-percentage	100
 auto-aof-rewrite-min-size 64mb
 ```
